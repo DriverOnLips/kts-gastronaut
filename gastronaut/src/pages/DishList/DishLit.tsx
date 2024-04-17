@@ -3,7 +3,7 @@ import React from 'react';
 const DishList = () => {
 	return (
 		<React.Fragment>
-			<h1>Dish List</h1>
+			<span style={{ color: 'white' }}>Dish List</span>
 		</React.Fragment>
 	);
 };

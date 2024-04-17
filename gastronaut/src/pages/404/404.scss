@@ -108,26 +108,10 @@
 	transform: rotate(-3600deg) !important;
 }
 
-html,
-body {
-	margin: 0;
-	width: 100%;
-	height: 100%;
-	font-family: 'Dosis', sans-serif;
-	font-weight: 300;
-	-webkit-user-select: none; /* Safari 3.1+ */
-	-moz-user-select: none; /* Firefox 2+ */
-	-ms-user-select: none; /* IE 10+ */
-	user-select: none; /* Standard syntax */
-}
-
 .bg-purple {
-	background: url(http://salehriaz.com/404Page/img/bg_purple.png);
-	background-repeat: repeat-x;
-	background-size: cover;
-	background-position: left top;
-	height: 100%;
+	height: 100vh;
 	overflow: hidden;
+	max-width: 100vw;
 }
 
 li a:hover {

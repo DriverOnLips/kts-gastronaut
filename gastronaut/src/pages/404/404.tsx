@@ -1,7 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import './404.scss';
 
 const Page404 = () => {
+	const navigate = useNavigate();
+
+	const handleClickHome = (event: React.MouseEvent) => {
+		event.preventDefault();
+		navigate('/');
+	};
+
 	return (
 		<body className='bg-purple'>
 			<div className='stars'>
@@ -12,11 +21,11 @@ const Page404 = () => {
 						width='300px'
 					/>
 					<a
-						href='http://salehriaz.com/404Page/404.html'
+						onClick={(e) => handleClickHome(e)}
 						className='btn-go-home'
 						target='_blank'
 					>
-						GO BACK HOME
+						ДОМОЙ
 					</a>
 				</div>
 				<div className='objects'>
