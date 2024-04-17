@@ -12,14 +12,10 @@ const Page404 = () => {
 	};
 
 	return (
-		<body className='bg-purple'>
+		<div className='bg-purple'>
 			<div className='stars'>
 				<div className='central-body'>
-					<img
-						className='image-404'
-						src='http://salehriaz.com/404Page/img/404.svg'
-						width='300px'
-					/>
+					<span className='span-404'>Кажется, кто-то потерялся</span>
 					<a
 						onClick={(e) => handleClickHome(e)}
 						className='btn-go-home'
@@ -62,7 +58,7 @@ const Page404 = () => {
 					<div className='star'></div>
 				</div>
 			</div>
-		</body>
+		</div>
 	);
 };
 
