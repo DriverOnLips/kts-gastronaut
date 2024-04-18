@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { useDishContext } from '../../App';
-import { Api } from '../../utils/api';
-import { DishType } from '../../types/DishType';
-import Text from '../../components/Text/Text';
+import { Api } from 'utils/api';
+import { DishType } from 'types/DishType';
+import Text from 'components/Text/Text';
 
 const DishPage = () => {
 	const navigate = useNavigate();
@@ -33,18 +34,20 @@ const DishPage = () => {
 				aggregateLikes: response.aggregateLikes,
 				summary: response.summary,
 				ingredients: response.extendedIngredients?.map(
-					(item: any) => item.original
+					(item: any) => item.original,
 				),
 				equipment: response.analyzedInstructions?.[0]?.steps?.map(
-					(item: any) => item.equipment?.[0]?.localizedName
+					(item: any) => item.equipment?.[0]?.localizedName,
 				),
 				steps: response.analyzedInstructions?.[0]?.steps?.map(
-					(item: any) => item.step
+					(item: any) => item.step,
 				),
 			};
 
 			setDish(dishToSet);
 			setIsLoaded(true);
+
+			console.log('asdf');
 		};
 
 		loadDish();

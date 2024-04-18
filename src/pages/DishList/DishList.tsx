@@ -1,11 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 
-import styles from './DishList.module.scss';
-
-import { Api } from '../../utils/api';
+import { DishFromList } from 'types/DishFromList';
+import { Api } from 'utils/api';
 import { useDishContext } from '../../App';
-import { DishFromList } from '../../types/DishFromList';
 import DishItem from './components/DishItem/DishItem';
+import styles from './DishList.module.scss';
 
 const DishList = () => {
 	const { dishList, setDishList } = useDishContext();
@@ -27,7 +26,7 @@ const DishList = () => {
 							.map((item: any) => item.name)
 							.join(', '),
 					};
-				}
+				},
 			);
 
 			setDishList(dishesToSet);

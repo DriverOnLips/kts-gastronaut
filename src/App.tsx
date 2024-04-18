@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React, { createContext, useContext, useRef, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { DishFromList } from './types/DishFromList';
-import DishList from './pages/DishList/DishList';
-import DishPage from './pages/DishPage/DishPage';
-import Page404 from './pages/404/404';
-import MyComponent from './components/Header/Header';
+import Header from 'components/Header/Header';
+import Page404 from 'pages/404/404';
+import DishList from 'pages/DishList/DishList';
+import DishPage from 'pages/DishPage/DishPage';
+import { DishFromList } from 'types/DishFromList';
 
 type DishContextType = {
 	dishList: DishFromList[];
@@ -47,7 +47,7 @@ const App = () => {
 			}}
 		>
 			<BrowserRouter basename='/'>
-				<MyComponent />
+				<Header />
 				<Routes>
 					<Route
 						path='/'

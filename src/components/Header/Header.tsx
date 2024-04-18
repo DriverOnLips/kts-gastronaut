@@ -1,9 +1,9 @@
 import React from 'react';
-import styles from './Header.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useDishContext } from '../../App';
+import styles from './Header.module.scss';
 
-const MyComponent = () => {
+const Header = () => {
 	const { rootRef } = useDishContext();
 	const navigate = useNavigate();
 
@@ -35,4 +35,4 @@ const MyComponent = () => {
 	);
 };
 
-export default MyComponent;
+export default Header;

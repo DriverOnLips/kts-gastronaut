@@ -1,8 +1,9 @@
+import { useNavigate } from 'react-router-dom';
+
+import Text from 'components/Text/Text';
+import { DishFromList } from 'types/DishFromList';
 import styles from './DishItem.module.scss';
 
-import { DishFromList } from '../../../../types/DishFromList';
-import { useNavigate } from 'react-router-dom';
-import Text from '../../../../components/Text/Text';
 
 const DishItem: React.FC<DishFromList> = ({
 	id,
