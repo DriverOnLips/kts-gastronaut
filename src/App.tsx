@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React, { createContext, useContext, useRef, useState } from 'react';
 
 import { DishFromList } from './types/DishFromList';
-import DishList from './pages/DishList/DishLit';
+import DishList from './pages/DishList/DishList';
 import DishPage from './pages/DishPage/DishPage';
 import Page404 from './pages/404/404';
 import MyComponent from './components/Header/Header';
@@ -56,6 +56,10 @@ const App = () => {
 					<Route
 						path='/dish/:id'
 						element={<DishPage />}
+					/>
+					<Route
+						path='/404'
+						element={<Page404 />}
 					/>
 					<Route
 						path='*'

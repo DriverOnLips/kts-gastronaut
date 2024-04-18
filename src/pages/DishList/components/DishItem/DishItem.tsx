@@ -4,7 +4,14 @@ import { DishFromList } from '../../../../types/DishFromList';
 import { useNavigate } from 'react-router-dom';
 import Text from '../../../../components/Text/Text';
 
-const DishItem: React.FC<DishFromList> = ({ id, title, image, dishTypes }) => {
+const DishItem: React.FC<DishFromList> = ({
+	id,
+	title,
+	image,
+	readyInMinutes,
+	ingredients,
+	calories,
+}) => {
 	const navigate = useNavigate();
 
 	return (
@@ -33,7 +40,23 @@ const DishItem: React.FC<DishFromList> = ({ id, title, image, dishTypes }) => {
 						text_align='start'
 						weight='light'
 					>
-						{dishTypes}
+						{readyInMinutes}
+					</Text>
+					<Text
+						className='my-3'
+						size='s5'
+						text_align='start'
+						weight='light'
+					>
+						{ingredients}
+					</Text>
+					<Text
+						className='dish_item__info__dish_types my-3'
+						size='s5'
+						text_align='start'
+						weight='light'
+					>
+						{calories}
 					</Text>
 				</div>
 			</div>
