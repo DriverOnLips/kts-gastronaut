@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import './Text.scss';
 
 type TextProps = {
-	className: string;
+	className?: string;
 	size: 's0' | 's1' | 's2' | 's3' | 's4' | 's5' | 's6' | 's7';
 	text_align: 'center' | 'start' | 'end';
 	weight: 'light' | 'medium' | 'bold';

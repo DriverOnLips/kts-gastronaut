@@ -4,7 +4,6 @@ import Text from 'components/Text/Text';
 import { DishFromList } from 'types/DishFromList';
 import styles from './DishItem.module.scss';
 
-
 const DishItem: React.FC<DishFromList> = ({
 	id,
 	title,

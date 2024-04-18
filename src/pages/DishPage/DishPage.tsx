@@ -58,7 +58,6 @@ const DishPage = () => {
 			{isLoaded ? (
 				<>
 					<Text
-						className=''
 						size='s3'
 						text_align='center'
 						weight='bold'
