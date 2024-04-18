@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Jura|Rajdhani');
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #000;
+	background-image: url('../assets/gif/background.gif');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 100vw;
+	height: 100vh;
+	overflow: auto;
+}
+
+#root {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+}

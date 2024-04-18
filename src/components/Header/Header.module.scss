@@ -1,0 +1,59 @@
+@import '../../styles/variables.scss';
+
+.navbar_desctop {
+	width: 100%;
+	height: 56px;
+	position: fixed;
+	top: 0;
+	background: rgba($color-third, 0.5);
+	color: $text-color;
+	display: flex;
+	align-items: center;
+	padding: 0 2rem;
+	z-index: 999;
+}
+
+.navbar__logo {
+	font-size: $size3;
+	color: $text-color;
+	font-weight: $bold;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.navbar__logo:hover {
+	transform: scale(1.05);
+}
+
+.links {
+	all: unset;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 5vw;
+}
+
+.link {
+	all: unset;
+	font-size: $size4;
+	font-weight: $light;
+	text-decoration: none;
+	position: relative;
+	cursor: pointer;
+
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0;
+		height: 2px;
+		background-color: $text-color;
+		transition: width 0.3s ease;
+	}
+
+	&:hover::after {
+		width: 100%;
+	}
+}
