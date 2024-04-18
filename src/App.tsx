@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 
 import { DishFromList } from './types/DishFromList';
 import DishList from './pages/DishList/DishLit';
@@ -12,6 +12,7 @@ type DishContextType = {
 	setDishList: (value: DishFromList[]) => void;
 	dish: any;
 	setDish: (value: any) => void;
+	rootRef: HTMLElement | null;
 };
 
 const DishContext = createContext<DishContextType>({
@@ -23,6 +24,7 @@ const DishContext = createContext<DishContextType>({
 	setDish: () => {
 		throw new Error('setDish is not defined');
 	},
+	rootRef: null,
 });
 
 export const useDishContext = () => useContext(DishContext);
@@ -32,6 +34,7 @@ const DishProvider = DishContext.Provider;
 const App = () => {
 	const [dishList, setDishList] = useState<DishFromList[]>([]);
 	const [dish, setDish] = useState<any>(null);
+	const rootRef = document.getElementById('root');
 
 	return (
 		<DishProvider
@@ -40,6 +43,7 @@ const App = () => {
 				setDishList,
 				dish,
 				setDish,
+				rootRef,
 			}}
 		>
 			<BrowserRouter basename='/'>
@@ -50,7 +54,7 @@ const App = () => {
 						element={<DishList />}
 					/>
 					<Route
-						path='/film/:id'
+						path='/dish/:id'
 						element={<DishPage />}
 					/>
 					<Route

@@ -14,7 +14,9 @@ export class Api {
 		Api.instance = this;
 
 		this.domain = 'https://api.spoonacular.com/';
-		const token = 'c1ed0064ec724ead8177ab8848ea4dc8';
+		// const token = 'c1ed0064ec724ead8177ab8848ea4dc8';
+		const token = 'd1042c6f8c84432bbd5b508bca52c270';
+		// 5612ded2c55f4a42aafe5dd7fdec9f3f
 		this.token = token;
 		this.config = [
 			{ name: 'getRecepes', url: `${this.domain}recipes/complexSearch?` },
