@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecipeContext } from '../../App';
 import styles from './Header.module.scss';
+import logo from 'assets/svg/logo.svg';
 
 const Header = () => {
 	const { rootRef } = useRecipeContext();
@@ -17,18 +18,25 @@ const Header = () => {
 
 	return (
 		<nav className={styles.navbar_desctop}>
-			<a
-				className={styles.navbar__logo}
-				onClick={handleLogoClick}
-			>
-				Гастронавт
-			</a>
+			<div className={styles.navbar__logo_div}>
+				<img
+					src={logo}
+					className={styles.navbar__logo_img}
+				/>
+				<a
+					className={styles.navbar__logo_link}
+					onClick={handleLogoClick}
+				>
+					Food Client
+				</a>
+			</div>
+
 			<ul className={styles.links}>
 				<li
 					className={styles.link}
 					onClick={handleLogoClick}
 				>
-					Блюда
+					Recipes
 				</li>
 			</ul>
 		</nav>

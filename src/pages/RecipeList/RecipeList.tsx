@@ -6,6 +6,7 @@ import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
 import { useRecipeContext } from '../../App';
 import RecipeItem from './components/RecipeItem/RecipeItem';
+import intro from 'assets/img/intro.png';
 
 const RecipeList = () => {
 	const { recipeList, setRecipeList } = useRecipeContext();
@@ -22,10 +23,10 @@ const RecipeList = () => {
 						title: item.title,
 						image: item.image,
 						readyInMinutes: item.readyInMinutes,
-						calories: item.nutrition.nutrients?.[0]?.amount,
+						calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
 						ingredients: item.nutrition.ingredients
 							.map((item: any) => item.name)
-							.join(', '),
+							.join(' + '),
 					};
 				},
 			);
@@ -38,12 +39,18 @@ const RecipeList = () => {
 
 	return (
 		<div className={styles.recipe_list}>
-			{recipeList?.map((item: RecipeFromList) => (
-				<RecipeItem
-					key={item.id}
-					{...item}
-				/>
-			))}
+			<img
+				src={intro}
+				className={styles.recipe_list__intro}
+			/>
+			<div className={`${styles.recipe_list__container} my-1`}>
+				{recipeList?.map((item: RecipeFromList) => (
+					<RecipeItem
+						key={item.id}
+						{...item}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };
