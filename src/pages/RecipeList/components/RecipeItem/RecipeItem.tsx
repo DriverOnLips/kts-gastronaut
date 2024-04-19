@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
 import Text from 'components/Text/Text';
-import { DishFromList } from 'types/DishFromList';
-import styles from './DishItem.module.scss';
+import { RecipeFromList } from 'types/RecipeFromList';
+import styles from './RecipeItem.module.scss';
 
-const DishItem: React.FC<DishFromList> = ({
+const RecipeItem: React.FC<RecipeFromList> = ({
 	id,
 	title,
 	image,
@@ -15,19 +15,19 @@ const DishItem: React.FC<DishFromList> = ({
 	const navigate = useNavigate();
 
 	return (
-		<div className={styles.dish_item}>
+		<div className={styles.recipe_item}>
 			<div
-				className={styles.dish_item__content}
-				onClick={() => navigate(`/dish/${id}`)}
+				className={styles.recipe_item__content}
+				onClick={() => navigate(`/recipe/${id}`)}
 			>
 				<img
-					className={styles.dish_item__img}
+					className={styles.recipe_item__img}
 					src={image}
 					alt={title}
 				/>
-				<div className={styles.dish_item__info}>
+				<div className={styles.recipe_item__info}>
 					<Text
-						className='dish_item__info__name'
+						className='recipe_item__info__name'
 						size='s4'
 						text_align='center'
 						weight='bold'
@@ -35,7 +35,7 @@ const DishItem: React.FC<DishFromList> = ({
 						{title}
 					</Text>
 					<Text
-						className='dish_item__info__dish_types my-3'
+						className='recipe_item__info__recipe_types my-3'
 						size='s5'
 						text_align='start'
 						weight='light'
@@ -51,7 +51,7 @@ const DishItem: React.FC<DishFromList> = ({
 						{ingredients}
 					</Text>
 					<Text
-						className='dish_item__info__dish_types my-3'
+						className='recipe_item__info__recipe_types mt-3'
 						size='s5'
 						text_align='start'
 						weight='light'
@@ -64,4 +64,4 @@ const DishItem: React.FC<DishFromList> = ({
 	);
 };
 
-export default DishItem;
+export default RecipeItem;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDishContext } from '../../App';
+import { useRecipeContext } from '../../App';
 import styles from './Header.module.scss';
 
 const Header = () => {
-	const { rootRef } = useDishContext();
+	const { rootRef } = useRecipeContext();
 	const navigate = useNavigate();
 
 	const handleLogoClick = () => {

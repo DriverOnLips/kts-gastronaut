@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useDishContext } from '../../App';
+import { useRecipeContext } from '../../App';
 import { Api } from 'utils/api';
-import { DishType } from 'types/DishType';
+import { RecipeType } from 'types/RecipeType';
 import Text from 'components/Text/Text';
 
-const DishPage = () => {
+const RecipePage = () => {
 	const navigate = useNavigate();
 	const { id } = useParams();
 	const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-	const { dish, setDish } = useDishContext();
+	const { recipe, setRecipe } = useRecipeContext();
 	const api = new Api();
 
 	useEffect(() => {
@@ -21,9 +21,9 @@ const DishPage = () => {
 			return;
 		}
 
-		const loadDish = async () => {
+		const loadRecipe = async () => {
 			const response = await api.getRecipeInfo(+id);
-			const dishToSet: DishType = {
+			const recipeToSet: RecipeType = {
 				id: response.id,
 				title: response.title,
 				image: response.image,
@@ -44,13 +44,11 @@ const DishPage = () => {
 				),
 			};
 
-			setDish(dishToSet);
+			setRecipe(recipeToSet);
 			setIsLoaded(true);
-
-			console.log('asdf');
 		};
 
-		loadDish();
+		loadRecipe();
 	}, []);
 
 	return (
@@ -62,7 +60,7 @@ const DishPage = () => {
 						text_align='center'
 						weight='bold'
 					>
-						{dish.title}
+						{recipe.title}
 					</Text>
 				</>
 			) : (
@@ -72,4 +70,4 @@ const DishPage = () => {
 	);
 };
 
-export default DishPage;
+export default RecipePage;

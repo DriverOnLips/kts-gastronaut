@@ -1,20 +1,21 @@
-import React, { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { DishFromList } from 'types/DishFromList';
+import styles from './RecipeList.module.scss';
+
+import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
-import { useDishContext } from '../../App';
-import DishItem from './components/DishItem/DishItem';
-import styles from './DishList.module.scss';
+import { useRecipeContext } from '../../App';
+import RecipeItem from './components/RecipeItem/RecipeItem';
 
-const DishList = () => {
-	const { dishList, setDishList } = useDishContext();
+const RecipeList = () => {
+	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = new Api();
 
 	useEffect(() => {
 		const loadRecepes = async () => {
 			const response = await api.getRecipes();
 
-			const dishesToSet: DishFromList[] = response?.results?.map(
+			const recipesToSet: RecipeFromList[] = response?.results?.map(
 				(item: any) => {
 					return {
 						id: item.id,
@@ -29,16 +30,16 @@ const DishList = () => {
 				},
 			);
 
-			setDishList(dishesToSet);
+			setRecipeList(recipesToSet);
 		};
 
 		loadRecepes();
 	}, []);
 
 	return (
-		<div className={styles.dish_list}>
-			{dishList?.map((item: DishFromList) => (
-				<DishItem
+		<div className={styles.recipe_list}>
+			{recipeList?.map((item: RecipeFromList) => (
+				<RecipeItem
 					key={item.id}
 					{...item}
 				/>
@@ -47,4 +48,4 @@ const DishList = () => {
 	);
 };
 
-export default DishList;
+export default RecipeList;

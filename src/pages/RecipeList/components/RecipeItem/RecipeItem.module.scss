@@ -1,6 +1,6 @@
-@import '../../../../styles/variables.scss';
+@import "../../../../styles/variables.scss";
 
-.dish_item {
+.recipe_item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -35,7 +35,7 @@
 }
 
 @media screen and (max-width: 1000px) {
-	.dish_item {
+	.recipe_item {
 		&__content {
 			width: 40vw;
 		}
@@ -43,7 +43,7 @@
 }
 
 @media screen and (max-width: 650px) {
-	.dish_item {
+	.recipe_item {
 		&__content {
 			width: 70vw;
 		}

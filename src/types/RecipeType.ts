@@ -1,4 +1,4 @@
-export type DishType = {
+export type RecipeType = {
 	id: number;
 	title: string;
 	image: string;
