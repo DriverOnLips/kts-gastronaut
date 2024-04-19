@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import styles from './RecipePage.module.scss';
+
 import { useRecipeContext } from '../../App';
 import { Api } from 'utils/api';
 import { RecipeType } from 'types/RecipeType';
 import Text from 'components/Text/Text';
+import Loader from 'components/Loader/Loader';
 
 const RecipePage = () => {
 	const navigate = useNavigate();
@@ -16,7 +19,7 @@ const RecipePage = () => {
 
 	useEffect(() => {
 		if (!id || isNaN(+id)) {
-			navigate('/404');
+			navigate('/not_found');
 
 			return;
 		}
@@ -52,7 +55,7 @@ const RecipePage = () => {
 	}, []);
 
 	return (
-		<>
+		<div className={`${styles.recipe_page}`}>
 			{isLoaded ? (
 				<>
 					<Text
@@ -64,9 +67,11 @@ const RecipePage = () => {
 					</Text>
 				</>
 			) : (
-				<></>
+				<>
+					<Loader />
+				</>
 			)}
-		</>
+		</div>
 	);
 };
 

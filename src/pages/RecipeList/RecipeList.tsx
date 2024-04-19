@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import styles from './RecipeList.module.scss';
 
@@ -7,8 +7,11 @@ import { Api } from 'utils/api';
 import { useRecipeContext } from '../../App';
 import RecipeItem from './components/RecipeItem/RecipeItem';
 import intro from 'assets/img/intro.png';
+import Loader from 'components/Loader/Loader';
 
 const RecipeList = () => {
+	const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
 	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = new Api();
 
@@ -34,23 +37,37 @@ const RecipeList = () => {
 			setRecipeList(recipesToSet);
 		};
 
-		loadRecepes();
+		if (recipeList?.length < 1) {
+			loadRecepes();
+		}
 	}, []);
+
+	useEffect(() => {
+		if (recipeList?.length > 0) {
+			setIsLoaded(true);
+		}
+	}, [recipeList]);
 
 	return (
 		<div className={styles.recipe_list}>
-			<img
-				src={intro}
-				className={styles.recipe_list__intro}
-			/>
-			<div className={`${styles.recipe_list__container} my-1`}>
-				{recipeList?.map((item: RecipeFromList) => (
-					<RecipeItem
-						key={item.id}
-						{...item}
+			{isLoaded ? (
+				<>
+					<img
+						src={intro}
+						className={styles.recipe_list__intro}
 					/>
-				))}
-			</div>
+					<div className={`${styles.recipe_list__container} my-1`}>
+						{recipeList?.map((item: RecipeFromList) => (
+							<RecipeItem
+								key={item.id}
+								{...item}
+							/>
+						))}
+					</div>
+				</>
+			) : (
+				<Loader />
+			)}
 		</div>
 	);
 };

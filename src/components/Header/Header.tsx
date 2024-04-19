@@ -1,7 +1,8 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecipeContext } from '../../App';
+
 import styles from './Header.module.scss';
+
+import { useRecipeContext } from '../../App';
 import logo from 'assets/svg/logo.svg';
 
 const Header = () => {
@@ -18,17 +19,15 @@ const Header = () => {
 
 	return (
 		<nav className={styles.navbar_desctop}>
-			<div className={styles.navbar__logo_div}>
+			<div
+				className={styles.navbar__logo_div}
+				onClick={handleLogoClick}
+			>
 				<img
 					src={logo}
 					className={styles.navbar__logo_img}
 				/>
-				<a
-					className={styles.navbar__logo_link}
-					onClick={handleLogoClick}
-				>
-					Food Client
-				</a>
+				<a className={styles.navbar__logo_link}>Food Client</a>
 			</div>
 
 			<ul className={styles.links}>
