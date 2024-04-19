@@ -1,6 +1,6 @@
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
 
-.dish_list {
+.recipe_list {
 	padding-top: 56px;
 	color: $text-color;
 	display: flex;
@@ -8,21 +8,21 @@
 }
 
 @media (min-width: 650px) {
-	.dish_list > * {
+	.recipe_list > * {
 		width: calc(33% - 2rem);
 		margin: 1rem;
 	}
 }
 
 @media (max-width: 1000px) {
-	.dish_list > * {
+	.recipe_list > * {
 		width: calc(50% - 2rem);
 		margin: 1rem;
 	}
 }
 
 @media (max-width: 650px) {
-	.dish_list > * {
+	.recipe_list > * {
 		width: 100%;
 		margin: 0.5rem;
 	}

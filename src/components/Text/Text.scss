@@ -1,4 +1,4 @@
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
 
 .s0 {
 	font-size: $size0;
@@ -42,16 +42,4 @@
 
 .bold {
 	font-weight: $bold;
-}
-
-.my-3 {
-	margin: 1.5rem 0;
-}
-
-.my-4 {
-	margin: 1rem 0;
-}
-
-.my-5 {
-	margin: 0.75rem 0;
 }

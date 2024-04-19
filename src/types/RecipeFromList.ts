@@ -1,4 +1,4 @@
-export type DishFromList = {
+export type RecipeFromList = {
 	id: number;
 	title: string;
 	image: string;

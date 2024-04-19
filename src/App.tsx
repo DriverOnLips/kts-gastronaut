@@ -1,61 +1,61 @@
+import { createContext, useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React, { createContext, useContext, useRef, useState } from 'react';
 
-import { DishFromList } from './types/DishFromList';
-import DishList from './pages/DishList/DishList';
-import DishPage from './pages/DishPage/DishPage';
-import Page404 from './pages/404/404';
-import MyComponent from './components/Header/Header';
+import Header from 'components/Header/Header';
+import Page404 from 'pages/404/404';
+import RecipeList from 'pages/RecipeList/RecipeList';
+import RecipePage from 'pages/RecipePage/RecipePage';
+import { RecipeFromList } from 'types/RecipeFromList';
 
-type DishContextType = {
-	dishList: DishFromList[];
-	setDishList: (value: DishFromList[]) => void;
-	dish: any;
-	setDish: (value: any) => void;
+type RecipeContextType = {
+	recipeList: RecipeFromList[];
+	setRecipeList: (value: RecipeFromList[]) => void;
+	recipe: any;
+	setRecipe: (value: any) => void;
 	rootRef: HTMLElement | null;
 };
 
-const DishContext = createContext<DishContextType>({
-	dishList: [],
-	setDishList: () => {
-		throw new Error('setDishList is not defined');
+const RecipeContext = createContext<RecipeContextType>({
+	recipeList: [],
+	setRecipeList: () => {
+		throw new Error('setRecipeList is not defined');
 	},
-	dish: null,
-	setDish: () => {
-		throw new Error('setDish is not defined');
+	recipe: null,
+	setRecipe: () => {
+		throw new Error('setRecipe is not defined');
 	},
 	rootRef: null,
 });
 
-export const useDishContext = () => useContext(DishContext);
+export const useRecipeContext = () => useContext(RecipeContext);
 
-const DishProvider = DishContext.Provider;
+const RecipeProvider = RecipeContext.Provider;
 
 const App = () => {
-	const [dishList, setDishList] = useState<DishFromList[]>([]);
-	const [dish, setDish] = useState<any>(null);
+	const [recipeList, setRecipeList] = useState<RecipeFromList[]>([]);
+	const [recipe, setRecipe] = useState<any>(null);
 	const rootRef = document.getElementById('root');
 
 	return (
-		<DishProvider
+		<RecipeProvider
 			value={{
-				dishList,
-				setDishList,
-				dish,
-				setDish,
+				recipeList,
+				setRecipeList,
+				recipe,
+				setRecipe,
 				rootRef,
 			}}
 		>
 			<BrowserRouter basename='/'>
-				<MyComponent />
+				<Header />
 				<Routes>
 					<Route
 						path='/'
-						element={<DishList />}
+						element={<RecipeList />}
 					/>
 					<Route
-						path='/dish/:id'
-						element={<DishPage />}
+						path='/recipe/:id'
+						element={<RecipePage />}
 					/>
 					<Route
 						path='/404'
@@ -67,7 +67,7 @@ const App = () => {
 					/>
 				</Routes>
 			</BrowserRouter>
-		</DishProvider>
+		</RecipeProvider>
 	);
 };
 

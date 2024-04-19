@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './Header.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { useDishContext } from '../../App';
+import { useRecipeContext } from '../../App';
+import styles from './Header.module.scss';
 
-const MyComponent = () => {
-	const { rootRef } = useDishContext();
+const Header = () => {
+	const { rootRef } = useRecipeContext();
 	const navigate = useNavigate();
 
 	const handleLogoClick = () => {
@@ -35,4 +35,4 @@ const MyComponent = () => {
 	);
 };
 
-export default MyComponent;
+export default Header;
