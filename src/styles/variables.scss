@@ -10,14 +10,17 @@ $size7: 0.75rem;
 $size8: 0.5rem;
 
 // weights
-$light: 300;
 $medium: 500;
 $bold: 700;
 
 // colors
-$background-color: white;
+$background-color: rgba(255, 192, 118, 0.23);
+$color-primary: #b5460f;
 $color-secondary: #ffcb39;
 $color-third: rgb(92, 2, 92);
-$text-color: white;
-$text-color-secondary: black;
-$text-color-third: aqua;
+$color-white: #ffffff;
+$text-color-primary: black;
+$text-color-secondary: #afadb5;
+$text-color-white: white;
+$text-color-main: #b5460f;
+$loader-color: #e74c3c;

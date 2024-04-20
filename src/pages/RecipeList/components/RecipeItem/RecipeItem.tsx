@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
+import styles from './RecipeItem.module.scss';
+
 import Text from 'components/Text/Text';
 import { RecipeFromList } from 'types/RecipeFromList';
-import styles from './RecipeItem.module.scss';
+import readyInMinutesSvg from 'assets/svg/readyInMinutes.svg';
+import Button from 'components/Button/Button';
 
 const RecipeItem: React.FC<RecipeFromList> = ({
 	id,
@@ -26,38 +29,57 @@ const RecipeItem: React.FC<RecipeFromList> = ({
 					alt={title}
 				/>
 				<div className={styles.recipe_item__info}>
+					<div className={styles.recipe_item__info__ready_div}>
+						<img
+							src={readyInMinutesSvg}
+							className={styles.recipe_item__info__ready_svg}
+						/>
+						<Text
+							className={`${styles.recipe_item__info__ready_text}`}
+							size='s5'
+							text_align='start'
+							weight='medium'
+							color='secondary'
+						>
+							{readyInMinutes} minutes
+						</Text>
+					</div>
+
 					<Text
-						className='recipe_item__info__name'
+						className={`${styles.recipe_item__info__name} my-4`}
 						size='s4'
-						text_align='center'
+						text_align='start'
 						weight='bold'
+						color='primary'
 					>
 						{title}
 					</Text>
+
 					<Text
-						className='recipe_item__info__recipe_types my-3'
+						className={`${styles.recipe_item__info__ingredients} mb-1`}
 						size='s5'
 						text_align='start'
-						weight='light'
-					>
-						{readyInMinutes}
-					</Text>
-					<Text
-						className='my-3'
-						size='s5'
-						text_align='start'
-						weight='light'
+						weight='medium'
+						color='secondary'
 					>
 						{ingredients}
 					</Text>
 					<Text
-						className='recipe_item__info__recipe_types mt-3'
+						className={`${styles.recipe_item__info__calories} mb-3 ml-3`}
 						size='s5'
 						text_align='start'
-						weight='light'
+						weight='bold'
+						color='main'
 					>
-						{calories}
+						{calories} kcal
 					</Text>
+					{/* <Button
+						type='default'
+						text='Save'
+						onClick={() => {
+							console.log('click');
+						}}
+					/> */}
 				</div>
 			</div>
 		</div>

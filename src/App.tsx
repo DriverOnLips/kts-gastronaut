@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Header from 'components/Header/Header';
-import Page404 from 'pages/404/404';
+import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
 import { RecipeFromList } from 'types/RecipeFromList';
@@ -58,12 +58,12 @@ const App = () => {
 						element={<RecipePage />}
 					/>
 					<Route
-						path='/404'
-						element={<Page404 />}
+						path='/not_found'
+						element={<NotFound />}
 					/>
 					<Route
 						path='*'
-						element={<Page404 />}
+						element={<NotFound />}
 					/>
 				</Routes>
 			</BrowserRouter>

@@ -1,7 +1,9 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecipeContext } from '../../App';
+
 import styles from './Header.module.scss';
+
+import { useRecipeContext } from '../../App';
+import logo from 'assets/svg/logo.svg';
 
 const Header = () => {
 	const { rootRef } = useRecipeContext();
@@ -17,18 +19,23 @@ const Header = () => {
 
 	return (
 		<nav className={styles.navbar_desctop}>
-			<a
-				className={styles.navbar__logo}
+			<div
+				className={styles.navbar__logo_div}
 				onClick={handleLogoClick}
 			>
-				Гастронавт
-			</a>
+				<img
+					src={logo}
+					className={styles.navbar__logo_img}
+				/>
+				<a className={styles.navbar__logo_link}>Food Client</a>
+			</div>
+
 			<ul className={styles.links}>
 				<li
 					className={styles.link}
 					onClick={handleLogoClick}
 				>
-					Блюда
+					Recipes
 				</li>
 			</ul>
 		</nav>
