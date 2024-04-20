@@ -20,8 +20,10 @@ export class Api {
 		// const token = '2f57ba40700b492a98d46c16cb731636';
 		// const token = '96b03ded692d45b391ec26a66cf00564';
 		// const token = '3a40e1bfe3084f53b0d475f56d06468b';
-		const token = '5884e4538ade47a3bee00a8bed3eb378';
+		// const token = '5884e4538ade47a3bee00a8bed3eb378';
 		// const token = 'b628c4fc31ce4a519836f0bfa06853a4';
+		// const token = 'af79edba6a414c9f92d551e45dcd08b1';
+		const token = 'e31e1cb391a9463893f57a751d12c66a';
 
 		// const token = '5612ded2c55f4a42aafe5dd7fdec9f3f';
 
@@ -32,7 +34,7 @@ export class Api {
 		];
 	}
 
-	getRecipes = async (): Promise<any> => {
+	getRecipes = async (count = 10, offset?: number): Promise<any> => {
 		const configItem = this.config.find((item) => item.name === 'getRecipes');
 
 		if (!configItem) {
@@ -41,6 +43,8 @@ export class Api {
 
 		const params = {
 			apiKey: this.token,
+			number: count,
+			...(offset && { offset }),
 		};
 
 		return axios

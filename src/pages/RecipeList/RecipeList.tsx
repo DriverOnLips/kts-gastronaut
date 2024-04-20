@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import styles from './RecipeList.module.scss';
 
@@ -11,33 +11,50 @@ import Loader from 'components/Loader/Loader';
 
 const RecipeList = () => {
 	const [isLoaded, setIsLoaded] = useState<boolean>(false);
+	const offsetRef = useRef(0);
 
 	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = new Api();
 
+	const loadRecepes = async () => {
+		const response = await api.getRecipes(10, offsetRef.current);
+
+		const recipesToSet = response?.results?.map((item: any) => ({
+			id: item.id,
+			title: item.title,
+			image: item.image,
+			readyInMinutes: item.readyInMinutes,
+			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
+			ingredients: item.nutrition.ingredients
+				.map((item: any) => item.name)
+				.join(' + '),
+		}));
+
+		setRecipeList((prevRecipes) => [...prevRecipes, ...recipesToSet]);
+		offsetRef.current += 10;
+	};
+
 	useEffect(() => {
-		const loadRecepes = async () => {
-			const response = await api.getRecipes();
+		const handleScroll = () => {
+			const scrollTop = window.scrollY || document.documentElement.scrollTop;
+			const scrollHeight = document.documentElement.scrollHeight;
+			const clientHeight = document.documentElement.clientHeight;
+			const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
 
-			const recipesToSet: RecipeFromList[] = response?.results?.map(
-				(item: any) => {
-					return {
-						id: item.id,
-						title: item.title,
-						image: item.image,
-						readyInMinutes: item.readyInMinutes,
-						calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
-						ingredients: item.nutrition.ingredients
-							.map((item: any) => item.name)
-							.join(' + '),
-					};
-				},
-			);
-
-			setRecipeList(recipesToSet);
+			if (scrolledToBottom) {
+				loadRecepes();
+			}
 		};
 
-		if (recipeList?.length < 1) {
+		window.addEventListener('scroll', handleScroll);
+
+		return () => {
+			window.removeEventListener('scroll', handleScroll);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (recipeList?.length <= 0) {
 			loadRecepes();
 		}
 	}, []);
