@@ -237,7 +237,7 @@ const RecipePage = () => {
 							<img src={separator_1} />
 							<img
 								src={separator_2}
-								style={{ width: 1, height: '100%' }}
+								style={{ width: 1 }}
 							/>
 						</div>
 
@@ -279,6 +279,28 @@ const RecipePage = () => {
 						>
 							Directions
 						</Text>
+						<div className={`${styles.recipe_page_content__steps} my-4`}>
+							{recipe?.steps?.map((step: string, index: number) => (
+								<div>
+									<Text
+										size='s5'
+										text_align='start'
+										weight='bold'
+										color='primary'
+									>
+										step {index + 1}
+									</Text>
+									<Text
+										size='s5'
+										text_align='start'
+										weight='medium'
+										color='primary'
+									>
+										{step}
+									</Text>
+								</div>
+							))}
+						</div>
 					</div>
 				</div>
 			) : (
