@@ -1,5 +1,148 @@
 @import "/src/styles/variables.scss";
 
 .recipe_page {
-	padding-top: 64px;
+	padding: calc(64px + 2rem) 5vw 2rem 5vw;
+
+	&_content {
+		width: 100%;
+
+		&__top {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+
+			&_img {
+				cursor: pointer;
+			}
+		}
+
+		&__stats {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			&_img {
+				width: 40vw;
+				border-radius: 10px;
+			}
+
+			&_div {
+				display: flex;
+				flex-wrap: wrap;
+				width: 50vw;
+				margin-left: 3vw;
+
+				&__preparation,
+				&__cooking,
+				&__total,
+				&__ratings,
+				&__servings {
+					display: flex;
+					flex-direction: column;
+					gap: 0.5rem;
+				}
+			}
+
+			&_div > * {
+				width: calc(33% - 2rem);
+				min-width: 115px;
+				margin: 1rem;
+			}
+		}
+
+		&__summary {
+			padding: 2rem;
+			border-radius: 10px;
+			background-color: rgba($color-primary, 0.33);
+
+			&_div {
+				font-size: $size6;
+			}
+		}
+
+		&__ingredients_equipment {
+			display: flex;
+			justify-content: space-between;
+
+			&__separator {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 5px;
+			}
+		}
+
+		&__ingredients {
+			display: flex;
+			flex-direction: column;
+
+			&__content {
+				display: flex;
+				flex-direction: column;
+			}
+		}
+
+		&__equipment {
+			display: flex;
+			flex-direction: column;
+
+			&__content {
+				display: flex;
+				flex-direction: column;
+			}
+		}
+	}
+}
+
+@media (max-width: 950px) {
+	.recipe_page {
+		&_content {
+			&__stats {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+
+				&_img {
+					width: 80vw;
+				}
+
+				&_div {
+					width: 80vw;
+					margin-left: 0;
+					margin-top: 2rem;
+					justify-content: center;
+				}
+
+				&_div > * {
+					margin: 0.5rem;
+				}
+			}
+
+			&__summary {
+				width: 72vw;
+				margin: auto;
+			}
+		}
+	}
+}
+
+@media (max-width: 350px) {
+	.recipe_page {
+		&_content {
+			&__stats {
+				&_img {
+					width: 80vw;
+				}
+
+				&_div {
+					width: 100vw;
+				}
+			}
+
+			&__summary {
+				width: 72vw;
+				padding: 1rem;
+			}
+		}
+	}
 }

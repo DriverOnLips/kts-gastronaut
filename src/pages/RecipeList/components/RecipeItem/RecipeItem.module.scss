@@ -7,12 +7,17 @@
 
 	&__content {
 		background-color: $color-white;
-		border-radius: 5px;
+		border-radius: 10px;
 		width: 25vw;
 		height: 100%;
 		overflow: hidden;
 		cursor: pointer;
 		position: relative;
+		transition: all 0.5s;
+	}
+
+	&__content:hover {
+		box-shadow: 0px 2px 20px rgb(128, 128, 128);
 	}
 
 	&__content:hover &__img {
@@ -23,7 +28,7 @@
 		width: 100%;
 		// aspect-ratio: 4 / 3;
 		object-fit: contain;
-		border-radius: 5px 5px 0 0;
+		border-radius: 10px 10px 0 0;
 		transition: all 0.5s;
 	}
 

@@ -13,15 +13,15 @@ const NotFound: React.FC = () => {
 		const header = currentTarget.querySelectorAll('h1');
 		const paragraph = currentTarget.querySelector('p');
 		if (header && paragraph) {
-			const rotateYValue = 30 * Math.tanh(0.0008 * (screenX - getWidth() / 2));
+			const rotateYValue = 50 * Math.tanh(0.0008 * (screenX - getWidth() / 2));
 			const rotateY = `rotateY(${rotateYValue}deg)`;
-			const rotateXValue = 30 * Math.tanh(0.0008 * (screenY - getHeight() / 2));
+			const rotateXValue = 50 * Math.tanh(0.0008 * (screenY - getHeight() / 2));
 			const rotateX = `rotateX(${-rotateXValue}deg)`;
 			const transformStyle = `${rotateY} ${rotateX}`;
 			header.forEach((item) => {
 				item.style.setProperty('transform', transformStyle);
 			});
-			paragraph.style.setProperty('transform', rotateY);
+			paragraph.style.setProperty('transform', transformStyle);
 		}
 	};
 
