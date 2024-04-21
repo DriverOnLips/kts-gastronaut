@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import styles from './RecipeList.module.scss';
-
+import intro from 'assets/img/intro.png';
+import Loader from 'components/Loader/Loader';
 import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
 import { useRecipeContext } from '../../App';
 import RecipeItem from './components/RecipeItem/RecipeItem';
-import intro from 'assets/img/intro.png';
-import Loader from 'components/Loader/Loader';
+import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	const [isLoaded, setIsLoaded] = useState<boolean>(false);
