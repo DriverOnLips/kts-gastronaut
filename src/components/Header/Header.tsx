@@ -1,9 +1,9 @@
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './Header.module.scss';
-
-import { useRecipeContext } from '../../App';
 import logo from 'assets/svg/logo.svg';
+import { useRecipeContext } from '../../App';
+import styles from './Header.module.scss';
 
 const Header = () => {
 	const { rootRef } = useRecipeContext();

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createContext, useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -6,12 +7,13 @@ import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
 import { RecipeFromList } from 'types/RecipeFromList';
+import { RecipeType } from 'types/RecipeType';
 
 type RecipeContextType = {
 	recipeList: RecipeFromList[];
 	setRecipeList: (value: RecipeFromList[]) => void;
-	recipe: any;
-	setRecipe: (value: any) => void;
+	recipe: RecipeType | null;
+	setRecipe: (value: RecipeType) => void;
 	rootRef: HTMLElement | null;
 };
 
@@ -33,7 +35,7 @@ const RecipeProvider = RecipeContext.Provider;
 
 const App = () => {
 	const [recipeList, setRecipeList] = useState<RecipeFromList[]>([]);
-	const [recipe, setRecipe] = useState<any>(null);
+	const [recipe, setRecipe] = useState<RecipeType | null>(null);
 	const rootRef = document.getElementById('root');
 
 	return (

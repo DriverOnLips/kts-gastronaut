@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 
+import { Link } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
+import Button from 'components/Button/Button';
+import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
 import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
 import { useRecipeContext } from '../../App';
-import RecipeItem from './components/RecipeItem/RecipeItem';
+// import RecipeItem from './components/RecipeItem/RecipeItem';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
@@ -29,7 +33,10 @@ const RecipeList = () => {
 				.join(' + '),
 		}));
 
-		setRecipeList((prevRecipes) => [...prevRecipes, ...recipesToSet]);
+		setRecipeList((prevRecipes: RecipeFromList[]) => [
+			...prevRecipes,
+			...recipesToSet,
+		]);
 		offsetRef.current += 10;
 	};
 
@@ -74,10 +81,25 @@ const RecipeList = () => {
 					/>
 					<div className={`${styles.recipe_list__container} my-1`}>
 						{recipeList?.map((item: RecipeFromList) => (
-							<RecipeItem
+							// <RecipeItem
+							// 	key={item.id}
+							// 	{...item}
+							// />
+							<Link
 								key={item.id}
-								{...item}
-							/>
+								to={`/recipe/${item.id}`}
+								style={{ textDecoration: 'none' }}
+							>
+								<Card
+									key={item.id}
+									actionSlot={<Button>Save</Button>}
+									captionSlot={item.readyInMinutes + ' minutes'}
+									contentSlot={item.calories + ' kcal'}
+									image={item.image}
+									title={item.title}
+									subtitle={item.ingredients}
+								/>
+							</Link>
 						))}
 					</div>
 				</>

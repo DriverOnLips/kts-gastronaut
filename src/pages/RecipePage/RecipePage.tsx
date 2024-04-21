@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import styles from './RecipePage.module.scss';
-
-import { useRecipeContext } from '../../App';
-import { Api } from 'utils/api';
-import { RecipeType } from 'types/RecipeType';
-import Text from 'components/Text/Text';
-import Loader from 'components/Loader/Loader';
 import back_button from 'assets/svg/back_button.svg';
+import Loader from 'components/Loader/Loader';
+import Text from 'components/Text/Text';
+import { RecipeType } from 'types/RecipeType';
+import { Api } from 'utils/api';
+import { useRecipeContext } from '../../App';
+import Equipment from './components/Equipment/Equipment';
+import Ingredients from './components/Ingredients/Ingredients';
+import StatsItem from './components/StatsItem/StatsItem';
 import separator_1 from './components/svg/separator_1.svg';
 import separator_2 from './components/svg/separator_2.svg';
-import ingredient_svg from './components/svg/ingredient.svg';
-import equipment_svg from './components/svg/equipment.svg';
+import styles from './RecipePage.module.scss';
 
 const RecipePage = () => {
 	const navigate = useNavigate();
@@ -35,11 +35,11 @@ const RecipePage = () => {
 				id: response.id,
 				title: response.title,
 				image: response.image,
-				preparationMinutes: response.preparationMinutes,
-				cookingMinutes: response.cookingMinutes,
-				readyInMinutes: response.readyInMinutes,
-				servings: response.servings,
-				aggregateLikes: response.aggregateLikes,
+				preparationMinutes: Math.max(0, response.preparationMinutes),
+				cookingMinutes: Math.max(0, response.cookingMinutes),
+				readyInMinutes: Math.max(0, response.readyInMinutes),
+				servings: Math.max(0, response.servings),
+				aggregateLikes: Math.max(0, response.aggregateLikes),
 				summary: response.summary,
 				ingredients: response.extendedIngredients?.map(
 					(item: any) => item.original,
@@ -91,106 +91,40 @@ const RecipePage = () => {
 							className={`${styles.recipe_page_content__stats_img}`}
 						/>
 						<div className={`${styles.recipe_page_content__stats_div}`}>
-							<div
+							<StatsItem
 								className={`${styles.recipe_page_content__stats_div__preparation}`}
-							>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='medium'
-									color='primary'
-								>
-									Preparation
-								</Text>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='bold'
-									color='main'
-								>
-									{recipe.preparationMinutes} minutes
-								</Text>
-							</div>
-							<div
+								title='Preparation'
+								value={recipe.preparationMinutes}
+								caption='minutes'
+							/>
+
+							<StatsItem
 								className={`${styles.recipe_page_content__stats_div__cooking}`}
-							>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='medium'
-									color='primary'
-								>
-									Cooking
-								</Text>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='bold'
-									color='main'
-								>
-									{recipe.cookingMinutes} minutes
-								</Text>
-							</div>
-							<div
+								title='Cooking'
+								value={recipe.cookingMinutes}
+								caption='minutes'
+							/>
+
+							<StatsItem
 								className={`${styles.recipe_page_content__stats_div__total}`}
-							>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='medium'
-									color='primary'
-								>
-									Total
-								</Text>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='bold'
-									color='main'
-								>
-									{recipe.readyInMinutes} minutes
-								</Text>
-							</div>
-							<div
+								title='Total'
+								value={recipe.readyInMinutes}
+								caption='minutes'
+							/>
+
+							<StatsItem
 								className={`${styles.recipe_page_content__stats_div__ratings}`}
-							>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='medium'
-									color='primary'
-								>
-									Ratings
-								</Text>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='bold'
-									color='main'
-								>
-									{recipe.aggregateLikes} likes
-								</Text>
-							</div>
-							<div
+								title='Ratings'
+								value={recipe.aggregateLikes}
+								caption='likes'
+							/>
+
+							<StatsItem
 								className={`${styles.recipe_page_content__stats_div__servings}`}
-							>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='medium'
-									color='primary'
-								>
-									Servings
-								</Text>
-								<Text
-									size='s5'
-									text_align='center'
-									weight='bold'
-									color='main'
-								>
-									{recipe.servings} servings
-								</Text>
-							</div>
+								title='Servings'
+								value={recipe.servings}
+								caption='servings'
+							/>
 						</div>
 					</div>
 
@@ -204,33 +138,8 @@ const RecipePage = () => {
 					<div
 						className={`${styles.recipe_page_content__ingredients_equipment}`}
 					>
-						<div className={`${styles.recipe_page_content__ingredients}`}>
-							<Text
-								size='s4'
-								text_align='start'
-								weight='bold'
-								color='primary'
-							>
-								Ingredients
-							</Text>
-							<div
-								className={`${styles.recipe_page_content__ingredients__content} my-4`}
-							>
-								{recipe?.ingredients?.map((ingredient: string) => (
-									<div>
-										<img src={ingredient_svg} />
-										<Text
-											size='s5'
-											text_align='start'
-											weight='medium'
-											color='primary'
-										>
-											{ingredient}
-										</Text>
-									</div>
-								))}
-							</div>
-						</div>
+						<Ingredients ingredients={recipe.ingredients} />
+
 						<div
 							className={`${styles.recipe_page_content__ingredients_equipment__separator}`}
 						>
@@ -241,33 +150,7 @@ const RecipePage = () => {
 							/>
 						</div>
 
-						<div className={`${styles.recipe_page_content__equipment}`}>
-							<Text
-								size='s4'
-								text_align='start'
-								weight='bold'
-								color='primary'
-							>
-								Equipment
-							</Text>
-							<div
-								className={`${styles.recipe_page_content__equipment__content} my-4`}
-							>
-								{recipe?.equipment?.map((equipment_item: string) => (
-									<div>
-										<img src={equipment_svg} />
-										<Text
-											size='s5'
-											text_align='start'
-											weight='medium'
-											color='primary'
-										>
-											{equipment_item}
-										</Text>
-									</div>
-								))}
-							</div>
-						</div>
+						<Equipment equipment={recipe?.equipment} />
 					</div>
 
 					<div className={`${styles.recipe_page_content__steps}`}>
@@ -281,7 +164,7 @@ const RecipePage = () => {
 						</Text>
 						<div className={`${styles.recipe_page_content__steps} my-4`}>
 							{recipe?.steps?.map((step: string, index: number) => (
-								<div>
+								<div key={index}>
 									<Text
 										size='s5'
 										text_align='start'
