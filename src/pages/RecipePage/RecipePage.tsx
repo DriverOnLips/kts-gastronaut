@@ -1,4 +1,5 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+// import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -47,7 +48,7 @@ const RecipePage = () => {
 				(item: { original: string }) => item.original,
 			),
 			equipment: response.analyzedInstructions?.[0]?.steps?.map(
-				(item) => item.equipment?.[0]?.localizedName,
+				(item: any) => item.equipment?.[0]?.localizedName,
 			),
 			steps: response.analyzedInstructions?.[0]?.steps?.map(
 				(item: { step: string }) => item.step,

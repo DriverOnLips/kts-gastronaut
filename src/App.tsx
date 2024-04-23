@@ -1,4 +1,4 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { createContext, useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -11,7 +11,11 @@ import { RecipeType } from 'types/RecipeType';
 
 type RecipeContextType = {
 	recipeList: RecipeFromList[];
-	setRecipeList: (value: RecipeFromList[]) => void;
+	setRecipeList: (
+		value:
+			| RecipeFromList[]
+			| ((prevRecipes: RecipeFromList[]) => RecipeFromList[]),
+	) => void;
 	recipe: RecipeType | null;
 	setRecipe: (value: RecipeType) => void;
 	rootRef: HTMLElement | null;

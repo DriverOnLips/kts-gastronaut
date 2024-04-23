@@ -1,4 +1,4 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { useNavigate } from 'react-router-dom';
 
 import logo from 'assets/svg/logo.svg';

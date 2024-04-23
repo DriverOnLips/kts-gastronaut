@@ -25,7 +25,7 @@ const RecipeList = () => {
 
 		if (response instanceof Error) return;
 
-		const recipesToSet = response?.map((item) => ({
+		const recipesToSet = response?.map((item: any) => ({
 			...item,
 			readyInMinutes: Math.max(0, item.readyInMinutes),
 			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
@@ -34,10 +34,11 @@ const RecipeList = () => {
 				.join(' + '),
 		}));
 
-		setRecipeList((prevRecipes: RecipeFromList[]) => [
+		setRecipeList((prevRecipes: RecipeFromList[]): RecipeFromList[] => [
 			...prevRecipes,
 			...recipesToSet,
 		]);
+
 		offsetRef.current += 10;
 	}, [setRecipeList, api]);
 
