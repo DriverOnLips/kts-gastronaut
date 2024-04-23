@@ -32,13 +32,10 @@ const RecipeList = () => {
 		}
 
 		const recipesToSet: RecipeFromList[] = response?.map((item) => ({
-			id: item.id,
-			title: item.title,
-			image: item.image,
-			readyInMinutes: item.readyInMinutes,
+			...item,
 			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
 			ingredients: item.nutrition.ingredients
-				.map((item) => item.name)
+				.map((ingredient: { name: string }) => ingredient.name)
 				.join(' + '),
 		}));
 

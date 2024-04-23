@@ -6,10 +6,23 @@ import styles from './NotFound.module.scss';
 const NotFound: React.FC = () => {
 	const navigate = useNavigate();
 
-	const _onMouseMove = (
-		event: React.MouseEvent<HTMLHeadingElement, MouseEvent>,
+	const _onMove = (
+		event:
+			| React.MouseEvent<HTMLHeadingElement, MouseEvent>
+			| React.TouchEvent<HTMLDivElement>,
 	) => {
-		const { currentTarget, pageX: screenX, pageY: screenY } = event;
+		let screenX, screenY;
+		if ('touches' in event) {
+			// Это сенсорное событие
+			screenX = event.touches[0].clientX;
+			screenY = event.touches[0].clientY;
+		} else {
+			// Это событие мыши
+			screenX = event.pageX;
+			screenY = event.pageY;
+		}
+
+		const { currentTarget } = event;
 		const header = currentTarget.querySelectorAll('h1');
 		const paragraph = currentTarget.querySelector('p');
 		if (header && paragraph) {
@@ -25,7 +38,7 @@ const NotFound: React.FC = () => {
 		}
 	};
 
-	function getWidth() {
+	const getWidth = () => {
 		return Math.max(
 			document.body.scrollWidth,
 			document.documentElement.scrollWidth,
@@ -33,9 +46,9 @@ const NotFound: React.FC = () => {
 			document.documentElement.offsetWidth,
 			document.documentElement.clientWidth,
 		);
-	}
+	};
 
-	function getHeight() {
+	const getHeight = () => {
 		return Math.max(
 			document.body.scrollHeight,
 			document.documentElement.scrollHeight,
@@ -43,12 +56,13 @@ const NotFound: React.FC = () => {
 			document.documentElement.offsetHeight,
 			document.documentElement.clientHeight,
 		);
-	}
+	};
 
 	return (
 		<div
 			className={`${styles.not_found}`}
-			onMouseMove={_onMouseMove}
+			onMouseMove={_onMove}
+			onTouchMove={_onMove}
 		>
 			<div className={`${styles.not_found_container}`}>
 				<h1 className={`${styles.not_found_container__404}`}>404</h1>
@@ -56,7 +70,7 @@ const NotFound: React.FC = () => {
 					Page not found
 				</h1>
 				<p className={`${styles.not_found_container__text}`}>
-					We don't have such page.{' '}
+					{`We don't have such page. `}
 					<a
 						onClick={() => navigate('/')}
 						className={`${styles.not_found_container__link}`}
