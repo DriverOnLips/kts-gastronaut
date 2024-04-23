@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
@@ -9,12 +9,13 @@ import Loader from 'components/Loader/Loader';
 import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
 import { useRecipeContext } from '../../App';
-// import RecipeItem from './components/RecipeItem/RecipeItem';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	const [isLoaded, setIsLoaded] = useState<boolean>(false);
 	const offsetRef = useRef(0);
+
+	const navigate = useNavigate();
 
 	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = new Api();
@@ -22,14 +23,22 @@ const RecipeList = () => {
 	const loadRecepes = async () => {
 		const response = await api.getRecipes(10, offsetRef.current);
 
-		const recipesToSet = response?.results?.map((item: any) => ({
+		if (response instanceof Error) {
+			console.error(
+				'Произошла ошибка при получении рецептов:',
+				response.message,
+			);
+			return;
+		}
+
+		const recipesToSet: RecipeFromList[] = response?.map((item) => ({
 			id: item.id,
 			title: item.title,
 			image: item.image,
 			readyInMinutes: item.readyInMinutes,
 			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
 			ingredients: item.nutrition.ingredients
-				.map((item: any) => item.name)
+				.map((item) => item.name)
 				.join(' + '),
 		}));
 
@@ -81,25 +90,17 @@ const RecipeList = () => {
 					/>
 					<div className={`${styles.recipe_list__container} my-1`}>
 						{recipeList?.map((item: RecipeFromList) => (
-							// <RecipeItem
-							// 	key={item.id}
-							// 	{...item}
-							// />
-							<Link
+							<Card
 								key={item.id}
-								to={`/recipe/${item.id}`}
-								style={{ textDecoration: 'none' }}
-							>
-								<Card
-									key={item.id}
-									actionSlot={<Button>Save</Button>}
-									captionSlot={item.readyInMinutes + ' minutes'}
-									contentSlot={item.calories + ' kcal'}
-									image={item.image}
-									title={item.title}
-									subtitle={item.ingredients}
-								/>
-							</Link>
+								actionSlot={<Button>Save</Button>}
+								captionSlot={item.readyInMinutes + ' minutes'}
+								contentSlot={item.calories + ' kcal'}
+								image={item.image}
+								title={item.title}
+								subtitle={item.ingredients}
+								onButtonClick={() => {}}
+								onItemClick={() => navigate(`/recipe/${item.id}`)}
+							/>
 						))}
 					</div>
 				</>

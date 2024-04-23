@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import * as React from 'react';
-import LoaderV2 from 'components/LoaderV2/LoaderV2';
-import TextV2 from 'components/TextV2/TextV2';
+import ButtonLoader from 'components/ButtonLoader/ButtonLoader';
+import Text from 'components/Text/Text';
 import styles from './Button.module.scss';
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -27,19 +27,8 @@ const Button: React.FC<ButtonProps> = ({
 			)}
 			disabled={props.disabled || loading}
 		>
-			{loading && (
-				<LoaderV2
-					className={styles.button__loader}
-					size='s'
-				/>
-			)}
-			<TextV2
-				className={styles.button__text}
-				tag='span'
-				view='button'
-			>
-				{children}
-			</TextV2>
+			{loading && <ButtonLoader className={styles.button__loader} />}
+			<Text className={styles.button__text}>{children}</Text>
 		</button>
 	);
 };

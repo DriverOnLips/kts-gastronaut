@@ -9,21 +9,29 @@ type TextProps = {
 	text_align?: 'center' | 'start' | 'end';
 	weight?: 'medium' | 'bold';
 	color?: 'primary' | 'secondary' | 'main';
+	maxLines?: number;
 	children: ReactNode;
 };
 
 const Text: React.FC<TextProps> = ({
 	className,
-	size,
-	text_align,
-	weight,
-	color,
+	size = 's5',
+	text_align = 'start',
+	weight = 'medium',
+	color = 'primary',
+	maxLines,
 	children,
 }) => {
 	return (
 		<span
-			className={`${className} ${size} ${weight} ${color}`}
-			style={{ textAlign: text_align }}
+			className={`${!!className && className} ${size} ${weight} ${color} 
+      ${!!maxLines && 'max_lines'}`}
+			style={
+				{
+					textAlign: text_align,
+					'--max-lines-count': maxLines,
+				} as React.CSSProperties
+			}
 		>
 			{children}
 		</span>

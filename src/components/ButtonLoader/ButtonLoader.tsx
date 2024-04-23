@@ -8,7 +8,7 @@ export type LoaderProps = {
 	className?: string;
 };
 
-const LoaderV2: React.FC<LoaderProps> = ({ size, className }) => {
+const ButtonLoader: React.FC<LoaderProps> = ({ size, className }) => {
 	let imgSrc;
 	switch (size) {
 		case 's':
@@ -34,4 +34,4 @@ const LoaderV2: React.FC<LoaderProps> = ({ size, className }) => {
 	);
 };
 
-export default LoaderV2;
+export default ButtonLoader;

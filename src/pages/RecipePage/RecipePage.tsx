@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import back_button from 'assets/svg/back_button.svg';
@@ -30,25 +31,17 @@ const RecipePage = () => {
 		}
 
 		const loadRecipe = async () => {
-			const response = await api.getRecipeInfo(+id);
+			const response = await api.getRecipeInfo(id);
 			const recipeToSet: RecipeType = {
-				id: response.id,
-				title: response.title,
-				image: response.image,
-				preparationMinutes: Math.max(0, response.preparationMinutes),
-				cookingMinutes: Math.max(0, response.cookingMinutes),
-				readyInMinutes: Math.max(0, response.readyInMinutes),
-				servings: Math.max(0, response.servings),
-				aggregateLikes: Math.max(0, response.aggregateLikes),
-				summary: response.summary,
+				...response,
 				ingredients: response.extendedIngredients?.map(
-					(item: any) => item.original,
+					(item: { original: string }) => item.original,
 				),
 				equipment: response.analyzedInstructions?.[0]?.steps?.map(
-					(item: any) => item.equipment?.[0]?.localizedName,
+					(item) => item.equipment?.[0]?.localizedName,
 				),
 				steps: response.analyzedInstructions?.[0]?.steps?.map(
-					(item: any) => item.step,
+					(item: { step: string }) => item.step,
 				),
 			};
 

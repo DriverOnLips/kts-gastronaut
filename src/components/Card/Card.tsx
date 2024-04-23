@@ -1,10 +1,10 @@
-import cn from 'classnames';
 import * as React from 'react';
-import ClockIcon from 'components/icons/ClockIcon/ClockIcon';
-import TextV2 from '../TextV2/TextV2';
+
+import readyInMinutesSvg from 'assets/svg/readyInMinutes.svg';
+import Text from 'components/Text/Text';
 import styles from './Card.module.scss';
 
-export type CardProps = {
+type CardProps = {
 	/** Дополнительный classname */
 	className?: string;
 	/** URL изображения */
@@ -17,8 +17,10 @@ export type CardProps = {
 	subtitle: React.ReactNode;
 	/** Содержимое карточки (футер/боковая часть), может быть пустым */
 	contentSlot?: React.ReactNode;
+	/** Клик на кнопку */
+	onButtonClick?: React.MouseEventHandler;
 	/** Клик на карточку */
-	onClick?: React.MouseEventHandler;
+	onItemClick?: React.MouseEventHandler;
 	/** Слот для действия */
 	actionSlot?: React.ReactNode;
 };
@@ -30,61 +32,81 @@ const Card: React.FC<CardProps> = ({
 	title,
 	subtitle,
 	contentSlot,
-	onClick,
+	onButtonClick,
+	onItemClick,
 	actionSlot,
 }) => {
 	return (
-		<div
-			className={cn(styles.card, className)}
-			onClick={onClick}
-		>
-			<div className={styles.card__header}>
+		<div className={`${styles.recipe_item} ${className ? className : ''}`}>
+			<div
+				className={styles.recipe_item__content}
+				onClick={onItemClick}
+			>
 				<img
-					className={styles['card__header-src']}
+					className={styles.recipe_item__img}
 					src={image}
-					alt='card'
+					alt='recipe_item'
 				/>
-			</div>
-			<div className={styles.card__body}>
-				{captionSlot && (
-					<TextV2
-						className={styles.card__caption}
-						view='p-14'
+				<div className={styles.recipe_item__info}>
+					<div className={styles.recipe_item__info__ready_div}>
+						{captionSlot && (
+							<Text
+								className={`${styles.recipe_item__info__ready_text}`}
+								size='s5'
+								text_align='start'
+								weight='medium'
+								color='secondary'
+							>
+								<img
+									src={readyInMinutesSvg}
+									className={styles.recipe_item__info__ready_svg}
+								/>
+								{captionSlot}
+							</Text>
+						)}
+					</div>
+
+					<Text
+						className={`${styles.recipe_item__info__name} my-4`}
+						size='s4'
+						text_align='start'
+						weight='bold'
+						color='primary'
+						maxLines={2}
+					>
+						{title}
+					</Text>
+
+					<Text
+						className={`${styles.recipe_item__info__ingredients}`}
+						size='s5'
+						text_align='start'
 						weight='medium'
 						color='secondary'
+						maxLines={3}
 					>
-						<ClockIcon className={styles.card__icon} />
-						{captionSlot}
-					</TextV2>
-				)}
-				<TextV2
-					maxLines={2}
-					tag='h4'
-					view='p-20'
-					weight='medium'
-					color='primary'
-				>
-					{title}
-				</TextV2>
-				<TextV2
-					maxLines={3}
-					className={styles.card__subtitle}
-					view='p-16'
-					color='secondary'
-				>
-					{subtitle}
-				</TextV2>
-				<div className={styles.card__footer}>
+						{subtitle}
+					</Text>
 					{contentSlot && (
-						<TextV2
-							view='p-18'
+						<Text
+							className={`${styles.recipe_item__info__calories} mb-1 ml-3`}
+							size='s5'
+							text_align='start'
 							weight='bold'
-							className={styles.card__content}
+							color='main'
 						>
 							{contentSlot}
-						</TextV2>
+						</Text>
 					)}
-					<div className={styles.card__action}>{actionSlot}</div>
+					<div
+						className={`${styles.recipe_item__info__btn} mb-3 mr-3`}
+						onClick={(event) => {
+							event.stopPropagation();
+							onButtonClick;
+						}}
+					>
+						{actionSlot}
+					</div>
 				</div>
 			</div>
 		</div>
