@@ -1,0 +1,64 @@
+@import "styles/variables.scss";
+
+.navbar_desctop {
+	width: 100vw;
+	height: 64px;
+	position: fixed;
+	top: 0;
+	background-color: $color-white;
+	display: flex;
+	align-items: center;
+	padding: 0 5vw;
+	z-index: 999;
+}
+
+.navbar__logo_div {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	cursor: pointer;
+
+	.navbar__logo_link {
+		font-size: $size4;
+		color: $text-color-primary;
+		font-weight: $bold;
+		transition: all 0.3s;
+	}
+
+	.navbar__logo_link:hover {
+		transform: scale(1.05);
+	}
+}
+
+.links {
+	all: unset;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 0 0 5vw;
+}
+
+.link {
+	all: unset;
+	font-size: $size5;
+	font-weight: $medium;
+	text-decoration: none;
+	position: relative;
+	cursor: pointer;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0;
+		height: 2px;
+		background-color: $text-color-primary;
+		transition: width 0.3s ease;
+	}
+
+	&:hover::after {
+		width: 100%;
+	}
+}

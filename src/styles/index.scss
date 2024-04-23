@@ -1,0 +1,19 @@
+@import "styles/margins.scss";
+@import "styles/variables.scss";
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background-color: $background-color;
+	// width: 100vw;
+	// height: 100vh;
+	overflow: auto;
+	font-family: "Roboto", sans-serif;
+}
+
+#root {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
