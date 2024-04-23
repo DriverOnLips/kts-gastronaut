@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import * as React from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -18,21 +18,16 @@ const RecipeList = () => {
 	const navigate = useNavigate();
 
 	const { recipeList, setRecipeList } = useRecipeContext();
-	const api = new Api();
+	const api = React.useMemo(() => new Api(), []);
 
-	const loadRecepes = async () => {
+	const loadRecepes = useCallback(async () => {
 		const response = await api.getRecipes(10, offsetRef.current);
 
-		if (response instanceof Error) {
-			console.error(
-				'Произошла ошибка при получении рецептов:',
-				response.message,
-			);
-			return;
-		}
+		if (response instanceof Error) return;
 
-		const recipesToSet: RecipeFromList[] = response?.map((item) => ({
+		const recipesToSet = response?.map((item) => ({
 			...item,
+			readyInMinutes: Math.max(0, item.readyInMinutes),
 			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
 			ingredients: item.nutrition.ingredients
 				.map((ingredient: { name: string }) => ingredient.name)
@@ -44,38 +39,34 @@ const RecipeList = () => {
 			...recipesToSet,
 		]);
 		offsetRef.current += 10;
-	};
+	}, [setRecipeList, api]);
+
+	const handleScroll = useCallback(() => {
+		const scrollTop = window.scrollY || document.documentElement.scrollTop;
+		const scrollHeight = document.documentElement.scrollHeight;
+		const clientHeight = document.documentElement.clientHeight;
+		const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
+
+		if (scrolledToBottom) {
+			loadRecepes();
+		}
+	}, [loadRecepes]);
 
 	useEffect(() => {
-		const handleScroll = () => {
-			const scrollTop = window.scrollY || document.documentElement.scrollTop;
-			const scrollHeight = document.documentElement.scrollHeight;
-			const clientHeight = document.documentElement.clientHeight;
-			const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
-
-			if (scrolledToBottom) {
-				loadRecepes();
-			}
-		};
-
 		window.addEventListener('scroll', handleScroll);
 
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
 		};
-	}, []);
-
-	useEffect(() => {
-		if (recipeList?.length <= 0) {
-			loadRecepes();
-		}
-	}, []);
+	}, [handleScroll]);
 
 	useEffect(() => {
 		if (recipeList?.length > 0) {
 			setIsLoaded(true);
+		} else {
+			loadRecepes();
 		}
-	}, [recipeList]);
+	}, [loadRecepes, recipeList]);
 
 	return (
 		<div className={styles.recipe_list}>

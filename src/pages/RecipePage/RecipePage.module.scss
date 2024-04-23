@@ -11,7 +11,7 @@
 			align-items: center;
 			gap: 1rem;
 
-			&_img {
+			&-img {
 				cursor: pointer;
 			}
 		}
@@ -21,12 +21,12 @@
 			align-items: center;
 			justify-content: space-between;
 
-			&_img {
+			&-img {
 				width: 40vw;
 				border-radius: 10px;
 			}
 
-			&_div {
+			&-div {
 				display: flex;
 				flex-wrap: wrap;
 				width: 50vw;
@@ -43,7 +43,7 @@
 				}
 			}
 
-			&_div > * {
+			&-div > * {
 				width: calc(33% - 2rem);
 				min-width: 115px;
 				margin: 1rem;
@@ -55,7 +55,7 @@
 			border-radius: 10px;
 			background-color: rgba($color-primary, 0.33);
 
-			&_div {
+			&-div {
 				font-size: $size6;
 			}
 		}

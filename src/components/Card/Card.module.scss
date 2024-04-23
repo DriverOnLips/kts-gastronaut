@@ -1,6 +1,6 @@
 @import "styles/variables.scss";
 
-.recipe_item {
+.card_item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -20,48 +20,43 @@
 		box-shadow: 0px 2px 20px rgb(128, 128, 128);
 	}
 
-	&__content:hover &__img {
+	&__content:hover &-img {
 		transform: scale(1.1);
 	}
 
-	&__img {
+	&-img {
 		width: 100%;
-		// aspect-ratio: 4 / 3;
 		object-fit: contain;
 		border-radius: 10px 10px 0 0;
 		transition: all 0.5s;
 	}
-
-	// &__img:hover {
-	// 	transform: scale(1.1);
-	// }
 
 	&__info {
 		display: flex;
 		flex-direction: column;
 		padding: 1.5rem;
 
-		&__ready_div {
+		&__caption-div {
 			display: flex;
 			align-items: flex-start;
 			gap: 0.5rem;
 		}
 
-		&__ready_svg {
+		&__caption-svg {
 			height: 1.25rem;
 		}
 
-		&__ingredients {
+		&__subtitle {
 			margin-bottom: 4rem;
 		}
 
-		&__calories {
+		&__content {
 			position: absolute;
 			bottom: 0;
 			left: 0;
 		}
 
-		&__btn {
+		&-btn {
 			position: absolute;
 			bottom: 0;
 			right: 0;
@@ -70,7 +65,7 @@
 }
 
 @media screen and (max-width: 1200px) {
-	.recipe_item {
+	.card_item {
 		&__content {
 			width: 40vw;
 		}
@@ -78,7 +73,7 @@
 }
 
 @media screen and (max-width: 650px) {
-	.recipe_item {
+	.card_item {
 		&__content {
 			width: 70vw;
 		}
@@ -86,7 +81,7 @@
 }
 
 @media screen and (max-width: 450px) {
-	.recipe_item {
+	.card_item {
 		&__content {
 			width: 80vw;
 		}

@@ -37,21 +37,20 @@ const Card: React.FC<CardProps> = ({
 	actionSlot,
 }) => {
 	return (
-		<div className={`${styles.recipe_item} ${className ? className : ''}`}>
+		<div className={`card_item ${className ? className : ''}`}>
 			<div
-				className={styles.recipe_item__content}
+				className={styles.card_item__content}
 				onClick={onItemClick}
 			>
 				<img
-					className={styles.recipe_item__img}
+					className={styles['card_item-img']}
 					src={image}
-					alt='recipe_item'
+					alt='card_item'
 				/>
-				<div className={styles.recipe_item__info}>
-					<div className={styles.recipe_item__info__ready_div}>
+				<div className={styles.card_item__info}>
+					<div className={styles['card_item__info__caption-div']}>
 						{captionSlot && (
 							<Text
-								className={`${styles.recipe_item__info__ready_text}`}
 								size='s5'
 								text_align='start'
 								weight='medium'
@@ -59,7 +58,7 @@ const Card: React.FC<CardProps> = ({
 							>
 								<img
 									src={readyInMinutesSvg}
-									className={styles.recipe_item__info__ready_svg}
+									className={styles['card_item__info__caption-svg']}
 								/>
 								{captionSlot}
 							</Text>
@@ -67,7 +66,7 @@ const Card: React.FC<CardProps> = ({
 					</div>
 
 					<Text
-						className={`${styles.recipe_item__info__name} my-4`}
+						className='my-4'
 						size='s4'
 						text_align='start'
 						weight='bold'
@@ -78,7 +77,7 @@ const Card: React.FC<CardProps> = ({
 					</Text>
 
 					<Text
-						className={`${styles.recipe_item__info__ingredients}`}
+						className={`${styles.card_item__info__subtitle}`}
 						size='s5'
 						text_align='start'
 						weight='medium'
@@ -89,7 +88,7 @@ const Card: React.FC<CardProps> = ({
 					</Text>
 					{contentSlot && (
 						<Text
-							className={`${styles.recipe_item__info__calories} mb-1 ml-3`}
+							className={`${styles.card_item__info__content} mb-1 ml-3`}
 							size='s5'
 							text_align='start'
 							weight='bold'
@@ -99,7 +98,7 @@ const Card: React.FC<CardProps> = ({
 						</Text>
 					)}
 					<div
-						className={`${styles.recipe_item__info__btn} mb-3 mr-3`}
+						className={`${styles['card_item__info-btn']} mb-3 mr-3`}
 						onClick={(event) => {
 							event.stopPropagation();
 							onButtonClick;

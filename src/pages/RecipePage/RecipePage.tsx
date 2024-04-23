@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import back_button from 'assets/svg/back_button.svg';
 import Loader from 'components/Loader/Loader';
@@ -21,53 +21,55 @@ const RecipePage = () => {
 	const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
 	const { recipe, setRecipe } = useRecipeContext();
-	const api = new Api();
+	const api = useMemo(() => new Api(), []);
+
+	const location = useLocation();
 
 	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [location]);
+
+	const loadRecipe = useCallback(async () => {
 		if (!id || isNaN(+id)) {
 			navigate('/not_found');
-
 			return;
 		}
 
-		const loadRecipe = async () => {
-			const response = await api.getRecipeInfo(id);
-			const recipeToSet: RecipeType = {
-				...response,
-				ingredients: response.extendedIngredients?.map(
-					(item: { original: string }) => item.original,
-				),
-				equipment: response.analyzedInstructions?.[0]?.steps?.map(
-					(item) => item.equipment?.[0]?.localizedName,
-				),
-				steps: response.analyzedInstructions?.[0]?.steps?.map(
-					(item: { step: string }) => item.step,
-				),
-			};
-
-			setRecipe(recipeToSet);
-			setIsLoaded(true); //
+		const response = await api.getRecipeInfo(id);
+		const recipeToSet: RecipeType = {
+			...response,
+			preparationMinutes: Math.max(0, response.preparationMinutes),
+			cookingMinutes: Math.max(0, response.cookingMinutes),
+			readyInMinutes: Math.max(0, response.readyInMinutes),
+			servings: Math.max(0, response.servings),
+			aggregateLikes: Math.max(0, response.aggregateLikes),
+			ingredients: response.extendedIngredients?.map(
+				(item: { original: string }) => item.original,
+			),
+			equipment: response.analyzedInstructions?.[0]?.steps?.map(
+				(item) => item.equipment?.[0]?.localizedName,
+			),
+			steps: response.analyzedInstructions?.[0]?.steps?.map(
+				(item: { step: string }) => item.step,
+			),
 		};
 
+		setRecipe(recipeToSet);
+		setIsLoaded(true);
+	}, [api, id, navigate, setRecipe]);
+
+	useEffect(() => {
 		loadRecipe();
-
-		// return () => setRecipe(null);
-	}, []);
-
-	// useEffect(() => {
-	// 	if (recipe?.id) {
-	// 		setIsLoaded(true);
-	// 	}
-	// }, [recipe]);
+	}, [loadRecipe]);
 
 	return (
-		<div className={`${styles.recipe_page}`}>
-			{isLoaded ? (
-				<div className={`${styles.recipe_page_content}`}>
-					<div className={`${styles.recipe_page_content__top}`}>
+		<div className={styles.recipe_page}>
+			{isLoaded && recipe?.id ? (
+				<div className={styles.recipe_page_content}>
+					<div className={styles.recipe_page_content__top}>
 						<img
 							src={back_button}
-							className={`${styles.recipe_page_content__top_img}`}
+							className={styles['recipe_page_content__top-img']}
 							onClick={() => navigate('/')}
 						/>
 						<Text
@@ -81,39 +83,41 @@ const RecipePage = () => {
 					<div className={`${styles.recipe_page_content__stats} my-2`}>
 						<img
 							src={recipe.image}
-							className={`${styles.recipe_page_content__stats_img}`}
+							className={styles['recipe_page_content__stats-img']}
 						/>
-						<div className={`${styles.recipe_page_content__stats_div}`}>
+						<div className={styles['recipe_page_content__stats-div']}>
 							<StatsItem
-								className={`${styles.recipe_page_content__stats_div__preparation}`}
+								className={
+									styles['recipe_page_content__stats-div__preparation']
+								}
 								title='Preparation'
 								value={recipe.preparationMinutes}
 								caption='minutes'
 							/>
 
 							<StatsItem
-								className={`${styles.recipe_page_content__stats_div__cooking}`}
+								className={styles['recipe_page_content__stats-div__cooking']}
 								title='Cooking'
 								value={recipe.cookingMinutes}
 								caption='minutes'
 							/>
 
 							<StatsItem
-								className={`${styles.recipe_page_content__stats_div__total}`}
+								className={styles['recipe_page_content__stats-div__total']}
 								title='Total'
 								value={recipe.readyInMinutes}
 								caption='minutes'
 							/>
 
 							<StatsItem
-								className={`${styles.recipe_page_content__stats_div__ratings}`}
+								className={styles['recipe_page_content__stats-div__ratings']}
 								title='Ratings'
 								value={recipe.aggregateLikes}
 								caption='likes'
 							/>
 
 							<StatsItem
-								className={`${styles.recipe_page_content__stats_div__servings}`}
+								className={styles['recipe_page_content__stats-div__servings']}
 								title='Servings'
 								value={recipe.servings}
 								caption='servings'
@@ -124,17 +128,17 @@ const RecipePage = () => {
 					<div className={`${styles.recipe_page_content__summary} mb-2`}>
 						<div
 							dangerouslySetInnerHTML={{ __html: recipe?.summary }}
-							className={`${styles.recipe_page_content__summary_div}`}
-						></div>
+							className={styles.recipe_page_content__summary_div}
+						/>
 					</div>
 
-					<div
-						className={`${styles.recipe_page_content__ingredients_equipment}`}
-					>
+					<div className={styles.recipe_page_content__ingredients_equipment}>
 						<Ingredients ingredients={recipe.ingredients} />
 
 						<div
-							className={`${styles.recipe_page_content__ingredients_equipment__separator}`}
+							className={
+								styles.recipe_page_content__ingredients_equipment__separator
+							}
 						>
 							<img src={separator_1} />
 							<img
@@ -143,10 +147,10 @@ const RecipePage = () => {
 							/>
 						</div>
 
-						<Equipment equipment={recipe?.equipment} />
+						<Equipment equipment={recipe.equipment} />
 					</div>
 
-					<div className={`${styles.recipe_page_content__steps}`}>
+					<div className={styles.recipe_page_content__steps}>
 						<Text
 							size='s4'
 							text_align='start'
