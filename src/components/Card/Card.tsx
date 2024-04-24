@@ -55,6 +55,8 @@ const Card: React.FC<CardProps> = ({
 								text_align='start'
 								weight='medium'
 								color='secondary'
+								display='flex'
+								gap='0.5rem'
 							>
 								<img
 									src={readyInMinutesSvg}

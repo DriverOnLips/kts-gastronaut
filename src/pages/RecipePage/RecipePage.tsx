@@ -12,8 +12,6 @@ import { useRecipeContext } from '../../App';
 import Equipment from './components/Equipment/Equipment';
 import Ingredients from './components/Ingredients/Ingredients';
 import StatsItem from './components/StatsItem/StatsItem';
-import separator_1 from './components/svg/separator_1.svg';
-import separator_2 from './components/svg/separator_2.svg';
 import styles from './RecipePage.module.scss';
 
 const RecipePage = () => {
@@ -135,19 +133,6 @@ const RecipePage = () => {
 
 					<div className={styles.recipe_page_content__ingredients_equipment}>
 						<Ingredients ingredients={recipe.ingredients} />
-
-						<div
-							className={
-								styles.recipe_page_content__ingredients_equipment__separator
-							}
-						>
-							<img src={separator_1} />
-							<img
-								src={separator_2}
-								style={{ width: 1 }}
-							/>
-						</div>
-
 						<Equipment equipment={recipe.equipment} />
 					</div>
 

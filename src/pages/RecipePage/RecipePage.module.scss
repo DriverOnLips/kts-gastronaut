@@ -62,7 +62,7 @@
 
 		&__ingredients_equipment {
 			display: flex;
-			justify-content: space-between;
+			// justify-content: space-between;
 
 			&__separator {
 				display: flex;
@@ -78,13 +78,13 @@
 
 			&__content {
 				display: flex;
-				flex-direction: column;
+				width: 50vw;
+				flex-wrap: wrap;
 			}
 		}
 
 		&__equipment {
 			display: flex;
-			flex-direction: column;
 
 			&__content {
 				display: flex;
