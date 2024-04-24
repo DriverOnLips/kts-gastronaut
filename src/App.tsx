@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Header from 'components/Header/Header';
+import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
 import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
@@ -66,6 +67,14 @@ const App = () => {
 					<Route
 						path='/not_found'
 						element={<NotFound />}
+					/>
+					<Route
+						path='/kts-gastronaut'
+						element={<MainPageRedirect />}
+					/>
+					<Route
+						path='/kts-gastronaut/'
+						element={<MainPageRedirect />}
 					/>
 					<Route
 						path='*'

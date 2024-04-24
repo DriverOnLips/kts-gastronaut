@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({
 	actionSlot,
 }) => {
 	return (
-		<div className={`card_item ${className ? className : ''}`}>
+		<div className={`${styles.card_item} ${className ? className : ''}`}>
 			<div
 				className={styles.card_item__content}
 				onClick={onItemClick}
