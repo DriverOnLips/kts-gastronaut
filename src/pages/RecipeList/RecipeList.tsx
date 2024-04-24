@@ -8,6 +8,7 @@ import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
 import { RecipeFromList } from 'types/RecipeFromList';
 import { Api } from 'utils/api';
+import { log } from 'utils/log';
 import { useRecipeContext } from '../../App';
 import styles from './RecipeList.module.scss';
 
@@ -23,7 +24,10 @@ const RecipeList = () => {
 	const loadRecepes = useCallback(async () => {
 		const response = await api.getRecipes(10, offsetRef.current);
 
-		if (response instanceof Error) return;
+		if (response instanceof Error) {
+			log(response);
+			return;
+		}
 
 		const recipesToSet = response?.map((item: any) => ({
 			...item,
