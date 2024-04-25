@@ -1,11 +1,14 @@
 import {
+	IReactionDisposer,
 	action,
 	computed,
 	makeObservable,
 	observable,
+	reaction,
 	runInAction,
 } from 'mobx';
 import { ILocalStore } from 'hooks/useLocalStore';
+import rootStore from 'stores/RootStore/instance';
 import {
 	RecipeFromListModel,
 	normalizeRecipeFromList,
@@ -82,6 +85,13 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	}
 
 	destroy(): void {
-		// nothing to do
+		this._qpReaction();
 	}
+
+	private readonly _qpReaction: IReactionDisposer = reaction(
+		() => rootStore.query.getParam('search'),
+		(search) => {
+			log(`search value changed:${search}`);
+		},
+	);
 }
