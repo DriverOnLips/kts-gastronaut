@@ -7,30 +7,12 @@ import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
 import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
-import { RecipeFromList } from 'types/RecipeFromList';
-import { RecipeType } from 'types/RecipeType';
 
 type RecipeContextType = {
-	recipeList: RecipeFromList[];
-	setRecipeList: (
-		value:
-			| RecipeFromList[]
-			| ((prevRecipes: RecipeFromList[]) => RecipeFromList[]),
-	) => void;
-	recipe: RecipeType | null;
-	setRecipe: (value: RecipeType) => void;
 	rootRef: HTMLElement | null;
 };
 
 const RecipeContext = createContext<RecipeContextType>({
-	recipeList: [],
-	setRecipeList: () => {
-		throw new Error('setRecipeList is not defined');
-	},
-	recipe: null,
-	setRecipe: () => {
-		throw new Error('setRecipe is not defined');
-	},
 	rootRef: null,
 });
 
@@ -39,17 +21,11 @@ export const useRecipeContext = () => useContext(RecipeContext);
 const RecipeProvider = RecipeContext.Provider;
 
 const App = () => {
-	const [recipeList, setRecipeList] = useState<RecipeFromList[]>([]);
-	const [recipe, setRecipe] = useState<RecipeType | null>(null);
 	const rootRef = document.getElementById('root');
 
 	return (
 		<RecipeProvider
 			value={{
-				recipeList,
-				setRecipeList,
-				recipe,
-				setRecipe,
 				rootRef,
 			}}
 		>

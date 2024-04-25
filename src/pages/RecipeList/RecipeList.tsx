@@ -1,6 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import * as React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
@@ -9,16 +9,15 @@ import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { useQueryParamsStoreInit } from 'stores/RootStore/hooks/useQueryParamsStoreInit';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import { Api } from 'utils/api';
 import { Meta } from 'utils/meta';
-// import { useRecipeContext } from '../../App';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	const offsetRef = useRef(0);
 	const navigate = useNavigate();
-	const api = React.useMemo(() => new Api(), []);
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
@@ -30,64 +29,28 @@ const RecipeList = () => {
 		[navigate],
 	);
 
-	// const loadRecepes = useCallback(async () => {
-	// 	const response = await api.getRecipes(10, offsetRef.current);
-
-	// 	if (response instanceof Error) {
-	// 		log(response);
-	// 		return;
-	// 	}
-
-	// 	const recipesToSet = response?.map((item: any) => ({
-	// 		...item,
-	// 		readyInMinutes: Math.max(0, item.readyInMinutes),
-	// 		calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
-	// 		ingredients: item.nutrition.ingredients
-	// 			.map((ingredient: { name: string }) => ingredient.name)
-	// 			.join(' + '),
-	// 	}));
-
-	// 	setRecipeList((prevRecipes: RecipeFromList[]): RecipeFromList[] => [
-	// 		...prevRecipes,
-	// 		...recipesToSet,
-	// 	]);
-
-	// 	offsetRef.current += 10;
-	// }, [setRecipeList, api]);
-
-	// const handleScroll = useCallback(() => {
-	// 	const scrollTop = window.scrollY || document.documentElement.scrollTop;
-	// 	const scrollHeight = document.documentElement.scrollHeight;
-	// 	const clientHeight = document.documentElement.clientHeight;
-	// 	const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
-
-	// 	if (scrolledToBottom) {
-	// 		loadRecepes();
-	// 	}
-	// }, [loadRecepes]);
-
-	// useEffect(() => {
-	// 	window.addEventListener('scroll', handleScroll);
-
-	// 	return () => {
-	// 		window.removeEventListener('scroll', handleScroll);
-	// 	};
-	// }, [handleScroll]);
-
-	// useEffect(() => {
-	// 	if (recipeList?.length > 0) {
-	// 		setIsLoaded(true);
-	// 	} else {
-	// 		loadRecepes();
-	// 	}
-	// }, [loadRecepes, recipeList]);
-
 	useEffect(() => {
 		recipeListStore.getRecipes({ count: 10, offset: offsetRef.current });
 	}, [recipeListStore]);
 
+	// useQueryParamsStoreInit();
+	// const [searchTerm, setSearchTerm] = useState('');
+
+	// const handleInputChange = (event) => {
+	// 	setSearchTerm(event.target.value);
+	// 	const newSearchParams = new URLSearchParams(window.location.search);
+	// 	newSearchParams.set('search', event.target.value);
+	// 	navigate(`?${newSearchParams.toString()}`, { replace: true });
+	// };
+
 	return (
 		<div className={styles.recipe_list}>
+			{/* <input
+				type='text'
+				value={searchTerm}
+				onChange={handleInputChange}
+				placeholder='Введите текст для поиска...'
+			/> */}
 			{recipeListStore.meta === Meta.success ? (
 				<>
 					<img

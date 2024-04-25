@@ -1,14 +1,15 @@
 /* eslint-disable react/react-in-jsx-scope */
-// import * as React from 'react';
+import { observer } from 'mobx-react-lite';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import back_button from 'assets/svg/back_button.svg';
 import Loader from 'components/Loader/Loader';
 import Text from 'components/Text/Text';
-import { RecipeType } from 'types/RecipeType';
+import { useLocalStore } from 'hooks/useLocalStore';
+import RecipePageStore from 'stores/RecipePageStore/RecipePageStore';
 import { Api } from 'utils/api';
-import { useRecipeContext } from '../../App';
+import { Meta } from 'utils/meta';
 import Equipment from './components/Equipment/Equipment';
 import Ingredients from './components/Ingredients/Ingredients';
 import StatsItem from './components/StatsItem/StatsItem';
@@ -18,12 +19,11 @@ import styles from './RecipePage.module.scss';
 const RecipePage = () => {
 	const navigate = useNavigate();
 	const { id } = useParams();
-	const [isLoaded, setIsLoaded] = useState<boolean>(false);
-
-	const { recipe, setRecipe } = useRecipeContext();
-	const api = useMemo(() => new Api(), []);
 
 	const location = useLocation();
+
+	const recipePageStore = useLocalStore(() => new RecipePageStore());
+	const recipe = recipePageStore.recipeInfo;
 
 	const onImgClickHandler = useCallback(() => {
 		navigate('/');
@@ -33,42 +33,17 @@ const RecipePage = () => {
 		window.scrollTo(0, 0);
 	}, [location]);
 
-	const loadRecipe = useCallback(async () => {
+	useEffect(() => {
 		if (!id || isNaN(+id)) {
 			navigate('/not_found');
 			return;
 		}
-
-		const response = await api.getRecipeInfo(id);
-		const recipeToSet: RecipeType = {
-			...response,
-			preparationMinutes: Math.max(0, response.preparationMinutes),
-			cookingMinutes: Math.max(0, response.cookingMinutes),
-			readyInMinutes: Math.max(0, response.readyInMinutes),
-			servings: Math.max(0, response.servings),
-			aggregateLikes: Math.max(0, response.aggregateLikes),
-			ingredients: response.extendedIngredients?.map(
-				(item: { original: string }) => item.original,
-			),
-			equipment: response.analyzedInstructions?.[0]?.steps?.map(
-				(item: any) => item.equipment?.[0]?.localizedName,
-			),
-			steps: response.analyzedInstructions?.[0]?.steps?.map(
-				(item: { step: string }) => item.step,
-			),
-		};
-
-		setRecipe(recipeToSet);
-		setIsLoaded(true);
-	}, [api, id, navigate, setRecipe]);
-
-	useEffect(() => {
-		loadRecipe();
-	}, [loadRecipe]);
+		recipePageStore.getRecipeInfo({ id });
+	}, [id, navigate, recipePageStore]);
 
 	return (
 		<div className={styles.recipe_page}>
-			{isLoaded && recipe?.id ? (
+			{recipePageStore.meta === Meta.success && recipe ? (
 				<div className={styles.recipe_page_content}>
 					<div className={styles.recipe_page_content__top}>
 						<img
@@ -152,4 +127,4 @@ const RecipePage = () => {
 	);
 };
 
-export default RecipePage;
+export default observer(RecipePage);
