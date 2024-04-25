@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import * as React from 'react';
 import { ReactNode } from 'react';
 
@@ -36,8 +37,13 @@ const Text: React.FC<TextProps> = ({
 
 	return (
 		<span
-			className={`${className ? className : ''} ${size} ${weight} ${color} 
-      ${!!maxLines && 'max_lines'}`}
+			className={cn(
+				!!className && className,
+				size,
+				weight,
+				color,
+				!!maxLines && 'max_lines',
+			)}
 			style={style}
 		>
 			{children}

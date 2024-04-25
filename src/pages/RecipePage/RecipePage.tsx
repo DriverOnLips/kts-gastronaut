@@ -12,6 +12,7 @@ import { useRecipeContext } from '../../App';
 import Equipment from './components/Equipment/Equipment';
 import Ingredients from './components/Ingredients/Ingredients';
 import StatsItem from './components/StatsItem/StatsItem';
+import Steps from './components/Steps/Steps';
 import styles from './RecipePage.module.scss';
 
 const RecipePage = () => {
@@ -23,6 +24,10 @@ const RecipePage = () => {
 	const api = useMemo(() => new Api(), []);
 
 	const location = useLocation();
+
+	const onImgClickHandler = useCallback(() => {
+		navigate('/');
+	}, [navigate]);
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -69,7 +74,7 @@ const RecipePage = () => {
 						<img
 							src={back_button}
 							className={styles['recipe_page_content__top-img']}
-							onClick={() => navigate('/')}
+							onClick={onImgClickHandler}
 						/>
 						<Text
 							size='s3'
@@ -136,38 +141,7 @@ const RecipePage = () => {
 						<Equipment equipment={recipe.equipment} />
 					</div>
 
-					<div className={styles.recipe_page_content__steps}>
-						<Text
-							size='s4'
-							text_align='start'
-							weight='bold'
-							color='primary'
-						>
-							Directions
-						</Text>
-						<div className={`${styles.recipe_page_content__steps} my-4`}>
-							{recipe?.steps?.map((step: string, index: number) => (
-								<div key={index}>
-									<Text
-										size='s5'
-										text_align='start'
-										weight='bold'
-										color='primary'
-									>
-										step {index + 1}
-									</Text>
-									<Text
-										size='s5'
-										text_align='start'
-										weight='medium'
-										color='primary'
-									>
-										{step}
-									</Text>
-								</div>
-							))}
-						</div>
-					</div>
+					<Steps steps={recipe?.steps} />
 				</div>
 			) : (
 				<>

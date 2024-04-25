@@ -23,19 +23,23 @@ const Ingredients: React.FC<IngredientsProps> = ({ ingredients }) => {
 				className={`${styles.recipe_page_content__ingredients__content} my-4`}
 			>
 				{ingredients?.map((ingredient: string, index: number) => (
-					<div
-						key={index}
-						style={{ margin: '3px 0', width: '50%' }}
-					>
+					<>
 						{ingredient && (
 							<div
-								style={{
-									display: 'flex',
-									gap: '0.5rem',
-								}}
+								key={index}
+								className={
+									styles['recipe_page_content__ingredients__content-div']
+								}
 							>
-								<img src={ingredient_svg} />
-								<div className='ingredient_item'>
+								<img
+									src={ingredient_svg}
+									style={{ width: 24 }}
+								/>
+								<div
+									className={
+										styles.recipe_page_content__ingredients__content_item
+									}
+								>
 									<Text
 										size='s5'
 										text_align='start'
@@ -47,7 +51,7 @@ const Ingredients: React.FC<IngredientsProps> = ({ ingredients }) => {
 								</div>
 							</div>
 						)}
-					</div>
+					</>
 				))}
 			</div>
 		</div>

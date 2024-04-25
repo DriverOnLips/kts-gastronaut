@@ -35,9 +35,16 @@ const Equipment: React.FC<EquipmentProps> = ({ equipment }) => {
 							{equipment_item && (
 								<div
 									key={index}
-									style={{ display: 'flex', gap: '0.5rem', margin: '2px 0' }}
+									style={{
+										display: 'flex',
+										gap: '0.5rem',
+										margin: '0.5rem 0',
+									}}
 								>
-									<img src={equipment_svg} />
+									<img
+										src={equipment_svg}
+										style={{ width: 24 }}
+									/>
 									<Text
 										size='s5'
 										text_align='start'

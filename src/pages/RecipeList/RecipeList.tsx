@@ -21,6 +21,15 @@ const RecipeList = () => {
 	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = React.useMemo(() => new Api(), []);
 
+	const onCardButtonClickHandler = useCallback(() => {}, []);
+
+	const onCardItemClickHandler = useCallback(
+		(id: number) => {
+			navigate(`/recipe/${id}`);
+		},
+		[navigate],
+	);
+
 	const loadRecepes = useCallback(async () => {
 		const response = await api.getRecipes(10, offsetRef.current);
 
@@ -91,8 +100,8 @@ const RecipeList = () => {
 								image={item.image}
 								title={item.title}
 								subtitle={item.ingredients}
-								onButtonClick={() => {}}
-								onItemClick={() => navigate(`/recipe/${item.id}`)}
+								onButtonClick={onCardButtonClickHandler}
+								onItemClick={() => onCardItemClickHandler(item.id)}
 							/>
 						))}
 					</div>
