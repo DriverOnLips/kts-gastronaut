@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { memo } from 'react';
 import Text from 'components/Text/Text';
 import styles from '../../RecipePage.module.scss';
 import equipment_svg from '../svg/equipment.svg';
@@ -31,10 +32,9 @@ const Equipment: React.FC<EquipmentProps> = ({ equipment }) => {
 					className={`${styles.recipe_page_content__equipment__content} my-4`}
 				>
 					{equipment?.map((equipment_item: string, index: number) => (
-						<>
+						<div key={index}>
 							{equipment_item && (
 								<div
-									key={index}
 									style={{
 										display: 'flex',
 										gap: '0.5rem',
@@ -55,7 +55,7 @@ const Equipment: React.FC<EquipmentProps> = ({ equipment }) => {
 									</Text>
 								</div>
 							)}
-						</>
+						</div>
 					))}
 				</div>
 			</div>
@@ -63,4 +63,4 @@ const Equipment: React.FC<EquipmentProps> = ({ equipment }) => {
 	);
 };
 
-export default Equipment;
+export default memo(Equipment);

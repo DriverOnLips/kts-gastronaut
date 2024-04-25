@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import * as React from 'react';
 
@@ -6,23 +7,22 @@ import intro from 'assets/img/intro.png';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
-import { RecipeFromList } from 'types/RecipeFromList';
+import { useLocalStore } from 'hooks/useLocalStore';
+import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import { Api } from 'utils/api';
-import { log } from 'utils/log';
-import { useRecipeContext } from '../../App';
+import { Meta } from 'utils/meta';
+// import { useRecipeContext } from '../../App';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
-	const [isLoaded, setIsLoaded] = useState<boolean>(false);
 	const offsetRef = useRef(0);
-
 	const navigate = useNavigate();
-
-	const { recipeList, setRecipeList } = useRecipeContext();
 	const api = React.useMemo(() => new Api(), []);
 
-	const onCardButtonClickHandler = useCallback(() => {}, []);
+	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
+	const onCardButtonClickHandler = useCallback(() => {}, []);
 	const onCardItemClickHandler = useCallback(
 		(id: number) => {
 			navigate(`/recipe/${id}`);
@@ -30,68 +30,72 @@ const RecipeList = () => {
 		[navigate],
 	);
 
-	const loadRecepes = useCallback(async () => {
-		const response = await api.getRecipes(10, offsetRef.current);
+	// const loadRecepes = useCallback(async () => {
+	// 	const response = await api.getRecipes(10, offsetRef.current);
 
-		if (response instanceof Error) {
-			log(response);
-			return;
-		}
+	// 	if (response instanceof Error) {
+	// 		log(response);
+	// 		return;
+	// 	}
 
-		const recipesToSet = response?.map((item: any) => ({
-			...item,
-			readyInMinutes: Math.max(0, item.readyInMinutes),
-			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
-			ingredients: item.nutrition.ingredients
-				.map((ingredient: { name: string }) => ingredient.name)
-				.join(' + '),
-		}));
+	// 	const recipesToSet = response?.map((item: any) => ({
+	// 		...item,
+	// 		readyInMinutes: Math.max(0, item.readyInMinutes),
+	// 		calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
+	// 		ingredients: item.nutrition.ingredients
+	// 			.map((ingredient: { name: string }) => ingredient.name)
+	// 			.join(' + '),
+	// 	}));
 
-		setRecipeList((prevRecipes: RecipeFromList[]): RecipeFromList[] => [
-			...prevRecipes,
-			...recipesToSet,
-		]);
+	// 	setRecipeList((prevRecipes: RecipeFromList[]): RecipeFromList[] => [
+	// 		...prevRecipes,
+	// 		...recipesToSet,
+	// 	]);
 
-		offsetRef.current += 10;
-	}, [setRecipeList, api]);
+	// 	offsetRef.current += 10;
+	// }, [setRecipeList, api]);
 
-	const handleScroll = useCallback(() => {
-		const scrollTop = window.scrollY || document.documentElement.scrollTop;
-		const scrollHeight = document.documentElement.scrollHeight;
-		const clientHeight = document.documentElement.clientHeight;
-		const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
+	// const handleScroll = useCallback(() => {
+	// 	const scrollTop = window.scrollY || document.documentElement.scrollTop;
+	// 	const scrollHeight = document.documentElement.scrollHeight;
+	// 	const clientHeight = document.documentElement.clientHeight;
+	// 	const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
 
-		if (scrolledToBottom) {
-			loadRecepes();
-		}
-	}, [loadRecepes]);
+	// 	if (scrolledToBottom) {
+	// 		loadRecepes();
+	// 	}
+	// }, [loadRecepes]);
+
+	// useEffect(() => {
+	// 	window.addEventListener('scroll', handleScroll);
+
+	// 	return () => {
+	// 		window.removeEventListener('scroll', handleScroll);
+	// 	};
+	// }, [handleScroll]);
+
+	// useEffect(() => {
+	// 	if (recipeList?.length > 0) {
+	// 		setIsLoaded(true);
+	// 	} else {
+	// 		loadRecepes();
+	// 	}
+	// }, [loadRecepes, recipeList]);
 
 	useEffect(() => {
-		window.addEventListener('scroll', handleScroll);
-
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
-	}, [handleScroll]);
-
-	useEffect(() => {
-		if (recipeList?.length > 0) {
-			setIsLoaded(true);
-		} else {
-			loadRecepes();
-		}
-	}, [loadRecepes, recipeList]);
+		recipeListStore.getRecipes({ count: 10, offset: offsetRef.current });
+	}, [recipeListStore]);
 
 	return (
 		<div className={styles.recipe_list}>
-			{isLoaded ? (
+			{recipeListStore.meta === Meta.success ? (
 				<>
 					<img
 						src={intro}
 						className={styles.recipe_list__intro}
 					/>
 					<div className={`${styles.recipe_list__container} my-1`}>
-						{recipeList?.map((item: RecipeFromList) => (
+						{recipeListStore.recipeList?.map((item: RecipeFromListModel) => (
 							<Card
 								key={item.id}
 								actionSlot={<Button>Save</Button>}
@@ -113,4 +117,4 @@ const RecipeList = () => {
 	);
 };
 
-export default RecipeList;
+export default observer(RecipeList);

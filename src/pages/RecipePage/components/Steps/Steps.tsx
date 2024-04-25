@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { memo } from 'react';
 import Text from 'components/Text/Text';
 import styles from '../../RecipePage.module.scss';
 
@@ -19,12 +20,9 @@ const Steps: React.FC<StepsProps> = ({ steps }) => {
 			</Text>
 			<div className={`${styles['recipe_page_content__steps-div']} my-4`}>
 				{steps?.map((step: string, index: number) => (
-					<>
+					<div key={index}>
 						{steps && (
-							<div
-								key={index}
-								className={styles.recipe_page_content__steps_item}
-							>
+							<div className={styles.recipe_page_content__steps_item}>
 								<Text
 									size='s5'
 									text_align='start'
@@ -43,11 +41,11 @@ const Steps: React.FC<StepsProps> = ({ steps }) => {
 								</Text>
 							</div>
 						)}
-					</>
+					</div>
 				))}
 			</div>
 		</div>
 	);
 };
 
-export default Steps;
+export default memo(Steps);
