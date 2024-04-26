@@ -1,96 +1,166 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
-import * as React from 'react';
-
+/* eslint-disable react/react-in-jsx-scope */
+import { observer } from 'mobx-react-lite';
+import { useEffect, useCallback, useRef, useState, CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { VariableSizeGrid as Grid } from 'react-window'; // Импорт VariableSizeGrid
 import intro from 'assets/img/intro.png';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
-import { RecipeFromList } from 'types/RecipeFromList';
+import { useLocalStore } from 'hooks/useLocalStore';
+import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { useQueryParamsStoreInit } from 'stores/RootStore/hooks/useQueryParamsStoreInit';
+import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import { Api } from 'utils/api';
-import { useRecipeContext } from '../../App';
+import { log } from 'utils/log';
+import { Meta } from 'utils/meta';
 import styles from './RecipeList.module.scss';
 
-const RecipeList = () => {
-	const [isLoaded, setIsLoaded] = useState<boolean>(false);
-	const offsetRef = useRef(0);
+interface GridItemProps {
+	columnIndex: number;
+	rowIndex: number;
+	style: CSSProperties;
+}
 
+const RecipeList = () => {
+	const offsetRef = useRef(0);
+	const gridRef = useRef<HTMLDivElement | null>(null);
 	const navigate = useNavigate();
 
-	const { recipeList, setRecipeList } = useRecipeContext();
-	const api = React.useMemo(() => new Api(), []);
+	const [isAtEnd, setIsAtEnd] = useState(false);
 
-	const loadRecepes = useCallback(async () => {
-		const response = await api.getRecipes(10, offsetRef.current);
+	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
-		if (response instanceof Error) return;
-
-		const recipesToSet = response?.map((item) => ({
-			...item,
-			readyInMinutes: Math.max(0, item.readyInMinutes),
-			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
-			ingredients: item.nutrition.ingredients
-				.map((ingredient: { name: string }) => ingredient.name)
-				.join(' + '),
-		}));
-
-		setRecipeList((prevRecipes: RecipeFromList[]) => [
-			...prevRecipes,
-			...recipesToSet,
-		]);
-		offsetRef.current += 10;
-	}, [setRecipeList, api]);
-
-	const handleScroll = useCallback(() => {
-		const scrollTop = window.scrollY || document.documentElement.scrollTop;
-		const scrollHeight = document.documentElement.scrollHeight;
-		const clientHeight = document.documentElement.clientHeight;
-		const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
-
-		if (scrolledToBottom) {
-			loadRecepes();
-		}
-	}, [loadRecepes]);
+	const onCardButtonClickHandler = useCallback(() => {}, []);
+	const onCardItemClickHandler = useCallback(
+		(id: number) => {
+			navigate(`/recipe/${id}`);
+		},
+		[navigate],
+	);
 
 	useEffect(() => {
-		window.addEventListener('scroll', handleScroll);
+		recipeListStore.getRecipes({ count: 100, offset: offsetRef.current });
+	}, [recipeListStore]);
 
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
-	}, [handleScroll]);
+	// useQueryParamsStoreInit();
+	// const [searchTerm, setSearchTerm] = useState('');
 
-	useEffect(() => {
-		if (recipeList?.length > 0) {
-			setIsLoaded(true);
+	// const handleInputChange = (event) => {
+	// 	setSearchTerm(event.target.value);
+	// 	const newSearchParams = new URLSearchParams(window.location.search);
+	// 	newSearchParams.set('search', event.target.value);
+	// 	navigate(`?${newSearchParams.toString()}`, { replace: true });
+	// };
+
+	const getColumnCount = () => {
+		const screenWidth = window.innerWidth;
+		if (screenWidth < 650) {
+			return 1;
+		} else if (screenWidth < 1200) {
+			return 2;
 		} else {
-			loadRecepes();
+			return 3;
 		}
-	}, [loadRecepes, recipeList]);
+	};
+
+	const setItemHeight = () => {
+		const screenWidth = window.innerWidth;
+		if (screenWidth < 350) {
+			return 550;
+		} else if (screenWidth < 500) {
+			return 600;
+		} else if (screenWidth < 650) {
+			return 700;
+		} else if (screenWidth < 900) {
+			return 600;
+		} else if (screenWidth < 1200) {
+			return 700;
+		} else if (screenWidth < 1400) {
+			return 600;
+		} else if (screenWidth < 1700) {
+			return 650;
+		} else {
+			return 700;
+		}
+	};
+
+	// const handleScroll = useCallback(
+	// 	({ scrollTop }) => {
+	// 		const totalHeight =
+	// 			(recipeListStore.recipeList.length * setItemHeight()) /
+	// 			getColumnCount();
+	// 		console.log(scrollTop, totalHeight);
+	// 		const isAtEnd = scrollTop + 1200 >= totalHeight; // 1000 - это высота контейнера
+	// 		setIsAtEnd(isAtEnd);
+	// 	},
+	// 	[recipeListStore.recipeList.length],
+	// );
+
+	// useEffect(() => {
+	// 	if (isAtEnd) {
+	// 		setIsAtEnd(false);
+	// 		offsetRef.current += 10;
+	// 		recipeListStore.getRecipes({ count: 500, offset: offsetRef.current });
+	// 	}
+	// }, [isAtEnd, recipeListStore]);
 
 	return (
 		<div className={styles.recipe_list}>
-			{isLoaded ? (
+			{/* <input
+                type='text'
+                value={searchTerm}
+                onChange={handleInputChange}
+                placeholder='Введите текст для поиска...'
+            /> */}
+			{recipeListStore.meta === Meta.success ? (
 				<>
 					<img
 						src={intro}
 						className={styles.recipe_list__intro}
 					/>
-					<div className={`${styles.recipe_list__container} my-1`}>
-						{recipeList?.map((item: RecipeFromList) => (
-							<Card
-								key={item.id}
-								actionSlot={<Button>Save</Button>}
-								captionSlot={item.readyInMinutes + ' minutes'}
-								contentSlot={item.calories + ' kcal'}
-								image={item.image}
-								title={item.title}
-								subtitle={item.ingredients}
-								onButtonClick={() => {}}
-								onItemClick={() => navigate(`/recipe/${item.id}`)}
-							/>
-						))}
-					</div>
+					<Grid
+						ref={gridRef}
+						className={`${styles.recipe_list__container}`}
+						columnCount={getColumnCount()}
+						columnWidth={() => {
+							const columnCount = getColumnCount();
+							return window.innerWidth / columnCount - 14;
+						}}
+						height={1000} // Высота списка
+						rowCount={Math.ceil(
+							recipeListStore.recipeList.length / getColumnCount(),
+						)}
+						rowHeight={setItemHeight} // Высота элемента
+						width={window.innerWidth - 15} // Ширина списка
+						style={{ overflowY: 'scroll', scrollbarWidth: 'none' }}
+						// onScroll={handleScroll}
+					>
+						{({ columnIndex, rowIndex, style }: GridItemProps) => {
+							const index = rowIndex * getColumnCount() + columnIndex;
+							const item = recipeListStore.recipeList[index];
+							if (!item) return null;
+
+							return (
+								<div
+									style={style}
+									className={styles.recipe_list__container_item}
+								>
+									<Card
+										key={item.id}
+										actionSlot={<Button>Save</Button>}
+										captionSlot={item?.readyInMinutes + ' minutes'}
+										contentSlot={item.calories + ' kcal'}
+										image={item.image}
+										title={item.title}
+										subtitle={item.ingredients}
+										onButtonClick={onCardButtonClickHandler}
+										onItemClick={() => onCardItemClickHandler(item.id)}
+									/>
+								</div>
+							);
+						}}
+					</Grid>
 				</>
 			) : (
 				<Loader />
@@ -99,4 +169,4 @@ const RecipeList = () => {
 	);
 };
 
-export default RecipeList;
+export default observer(RecipeList);

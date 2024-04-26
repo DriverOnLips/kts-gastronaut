@@ -1,8 +1,6 @@
 @import "styles/variables.scss";
 
 .recipe_list {
-	padding-top: 64px;
-
 	&__intro {
 		width: 100%;
 	}
@@ -11,14 +9,17 @@
 		display: flex;
 		flex-wrap: wrap;
 		color: $text-color-primary;
-		padding: 0 5vw;
+		justify-content: center;
+
+		&_item:nth-of-type(-n + 3) {
+			padding-top: 1rem;
+		}
 	}
 }
 
 @media (min-width: 650px) {
 	.recipe_list__container > * {
 		width: calc(33% - 2rem);
-		margin: 1rem;
 	}
 }
 
@@ -26,6 +27,27 @@
 	.recipe_list__container > * {
 		width: calc(50% - 2rem);
 		margin: 1rem;
+	}
+
+	.recipe_list {
+		&__intro {
+			width: 100%;
+		}
+
+		&__container {
+			display: flex;
+			flex-wrap: wrap;
+			color: $text-color-primary;
+			justify-content: center;
+
+			&_item:nth-child(3) {
+				padding-top: 0;
+			}
+
+			&_item:nth-of-type(-n + 2) {
+				padding-top: 1rem;
+			}
+		}
 	}
 }
 
