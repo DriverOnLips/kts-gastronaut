@@ -2,16 +2,16 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect, useCallback, useRef, useState, CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { VariableSizeGrid as Grid } from 'react-window'; // Импорт VariableSizeGrid
+import { VariableSizeGrid as Grid } from 'react-window';
 import intro from 'assets/img/intro.png';
+import search from 'assets/svg/search.svg';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
+import Input from 'components/Input/Input';
 import Loader from 'components/Loader/Loader';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStoreInit } from 'stores/RootStore/hooks/useQueryParamsStoreInit';
-import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
-import { Api } from 'utils/api';
 import { log } from 'utils/log';
 import { Meta } from 'utils/meta';
 import styles from './RecipeList.module.scss';
@@ -23,11 +23,11 @@ interface GridItemProps {
 }
 
 const RecipeList = () => {
-	const offsetRef = useRef(0);
-	const gridRef = useRef<HTMLDivElement | null>(null);
-	const navigate = useNavigate();
+	const [inputText, setInputText] = useState<string>('');
 
-	const [isAtEnd, setIsAtEnd] = useState(false);
+	const offsetRef = useRef(0);
+
+	const navigate = useNavigate();
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
@@ -85,6 +85,8 @@ const RecipeList = () => {
 		}
 	};
 
+	// Used for addition data to list
+
 	// const handleScroll = useCallback(
 	// 	({ scrollTop }) => {
 	// 		const totalHeight =
@@ -119,15 +121,31 @@ const RecipeList = () => {
 						src={intro}
 						className={styles.recipe_list__intro}
 					/>
+					<div className={`${styles.recipe_list__input_search}`}>
+						<div className={styles['recipe_list__input_search__input-div']}>
+							<Input
+								value={inputText}
+								onChange={setInputText}
+								placeholder='Enter dishes'
+							/>
+						</div>
+						<div>
+							<Button>
+								<img
+									src={search}
+									style={{ display: 'flex' }}
+								/>
+							</Button>
+						</div>
+					</div>
 					<Grid
-						ref={gridRef}
 						className={`${styles.recipe_list__container}`}
 						columnCount={getColumnCount()}
 						columnWidth={() => {
 							const columnCount = getColumnCount();
 							return window.innerWidth / columnCount - 14;
 						}}
-						height={1000} // Высота списка
+						height={1200} // Высота списка
 						rowCount={Math.ceil(
 							recipeListStore.recipeList.length / getColumnCount(),
 						)}
