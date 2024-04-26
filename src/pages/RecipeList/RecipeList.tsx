@@ -11,8 +11,6 @@ import Input from 'components/Input/Input';
 import Loader from 'components/Loader/Loader';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
-import { useQueryParamsStoreInit } from 'stores/RootStore/hooks/useQueryParamsStoreInit';
-import { log } from 'utils/log';
 import { Meta } from 'utils/meta';
 import styles from './RecipeList.module.scss';
 
