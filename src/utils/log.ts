@@ -1,1 +1,3 @@
-export const log = (data: any) => console.log(data);
+export function log(...args: any[]) {
+	console.log(...args);
+}

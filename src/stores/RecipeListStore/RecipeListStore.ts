@@ -52,7 +52,16 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	}
 
 	async getRecipes(params: getRecipesParams): Promise<void> {
-		this._meta = Meta.loading;
+		switch (this._meta) {
+			case Meta.initial:
+				this._meta = Meta.loading;
+				break;
+			case Meta.loading:
+				return;
+			default:
+				break;
+		}
+
 		this._recipeList = getInitialCollectionModel();
 
 		const response = await this._api.getRecipes(params.count, params.offset);
@@ -60,14 +69,16 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		runInAction(() => {
 			if (!(response instanceof Error)) {
 				try {
-					const recipeList: RecipeFromListModel[] = [];
+					const recipeToSet: RecipeFromListModel[] = [];
 					for (const item of response) {
-						recipeList.push(normalizeRecipeFromList(item));
+						recipeToSet.push(normalizeRecipeFromList(item));
 					}
+
+					const recipeList = linearizeCollection(this._recipeList);
 
 					this._meta = Meta.success;
 					this._recipeList = normalizeCollection(
-						recipeList,
+						[...recipeList, ...recipeToSet],
 						(recipeItem) => recipeItem.id,
 					);
 				} catch (error) {

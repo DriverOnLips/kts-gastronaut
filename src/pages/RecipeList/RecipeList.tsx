@@ -12,6 +12,7 @@ import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStoreInit } from 'stores/RootStore/hooks/useQueryParamsStoreInit';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import { Api } from 'utils/api';
+import { log } from 'utils/log';
 import { Meta } from 'utils/meta';
 import styles from './RecipeList.module.scss';
 
@@ -23,7 +24,10 @@ interface GridItemProps {
 
 const RecipeList = () => {
 	const offsetRef = useRef(0);
+	const gridRef = useRef<HTMLDivElement | null>(null);
 	const navigate = useNavigate();
+
+	const [isAtEnd, setIsAtEnd] = useState(false);
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
@@ -36,7 +40,7 @@ const RecipeList = () => {
 	);
 
 	useEffect(() => {
-		recipeListStore.getRecipes({ count: 10, offset: offsetRef.current });
+		recipeListStore.getRecipes({ count: 100, offset: offsetRef.current });
 	}, [recipeListStore]);
 
 	// useQueryParamsStoreInit();
@@ -81,6 +85,26 @@ const RecipeList = () => {
 		}
 	};
 
+	// const handleScroll = useCallback(
+	// 	({ scrollTop }) => {
+	// 		const totalHeight =
+	// 			(recipeListStore.recipeList.length * setItemHeight()) /
+	// 			getColumnCount();
+	// 		console.log(scrollTop, totalHeight);
+	// 		const isAtEnd = scrollTop + 1200 >= totalHeight; // 1000 - это высота контейнера
+	// 		setIsAtEnd(isAtEnd);
+	// 	},
+	// 	[recipeListStore.recipeList.length],
+	// );
+
+	// useEffect(() => {
+	// 	if (isAtEnd) {
+	// 		setIsAtEnd(false);
+	// 		offsetRef.current += 10;
+	// 		recipeListStore.getRecipes({ count: 500, offset: offsetRef.current });
+	// 	}
+	// }, [isAtEnd, recipeListStore]);
+
 	return (
 		<div className={styles.recipe_list}>
 			{/* <input
@@ -96,6 +120,7 @@ const RecipeList = () => {
 						className={styles.recipe_list__intro}
 					/>
 					<Grid
+						ref={gridRef}
 						className={`${styles.recipe_list__container}`}
 						columnCount={getColumnCount()}
 						columnWidth={() => {
@@ -109,6 +134,7 @@ const RecipeList = () => {
 						rowHeight={setItemHeight} // Высота элемента
 						width={window.innerWidth - 15} // Ширина списка
 						style={{ overflowY: 'scroll', scrollbarWidth: 'none' }}
+						// onScroll={handleScroll}
 					>
 						{({ columnIndex, rowIndex, style }: GridItemProps) => {
 							const index = rowIndex * getColumnCount() + columnIndex;
