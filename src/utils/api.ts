@@ -11,7 +11,7 @@ export class Api {
 	];
 	// private token: string = 'd1042c6f8c84432bbd5b508bca52c270';
 	// private token: string = 'c1ed0064ec724ead8177ab8848ea4dc8';
-	private token: string = 'b4be191811054ad3bbb2438df1158ca7';
+	// private token: string = 'b4be191811054ad3bbb2438df1158ca7';
 	// private token: string = '2f57ba40700b492a98d46c16cb731636';
 	// private token: string = '96b03ded692d45b391ec26a66cf00564';
 	// private token: string = '3a40e1bfe3084f53b0d475f56d06468b';
@@ -35,6 +35,8 @@ export class Api {
 	getRecipes = async (
 		count = 10,
 		offset: number | null,
+		query: string | null,
+		type: string | null,
 	): Promise<RecipeFromListApi[] | Error> => {
 		const configItem = this.config.find((item) => item.name === 'getRecipes');
 
@@ -46,6 +48,8 @@ export class Api {
 			apiKey: this.token,
 			number: count,
 			...(offset && { offset }),
+			...(!!query && { query }),
+			...(!!type && { type }),
 		};
 
 		try {

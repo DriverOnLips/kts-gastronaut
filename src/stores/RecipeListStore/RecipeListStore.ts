@@ -8,6 +8,8 @@ import {
 	runInAction,
 } from 'mobx';
 import { ILocalStore } from 'hooks/useLocalStore';
+import InputStore from 'stores/InputStore/InputStore';
+import MultiDropdownStore from 'stores/MultiDropdownStore/MultiDropdownStore';
 import rootStore from 'stores/RootStore/instance';
 import {
 	RecipeFromListModel,
@@ -32,15 +34,40 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	private _meta: Meta = Meta.initial;
 	private _api = new Api();
 
+	public inputStore = new InputStore();
+	public dropdownStore = new MultiDropdownStore();
+
 	constructor() {
 		makeObservable<RecipeListStore, PrivateFields>(this, {
 			_recipeList: observable.ref,
 			_meta: observable,
 			_api: observable,
+			inputStore: observable,
+			dropdownStore: observable,
 			recipeList: computed,
 			meta: computed,
 			getRecipes: action,
 		});
+
+		const options = [
+			{ value: 'main course', isSelected: false },
+			{ value: 'side dish', isSelected: false },
+			{ value: 'dessert', isSelected: false },
+			{ value: 'appetizer', isSelected: false },
+			{ value: 'salad', isSelected: false },
+			{ value: 'bread', isSelected: false },
+			{ value: 'breakfast', isSelected: false },
+			{ value: 'soup', isSelected: false },
+			{ value: 'beverage', isSelected: false },
+			{ value: 'souce', isSelected: false },
+			{ value: 'marinade', isSelected: false },
+			{ value: 'fingerfood', isSelected: false },
+			{ value: 'snack', isSelected: false },
+			{ value: 'drink', isSelected: false },
+		];
+
+		this.dropdownStore.setOptions(options);
+		this.dropdownStore.setValues(options);
 	}
 
 	get recipeList(): RecipeFromListModel[] {
@@ -56,6 +83,9 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			case Meta.initial:
 				this._meta = Meta.loading;
 				break;
+			case Meta.success:
+				this._meta = Meta.loading;
+				break;
 			case Meta.loading:
 				return;
 			default:
@@ -64,7 +94,12 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 		this._recipeList = getInitialCollectionModel();
 
-		const response = await this._api.getRecipes(params.count, params.offset);
+		const response = await this._api.getRecipes(
+			params.count,
+			params.offset,
+			params.query,
+			params.type,
+		);
 
 		runInAction(() => {
 			if (!(response instanceof Error)) {
@@ -74,13 +109,11 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 						recipeToSet.push(normalizeRecipeFromList(item));
 					}
 
-					const recipeList = linearizeCollection(this._recipeList);
-
-					this._meta = Meta.success;
 					this._recipeList = normalizeCollection(
-						[...recipeList, ...recipeToSet],
+						recipeToSet,
 						(recipeItem) => recipeItem.id,
 					);
+					this._meta = Meta.success;
 				} catch (error) {
 					log(error);
 					this._meta = Meta.error;
@@ -96,13 +129,22 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	}
 
 	destroy(): void {
+		this.inputStore.destroy();
 		this._qpReaction();
 	}
 
 	private readonly _qpReaction: IReactionDisposer = reaction(
-		() => rootStore.query.getParam('search'),
-		(search) => {
-			log(`search value changed:${search}`);
+		() => ({
+			query: rootStore.query.getParam('query'),
+			type: rootStore.query.getParam('type'),
+		}),
+		({ query, type }) => {
+			this.getRecipes({
+				count: 100,
+				offset: 0,
+				query: String(query),
+				type: String(type),
+			});
 		},
 	);
 }

@@ -5,6 +5,19 @@
 		width: 100%;
 	}
 
+	&__input_search {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin: 1rem 2rem 1rem 0;
+
+		&__input-div {
+			display: flex;
+			justify-content: center;
+			width: 80vw;
+		}
+	}
+
 	&__container {
 		display: flex;
 		flex-wrap: wrap;
@@ -48,6 +61,22 @@
 				padding-top: 1rem;
 			}
 		}
+
+		&__input_search {
+			&__input-div {
+				width: 75vw;
+			}
+		}
+	}
+}
+
+@media (max-width: 900px) {
+	.recipe_list {
+		&__input_search {
+			&__input-div {
+				width: 70vw;
+			}
+		}
 	}
 }
 
@@ -55,5 +84,15 @@
 	.recipe_list__container > * {
 		width: 100%;
 		margin: 0.5rem;
+	}
+
+	.recipe_list {
+		&__input_search {
+			margin: 1rem 1rem 1rem 0;
+
+			&__input-div {
+				width: 60vw;
+			}
+		}
 	}
 }
