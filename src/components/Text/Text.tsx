@@ -21,7 +21,7 @@ const Text: React.FC<TextProps> = ({
 	size = 's5',
 	text_align = 'start',
 	weight = 'medium',
-	color = 'primary',
+	color,
 	display,
 	gap,
 	maxLines,
@@ -41,7 +41,7 @@ const Text: React.FC<TextProps> = ({
 				!!className && className,
 				size,
 				weight,
-				color,
+				!!color && color,
 				!!maxLines && 'max_lines',
 			)}
 			style={style}
