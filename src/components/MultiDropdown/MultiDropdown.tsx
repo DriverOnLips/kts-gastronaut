@@ -42,7 +42,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 	}, [dropdownStore]);
 
 	const onItemClick = useCallback(
-		(option: Option) => {
+		(option: Option) => () => {
 			dropdownStore.onItemClick(option);
 			if (onMultiDropdownClick) {
 				onMultiDropdownClick(dropdownStore.title);
@@ -83,7 +83,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 								styles.dropdown__option,
 								option.isSelected && styles.dropdown__option_selected,
 							)}
-							onClick={() => onItemClick(option)}
+							onClick={onItemClick(option)}
 						>
 							<Text key={index}>{option.value}</Text>
 						</button>
