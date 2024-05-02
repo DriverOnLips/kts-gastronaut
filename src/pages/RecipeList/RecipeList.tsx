@@ -38,6 +38,17 @@ const RecipeList = () => {
 		});
 	}, [getRecipes]);
 
+	const onButtonClick = useCallback(() => {
+		const params = new URLSearchParams(window.location.search);
+
+		getRecipes({
+			count: 100,
+			offset: offsetRef.current,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
+		});
+	}, [getRecipes]);
+
 	const onInputChange = useCallback(
 		(value: string) => {
 			inputStore.setValue(value);
@@ -82,8 +93,6 @@ const RecipeList = () => {
 	// 	}
 	// }, [isAtEnd, recipeListStore]);
 
-	console.log(recipeList, meta);
-
 	return (
 		<div className={styles.recipe_list}>
 			{meta === Meta.success ? (
@@ -106,7 +115,7 @@ const RecipeList = () => {
 								onMultiDropdownClick={onMultiDropdownClick}
 							/>
 						</div>
-						<div>
+						<div onClick={onButtonClick}>
 							<Button>
 								<img
 									src={search}

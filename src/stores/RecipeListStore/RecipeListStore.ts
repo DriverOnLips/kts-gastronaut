@@ -145,7 +145,6 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 					this._recipeList = getInitialCollectionModel();
 				}
 
-				console.log(this._recipeList);
 				return;
 			}
 
@@ -156,27 +155,27 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 	destroy(): void {
 		this.inputStore.destroy();
-		this._qpReaction();
+		// this._qpReaction();
 	}
 
-	private readonly _qpReaction: IReactionDisposer = reaction(
-		() => ({
-			query:
-				rootStore.query.getParam('query') !== undefined
-					? String(rootStore.query.getParam('query'))
-					: null,
-			type:
-				rootStore.query.getParam('type') !== undefined
-					? String(rootStore.query.getParam('type'))
-					: null,
-		}),
-		({ query, type }) => {
-			this.getRecipes({
-				count: 100,
-				offset: 0,
-				query,
-				type,
-			});
-		},
-	);
+	// private readonly _qpReaction: IReactionDisposer = reaction(
+	// 	() => ({
+	// 		query:
+	// 			rootStore.query.getParam('query') !== undefined
+	// 				? String(rootStore.query.getParam('query'))
+	// 				: null,
+	// 		type:
+	// 			rootStore.query.getParam('type') !== undefined
+	// 				? String(rootStore.query.getParam('type'))
+	// 				: null,
+	// 	}),
+	// 	({ query, type }) => {
+	// 		this.getRecipes({
+	// 			count: 100,
+	// 			offset: 0,
+	// 			query,
+	// 			type,
+	// 		});
+	// 	},
+	// );
 }
