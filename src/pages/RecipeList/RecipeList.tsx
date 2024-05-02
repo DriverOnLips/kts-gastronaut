@@ -23,11 +23,17 @@ const RecipeList = () => {
 	const navigate = useNavigate();
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
-	const { inputStore, dropdownStore } = recipeListStore;
+	const { inputStore, dropdownStore, meta, recipeList, getRecipes } =
+		recipeListStore;
 
 	useEffect(() => {
-		recipeListStore.getRecipes({ count: 100, offset: offsetRef.current });
-	}, [recipeListStore]);
+		getRecipes({
+			count: 100,
+			offset: offsetRef.current,
+			query: null,
+			type: null,
+		});
+	}, [getRecipes]);
 
 	const onInputChange = useCallback(
 		(value: string) => {
@@ -74,11 +80,11 @@ const RecipeList = () => {
 	// 	}
 	// }, [isAtEnd, recipeListStore]);
 
-	console.log(recipeListStore.recipeList);
+	console.log(recipeList, meta);
 
 	return (
 		<div className={styles.recipe_list}>
-			{recipeListStore.meta === Meta.success ? (
+			{meta === Meta.success ? (
 				<>
 					<img
 						src={intro}
@@ -107,7 +113,7 @@ const RecipeList = () => {
 							</Button>
 						</div>
 					</div>
-					<List recipeList={recipeListStore.recipeList} />
+					<List recipeList={recipeList} />
 				</>
 			) : (
 				<Loader />

@@ -46,7 +46,7 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			dropdownStore: observable,
 			recipeList: computed,
 			meta: computed,
-			getRecipes: action,
+			getRecipes: action.bound,
 		});
 
 		const options = [
@@ -120,6 +120,7 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 					this._recipeList = getInitialCollectionModel();
 				}
 
+				console.log(this._recipeList);
 				return;
 			}
 
