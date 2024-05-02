@@ -15,10 +15,21 @@ interface GridItemProps {
 
 type ListProps = {
 	recipeList: RecipeFromListModel[];
+	setIsAtEnd(value: boolean): void;
 };
 
-const List: React.FC<ListProps> = ({ recipeList }) => {
+const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 	const navigate = useNavigate();
+
+	const handleScroll = useCallback(
+		({ scrollTop }) => {
+			const totalHeight =
+				(recipeList.length * setItemHeight()) / getColumnCount();
+			const isAtEnd = scrollTop + 1200 >= totalHeight; // 1200 - это высота контейнера
+			setIsAtEnd(isAtEnd);
+		},
+		[recipeList.length, setIsAtEnd],
+	);
 
 	const onCardButtonClickHandler = useCallback(() => {}, []);
 	const onCardItemClickHandler = useCallback(
@@ -73,7 +84,7 @@ const List: React.FC<ListProps> = ({ recipeList }) => {
 			rowHeight={setItemHeight} // Высота элемента
 			width={window.innerWidth - 15} // Ширина списка
 			style={{ overflowY: 'scroll', scrollbarWidth: 'none' }}
-			// onScroll={handleScroll}
+			onScroll={handleScroll}
 		>
 			{({ columnIndex, rowIndex, style }: GridItemProps) => {
 				const index = rowIndex * getColumnCount() + columnIndex;

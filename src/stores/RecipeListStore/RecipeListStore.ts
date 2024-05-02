@@ -26,13 +26,14 @@ import { log } from 'utils/log';
 import { Meta } from 'utils/meta';
 import { IRecipeListStore, getRecipesParams } from './types';
 
-type PrivateFields = '_recipeList' | '_meta' | '_api';
+type PrivateFields = '_recipeList' | '_meta' | '_api' | '_offset';
 
 export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	private _recipeList: CollectionModel<number, RecipeFromListModel> =
 		getInitialCollectionModel();
 	private _meta: Meta = Meta.initial;
 	private _api = new Api();
+	private _offset;
 
 	public inputStore = new InputStore();
 	public dropdownStore = new MultiDropdownStore();
@@ -42,12 +43,18 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			_recipeList: observable.ref,
 			_meta: observable,
 			_api: observable,
+			_offset: observable,
 			inputStore: observable,
 			dropdownStore: observable,
 			recipeList: computed,
 			meta: computed,
+			offset: computed,
+			incrementOffset: action.bound,
 			getRecipes: action.bound,
+			getNewRecipes: action.bound,
 		});
+
+		this._offset = +(rootStore.query.getParam('offset') || 0);
 
 		const setDropdown = () => {
 			const options = [
@@ -103,6 +110,14 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		return this._meta;
 	}
 
+	get offset(): number {
+		return this._offset;
+	}
+
+	incrementOffset(): void {
+		this._offset += 100;
+	}
+
 	async getRecipes(params: getRecipesParams): Promise<void> {
 		switch (this._meta) {
 			case Meta.initial:
@@ -136,6 +151,54 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 					this._recipeList = normalizeCollection(
 						recipeToSet,
+						(recipeItem) => recipeItem.id,
+					);
+					this._meta = Meta.success;
+				} catch (error) {
+					log(error);
+					this._meta = Meta.error;
+					this._recipeList = getInitialCollectionModel();
+				}
+
+				return;
+			}
+
+			log(response);
+			this._meta = Meta.error;
+		});
+	}
+
+	async getNewRecipes(params: getRecipesParams): Promise<void> {
+		switch (this._meta) {
+			case Meta.initial:
+				this._meta = Meta.loading;
+				break;
+			case Meta.success:
+				this._meta = Meta.loading;
+				break;
+			case Meta.loading:
+				return;
+			default:
+				break;
+		}
+
+		const response = await this._api.getRecipes(
+			params.count,
+			params.offset,
+			params.query,
+			params.type,
+		);
+
+		runInAction(() => {
+			if (!(response instanceof Error)) {
+				try {
+					const recipeToSet: RecipeFromListModel[] = [];
+					for (const item of response) {
+						recipeToSet.push(normalizeRecipeFromList(item));
+					}
+
+					this._recipeList = normalizeCollection(
+						[...linearizeCollection(this._recipeList), ...recipeToSet],
 						(recipeItem) => recipeItem.id,
 					);
 					this._meta = Meta.success;

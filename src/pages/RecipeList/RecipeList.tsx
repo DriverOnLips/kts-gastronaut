@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
 import search from 'assets/svg/search.svg';
@@ -11,7 +11,6 @@ import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
-import rootStore from 'stores/RootStore/instance';
 import { Meta } from 'utils/meta';
 import List from './components/List/List';
 import styles from './RecipeList.module.scss';
@@ -19,31 +18,28 @@ import styles from './RecipeList.module.scss';
 const RecipeList = () => {
 	useQueryParamsStore();
 
-	const offsetRef = useRef(0);
-
 	const navigate = useNavigate();
 
+	const [isAtEnd, setIsAtEnd] = useState<boolean>(false);
+
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
-	const { inputStore, dropdownStore, meta, recipeList, getRecipes } =
-		recipeListStore;
-
-	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
-
-		getRecipes({
-			count: 100,
-			offset: offsetRef.current,
-			query: params.get('query') || null,
-			type: params.get('type') || null,
-		});
-	}, [getRecipes]);
+	const {
+		inputStore,
+		dropdownStore,
+		meta,
+		recipeList,
+		offset,
+		incrementOffset,
+		getRecipes,
+		getNewRecipes,
+	} = recipeListStore;
 
 	const onButtonClick = useCallback(() => {
 		const params = new URLSearchParams(window.location.search);
 
 		getRecipes({
 			count: 100,
-			offset: offsetRef.current,
+			offset,
 			query: params.get('query') || null,
 			type: params.get('type') || null,
 		});
@@ -71,64 +67,78 @@ const RecipeList = () => {
 		[navigate],
 	);
 
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+
+		getRecipes({
+			count: 100,
+			offset,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
+		});
+	}, [getRecipes]);
+
 	// Used for addition data to list
 
-	// const handleScroll = useCallback(
-	// 	({ scrollTop }) => {
-	// 		const totalHeight =
-	// 			(recipeListStore.recipeList.length * setItemHeight()) /
-	// 			getColumnCount();
-	// 		console.log(scrollTop, totalHeight);
-	// 		const isAtEnd = scrollTop + 1200 >= totalHeight; // 1000 - это высота контейнера
-	// 		setIsAtEnd(isAtEnd);
-	// 	},
-	// 	[recipeListStore.recipeList.length],
-	// );
+	useEffect(() => {
+		if (isAtEnd) {
+			setIsAtEnd(false);
+			incrementOffset();
 
-	// useEffect(() => {
-	// 	if (isAtEnd) {
-	// 		setIsAtEnd(false);
-	// 		offsetRef.current += 10;
-	// 		recipeListStore.getRecipes({ count: 500, offset: offsetRef.current });
-	// 	}
-	// }, [isAtEnd, recipeListStore]);
+			const newSearchParams = new URLSearchParams(window.location.search);
+			newSearchParams.set('offset', String(offset + 100));
+			navigate(`?${newSearchParams.toString()}`, { replace: true });
+
+			const params = new URLSearchParams(window.location.search);
+
+			getNewRecipes({
+				count: 100,
+				offset: offset + 100,
+				query: params.get('query') || null,
+				type: params.get('type') || null,
+			});
+		}
+	}, [isAtEnd, navigate, incrementOffset, getNewRecipes]);
 
 	return (
 		<div className={styles.recipe_list}>
-			{meta === Meta.success ? (
-				<>
-					<img
-						src={intro}
-						className={styles.recipe_list__intro}
-					/>
-					<div className={`${styles.recipe_list__input_search}`}>
-						<div className={styles['recipe_list__input_search__input-div']}>
-							<Input
-								value={inputStore.value}
-								onChange={onInputChange}
-								placeholder='Enter dishes'
-							/>
-						</div>
-						<div>
-							<MultiDropdown
-								dropdownStore={dropdownStore}
-								onMultiDropdownClick={onMultiDropdownClick}
-							/>
-						</div>
-						<div onClick={onButtonClick}>
-							<Button>
-								<img
-									src={search}
-									style={{ display: 'flex' }}
-								/>
-							</Button>
-						</div>
+			<>
+				<img
+					src={intro}
+					className={styles.recipe_list__intro}
+				/>
+				<div className={`${styles.recipe_list__input_search}`}>
+					<div className={styles['recipe_list__input_search__input-div']}>
+						<Input
+							value={inputStore.value}
+							onChange={onInputChange}
+							placeholder='Enter dishes'
+						/>
 					</div>
-					<List recipeList={recipeList} />
-				</>
-			) : (
-				<Loader />
-			)}
+					<div>
+						<MultiDropdown
+							dropdownStore={dropdownStore}
+							onMultiDropdownClick={onMultiDropdownClick}
+						/>
+					</div>
+					<div onClick={onButtonClick}>
+						<Button>
+							<img
+								src={search}
+								style={{ display: 'flex' }}
+							/>
+						</Button>
+					</div>
+				</div>
+				{meta === Meta.success ? (
+					<List
+						recipeList={recipeList}
+						setIsAtEnd={setIsAtEnd}
+					/>
+				) : (
+					<Loader />
+				)}
+			</>
 		</div>
 	);
 };
