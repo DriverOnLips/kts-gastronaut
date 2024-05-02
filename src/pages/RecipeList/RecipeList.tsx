@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
 import search from 'assets/svg/search.svg';
@@ -11,7 +11,6 @@ import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
-import { Meta } from 'utils/meta';
 import List from './components/List/List';
 import styles from './RecipeList.module.scss';
 
@@ -26,9 +25,9 @@ const RecipeList = () => {
 	const {
 		inputStore,
 		dropdownStore,
-		meta,
 		recipeList,
 		offset,
+		isSuccess,
 		incrementOffset,
 		getRecipes,
 		getNewRecipes,
@@ -130,7 +129,7 @@ const RecipeList = () => {
 						</Button>
 					</div>
 				</div>
-				{meta === Meta.success ? (
+				{isSuccess ? (
 					<List
 						recipeList={recipeList}
 						setIsAtEnd={setIsAtEnd}

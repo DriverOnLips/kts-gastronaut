@@ -41,11 +41,15 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 		dropdownStore.setIsOpen(true);
 	}, [dropdownStore]);
 
-	// useEffect(() => {
-	// 	if (!onMultiDropdownClick) return;
-
-	// 	onMultiDropdownClick(dropdownStore.title);
-	// }, [dropdownStore.values, dropdownStore.title, onMultiDropdownClick]);
+	const onItemClick = useCallback(
+		(option: Option) => {
+			dropdownStore.onItemClick(option);
+			if (onMultiDropdownClick) {
+				onMultiDropdownClick(dropdownStore.title);
+			}
+		},
+		[dropdownStore],
+	);
 
 	return (
 		<div
@@ -53,7 +57,6 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 			className={cn(
 				styles.dropdown,
 				dropdownStore.isOpen && styles.dropdown_open,
-				// disabled && styles.dropdown_disabled,
 				className,
 			)}
 		>
@@ -80,12 +83,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 								styles.dropdown__option,
 								option.isSelected && styles.dropdown__option_selected,
 							)}
-							onClick={() => {
-								dropdownStore.onItemClick(option);
-								if (onMultiDropdownClick) {
-									onMultiDropdownClick(dropdownStore.title);
-								}
-							}}
+							onClick={() => onItemClick(option)}
 						>
 							<Text key={index}>{option.value}</Text>
 						</button>

@@ -24,6 +24,7 @@ import {
 import { Api } from 'utils/api';
 import { log } from 'utils/log';
 import { Meta } from 'utils/meta';
+import { dropdownStoreOptions } from './config';
 import { IRecipeListStore, getRecipesParams } from './types';
 
 type PrivateFields = '_recipeList' | '_meta' | '_api' | '_offset';
@@ -49,6 +50,7 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			recipeList: computed,
 			meta: computed,
 			offset: computed,
+			isSuccess: computed,
 			incrementOffset: action.bound,
 			getRecipes: action.bound,
 			getNewRecipes: action.bound,
@@ -57,29 +59,12 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		this._offset = +(rootStore.query.getParam('offset') || 0);
 
 		const setDropdown = () => {
-			const options = [
-				{ value: 'main course', isSelected: false },
-				{ value: 'side dish', isSelected: false },
-				{ value: 'dessert', isSelected: false },
-				{ value: 'appetizer', isSelected: false },
-				{ value: 'salad', isSelected: false },
-				{ value: 'bread', isSelected: false },
-				{ value: 'breakfast', isSelected: false },
-				{ value: 'soup', isSelected: false },
-				{ value: 'beverage', isSelected: false },
-				{ value: 'souce', isSelected: false },
-				{ value: 'marinade', isSelected: false },
-				{ value: 'fingerfood', isSelected: false },
-				{ value: 'snack', isSelected: false },
-				{ value: 'drink', isSelected: false },
-			];
-
 			const type =
 				rootStore.query.getParam('type') !== undefined
 					? String(rootStore.query.getParam('type'))
 					: null;
 
-			const newOptions = options.map((option) =>
+			const newOptions = dropdownStoreOptions.map((option) =>
 				type?.includes(option.value)
 					? { ...option, isSelected: !option.isSelected }
 					: option,
@@ -114,23 +99,20 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		return this._offset;
 	}
 
+	get isSuccess(): boolean {
+		return this._meta === Meta.success;
+	}
+
 	incrementOffset(): void {
 		this._offset += 100;
 	}
 
 	async getRecipes(params: getRecipesParams): Promise<void> {
-		switch (this._meta) {
-			case Meta.initial:
-				this._meta = Meta.loading;
-				break;
-			case Meta.success:
-				this._meta = Meta.loading;
-				break;
-			case Meta.loading:
-				return;
-			default:
-				break;
+		if (this.meta === Meta.loading) {
+			return;
 		}
+
+		this._meta = Meta.loading;
 
 		this._recipeList = getInitialCollectionModel();
 
@@ -142,45 +124,38 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		);
 
 		runInAction(() => {
-			if (!(response instanceof Error)) {
-				try {
-					const recipeToSet: RecipeFromListModel[] = [];
-					for (const item of response) {
-						recipeToSet.push(normalizeRecipeFromList(item));
-					}
-
-					this._recipeList = normalizeCollection(
-						recipeToSet,
-						(recipeItem) => recipeItem.id,
-					);
-					this._meta = Meta.success;
-				} catch (error) {
-					log(error);
-					this._meta = Meta.error;
-					this._recipeList = getInitialCollectionModel();
-				}
+			if (response instanceof Error) {
+				log(response);
+				this._meta = Meta.error;
 
 				return;
 			}
 
-			log(response);
-			this._meta = Meta.error;
+			try {
+				const recipeToSet: RecipeFromListModel[] = [];
+				for (const item of response) {
+					recipeToSet.push(normalizeRecipeFromList(item));
+				}
+
+				this._recipeList = normalizeCollection(
+					recipeToSet,
+					(recipeItem) => recipeItem.id,
+				);
+				this._meta = Meta.success;
+			} catch (error) {
+				log(error);
+				this._meta = Meta.error;
+				this._recipeList = getInitialCollectionModel();
+			}
 		});
 	}
 
 	async getNewRecipes(params: getRecipesParams): Promise<void> {
-		switch (this._meta) {
-			case Meta.initial:
-				this._meta = Meta.loading;
-				break;
-			case Meta.success:
-				this._meta = Meta.loading;
-				break;
-			case Meta.loading:
-				return;
-			default:
-				break;
+		if (this.meta === Meta.loading) {
+			return;
 		}
+
+		this._meta = Meta.loading;
 
 		const response = await this._api.getRecipes(
 			params.count,
@@ -190,29 +165,29 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		);
 
 		runInAction(() => {
-			if (!(response instanceof Error)) {
-				try {
-					const recipeToSet: RecipeFromListModel[] = [];
-					for (const item of response) {
-						recipeToSet.push(normalizeRecipeFromList(item));
-					}
-
-					this._recipeList = normalizeCollection(
-						[...linearizeCollection(this._recipeList), ...recipeToSet],
-						(recipeItem) => recipeItem.id,
-					);
-					this._meta = Meta.success;
-				} catch (error) {
-					log(error);
-					this._meta = Meta.error;
-					this._recipeList = getInitialCollectionModel();
-				}
+			if (response instanceof Error) {
+				log(response);
+				this._meta = Meta.error;
 
 				return;
 			}
 
-			log(response);
-			this._meta = Meta.error;
+			try {
+				const recipeToSet: RecipeFromListModel[] = [];
+				for (const item of response) {
+					recipeToSet.push(normalizeRecipeFromList(item));
+				}
+
+				this._recipeList = normalizeCollection(
+					[...linearizeCollection(this._recipeList), ...recipeToSet],
+					(recipeItem) => recipeItem.id,
+				);
+				this._meta = Meta.success;
+			} catch (error) {
+				log(error);
+				this._meta = Meta.error;
+				this._recipeList = getInitialCollectionModel();
+			}
 		});
 	}
 

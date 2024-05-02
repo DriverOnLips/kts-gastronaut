@@ -33,7 +33,7 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 
 	const onCardButtonClickHandler = useCallback(() => {}, []);
 	const onCardItemClickHandler = useCallback(
-		(id: number) => {
+		() => (id: number) => {
 			navigate(`/recipe/${id}`);
 		},
 		[navigate],
@@ -105,7 +105,7 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 							title={item.title}
 							subtitle={item.ingredients}
 							onButtonClick={onCardButtonClickHandler}
-							onItemClick={() => onCardItemClickHandler(item.id)}
+							onItemClick={onCardItemClickHandler(item.id)}
 						/>
 					</div>
 				);
