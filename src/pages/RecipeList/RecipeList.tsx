@@ -11,6 +11,7 @@ import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
+import rootStore from 'stores/RootStore/instance';
 import { Meta } from 'utils/meta';
 import List from './components/List/List';
 import styles from './RecipeList.module.scss';
@@ -27,11 +28,13 @@ const RecipeList = () => {
 		recipeListStore;
 
 	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+
 		getRecipes({
 			count: 100,
 			offset: offsetRef.current,
-			query: null,
-			type: null,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
 		});
 	}, [getRecipes]);
 
@@ -49,7 +52,6 @@ const RecipeList = () => {
 	const onMultiDropdownClick = useCallback(
 		(value: string) => {
 			const newSearchParams = new URLSearchParams(window.location.search);
-
 			value !== 'Choose a category'
 				? newSearchParams.set('type', value)
 				: newSearchParams.set('type', '');

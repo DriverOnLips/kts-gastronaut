@@ -49,25 +49,50 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			getRecipes: action.bound,
 		});
 
-		const options = [
-			{ value: 'main course', isSelected: false },
-			{ value: 'side dish', isSelected: false },
-			{ value: 'dessert', isSelected: false },
-			{ value: 'appetizer', isSelected: false },
-			{ value: 'salad', isSelected: false },
-			{ value: 'bread', isSelected: false },
-			{ value: 'breakfast', isSelected: false },
-			{ value: 'soup', isSelected: false },
-			{ value: 'beverage', isSelected: false },
-			{ value: 'souce', isSelected: false },
-			{ value: 'marinade', isSelected: false },
-			{ value: 'fingerfood', isSelected: false },
-			{ value: 'snack', isSelected: false },
-			{ value: 'drink', isSelected: false },
-		];
+		const setDropdown = () => {
+			const options = [
+				{ value: 'main course', isSelected: false },
+				{ value: 'side dish', isSelected: false },
+				{ value: 'dessert', isSelected: false },
+				{ value: 'appetizer', isSelected: false },
+				{ value: 'salad', isSelected: false },
+				{ value: 'bread', isSelected: false },
+				{ value: 'breakfast', isSelected: false },
+				{ value: 'soup', isSelected: false },
+				{ value: 'beverage', isSelected: false },
+				{ value: 'souce', isSelected: false },
+				{ value: 'marinade', isSelected: false },
+				{ value: 'fingerfood', isSelected: false },
+				{ value: 'snack', isSelected: false },
+				{ value: 'drink', isSelected: false },
+			];
 
-		this.dropdownStore.setOptions(options);
-		this.dropdownStore.setValues(options);
+			const type =
+				rootStore.query.getParam('type') !== undefined
+					? String(rootStore.query.getParam('type'))
+					: null;
+
+			const newOptions = options.map((option) =>
+				type?.includes(option.value)
+					? { ...option, isSelected: !option.isSelected }
+					: option,
+			);
+
+			this.dropdownStore.setOptions(newOptions);
+			this.dropdownStore.setValues(newOptions);
+		};
+
+		const setInput = () => {
+			const query =
+				rootStore.query.getParam('query') !== undefined
+					? String(rootStore.query.getParam('query'))
+					: null;
+
+			if (query) this.inputStore.setValue(query);
+		};
+
+		setDropdown();
+		setInput();
 	}
 
 	get recipeList(): RecipeFromListModel[] {
@@ -136,15 +161,21 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 	private readonly _qpReaction: IReactionDisposer = reaction(
 		() => ({
-			query: rootStore.query.getParam('query'),
-			type: rootStore.query.getParam('type'),
+			query:
+				rootStore.query.getParam('query') !== undefined
+					? String(rootStore.query.getParam('query'))
+					: null,
+			type:
+				rootStore.query.getParam('type') !== undefined
+					? String(rootStore.query.getParam('type'))
+					: null,
 		}),
 		({ query, type }) => {
 			this.getRecipes({
 				count: 100,
 				offset: 0,
-				query: String(query),
-				type: String(type),
+				query,
+				type,
 			});
 		},
 	);
