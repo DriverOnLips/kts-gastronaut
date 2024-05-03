@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './NotFound.module.scss';
@@ -83,4 +84,4 @@ const NotFound: React.FC = () => {
 	);
 };
 
-export default NotFound;
+export default memo(NotFound);

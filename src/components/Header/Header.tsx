@@ -1,4 +1,5 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import logo from 'assets/svg/logo.svg';
@@ -9,13 +10,13 @@ const Header = () => {
 	const { rootRef } = useRecipeContext();
 	const navigate = useNavigate();
 
-	const handleLogoClick = () => {
+	const handleLogoClick = useCallback(() => {
 		if (location.pathname === '/') {
 			rootRef?.scrollIntoView({ behavior: 'smooth' });
 		} else {
 			navigate('/');
 		}
-	};
+	}, [navigate, rootRef]);
 
 	return (
 		<nav className={styles.navbar_desctop}>

@@ -2,6 +2,7 @@
 
 .card_item {
 	display: flex;
+	height: 650px;
 	flex-direction: column;
 	align-items: center;
 
@@ -64,19 +65,47 @@
 	}
 }
 
+@media (max-width: 1700px) {
+	.card_item {
+		height: 600px;
+	}
+}
+
+@media (max-width: 1400px) {
+	.card_item {
+		height: 550px;
+	}
+}
+
 @media screen and (max-width: 1200px) {
 	.card_item {
+		height: 650px;
+
 		&__content {
 			width: 40vw;
 		}
 	}
 }
 
+@media (max-width: 900px) {
+	.card_item {
+		height: 550px;
+	}
+}
+
 @media screen and (max-width: 650px) {
 	.card_item {
+		height: 650px;
+
 		&__content {
 			width: 70vw;
 		}
+	}
+}
+
+@media (max-width: 500px) {
+	.card_item {
+		height: 550px;
 	}
 }
 
@@ -85,5 +114,11 @@
 		&__content {
 			width: 80vw;
 		}
+	}
+}
+
+@media (max-width: 350px) {
+	.card_item {
+		height: 500px;
 	}
 }

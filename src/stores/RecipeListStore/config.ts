@@ -1,0 +1,16 @@
+export const dropdownStoreOptions = [
+	{ value: 'main course', isSelected: false },
+	{ value: 'side dish', isSelected: false },
+	{ value: 'dessert', isSelected: false },
+	{ value: 'appetizer', isSelected: false },
+	{ value: 'salad', isSelected: false },
+	{ value: 'bread', isSelected: false },
+	{ value: 'breakfast', isSelected: false },
+	{ value: 'soup', isSelected: false },
+	{ value: 'beverage', isSelected: false },
+	{ value: 'souce', isSelected: false },
+	{ value: 'marinade', isSelected: false },
+	{ value: 'fingerfood', isSelected: false },
+	{ value: 'snack', isSelected: false },
+	{ value: 'drink', isSelected: false },
+];

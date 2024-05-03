@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+/* eslint-disable react/react-in-jsx-scope */
 import styles from './Loader.module.scss';
 
 const Loader = () => {

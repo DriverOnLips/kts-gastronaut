@@ -1,3 +1,4 @@
+import cn from 'classnames';
 import * as React from 'react';
 import { ReactNode } from 'react';
 
@@ -9,6 +10,8 @@ type TextProps = {
 	text_align?: 'center' | 'start' | 'end';
 	weight?: 'medium' | 'bold';
 	color?: 'primary' | 'secondary' | 'main';
+	display?: 'flex';
+	gap?: string;
 	maxLines?: number;
 	children: ReactNode;
 };
@@ -18,20 +21,30 @@ const Text: React.FC<TextProps> = ({
 	size = 's5',
 	text_align = 'start',
 	weight = 'medium',
-	color = 'primary',
+	color,
+	display,
+	gap,
 	maxLines,
 	children,
 }) => {
+	const style: React.CSSProperties = {
+		textAlign: text_align,
+		'--max-lines-count': maxLines,
+	} as React.CSSProperties;
+
+	if (display) style.display = display;
+	if (gap) style.gap = gap;
+
 	return (
 		<span
-			className={`${!!className && className} ${size} ${weight} ${color} 
-      ${!!maxLines && 'max_lines'}`}
-			style={
-				{
-					textAlign: text_align,
-					'--max-lines-count': maxLines,
-				} as React.CSSProperties
-			}
+			className={cn(
+				!!className && className,
+				size,
+				weight,
+				!!color && color,
+				!!maxLines && 'max_lines',
+			)}
+			style={style}
 		>
 			{children}
 		</span>

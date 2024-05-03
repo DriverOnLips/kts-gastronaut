@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"plugins": [{ "name": "typescript-plugin-css-modules" }],
 		"target": "ES2020",
 		"useDefineForClassFields": true,
 		"lib": ["ES2020", "DOM", "DOM.Iterable"],
@@ -22,7 +23,9 @@
 		"paths": {
 			"assets": ["assets/*"],
 			"components": ["components/*"],
+			"hooks": ["hooks/*"],
 			"pages": ["pages/*"],
+			"stores": ["stores/*"],
 			"styles": ["styles/*"],
 			"types": ["types/*"],
 			"utils": ["utils/*"]

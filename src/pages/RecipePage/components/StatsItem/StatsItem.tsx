@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { memo } from 'react';
 import Text from 'components/Text/Text';
 
 type StatsItemProps = {
@@ -36,4 +37,4 @@ const StatsItem: React.FC<StatsItemProps> = ({
 	);
 };
 
-export default StatsItem;
+export default memo(StatsItem);

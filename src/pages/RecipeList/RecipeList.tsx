@@ -1,102 +1,145 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
-import * as React from 'react';
-
+/* eslint-disable react/react-in-jsx-scope */
+import { observer } from 'mobx-react-lite';
+import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
+import search from 'assets/svg/search.svg';
 import Button from 'components/Button/Button';
-import Card from 'components/Card/Card';
+import Input from 'components/Input/Input';
 import Loader from 'components/Loader/Loader';
-import { RecipeFromList } from 'types/RecipeFromList';
-import { Api } from 'utils/api';
-import { useRecipeContext } from '../../App';
+import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
+import { useLocalStore } from 'hooks/useLocalStore';
+import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
+import List from './components/List/List';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
-	const [isLoaded, setIsLoaded] = useState<boolean>(false);
-	const offsetRef = useRef(0);
+	useQueryParamsStore();
 
 	const navigate = useNavigate();
 
-	const { recipeList, setRecipeList } = useRecipeContext();
-	const api = React.useMemo(() => new Api(), []);
+	const [isAtEnd, setIsAtEnd] = useState<boolean>(false);
 
-	const loadRecepes = useCallback(async () => {
-		const response = await api.getRecipes(10, offsetRef.current);
+	const recipeListStore = useLocalStore(() => new RecipeListStore());
+	const {
+		inputStore,
+		dropdownStore,
+		recipeList,
+		offset,
+		isSuccess,
+		incrementOffset,
+		getRecipes,
+		getNewRecipes,
+	} = recipeListStore;
 
-		if (response instanceof Error) return;
+	const onButtonClick = useCallback(() => {
+		const params = new URLSearchParams(window.location.search);
 
-		const recipesToSet = response?.map((item) => ({
-			...item,
-			readyInMinutes: Math.max(0, item.readyInMinutes),
-			calories: Math.round(item.nutrition.nutrients?.[0]?.amount),
-			ingredients: item.nutrition.ingredients
-				.map((ingredient: { name: string }) => ingredient.name)
-				.join(' + '),
-		}));
+		getRecipes({
+			count: 100,
+			offset,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
+		});
+	}, [getRecipes]);
 
-		setRecipeList((prevRecipes: RecipeFromList[]) => [
-			...prevRecipes,
-			...recipesToSet,
-		]);
-		offsetRef.current += 10;
-	}, [setRecipeList, api]);
+	const onInputChange = useCallback(
+		(value: string) => {
+			inputStore.setValue(value);
 
-	const handleScroll = useCallback(() => {
-		const scrollTop = window.scrollY || document.documentElement.scrollTop;
-		const scrollHeight = document.documentElement.scrollHeight;
-		const clientHeight = document.documentElement.clientHeight;
-		const scrolledToBottom = scrollTop + clientHeight >= scrollHeight;
+			const newSearchParams = new URLSearchParams(window.location.search);
+			newSearchParams.set('query', value);
+			navigate(`?${newSearchParams.toString()}`, { replace: true });
+		},
+		[inputStore, navigate],
+	);
 
-		if (scrolledToBottom) {
-			loadRecepes();
-		}
-	}, [loadRecepes]);
+	const onMultiDropdownClick = useCallback(
+		(value: string) => {
+			const newSearchParams = new URLSearchParams(window.location.search);
+			value !== 'Choose a category'
+				? newSearchParams.set('type', value)
+				: newSearchParams.set('type', '');
+			navigate(`?${newSearchParams.toString()}`, { replace: true });
+		},
+		[navigate],
+	);
 
 	useEffect(() => {
-		window.addEventListener('scroll', handleScroll);
+		const params = new URLSearchParams(window.location.search);
 
-		return () => {
-			window.removeEventListener('scroll', handleScroll);
-		};
-	}, [handleScroll]);
+		getRecipes({
+			count: 100,
+			offset,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
+		});
+	}, [getRecipes]);
+
+	// Used for addition data to list
 
 	useEffect(() => {
-		if (recipeList?.length > 0) {
-			setIsLoaded(true);
-		} else {
-			loadRecepes();
+		if (isAtEnd) {
+			setIsAtEnd(false);
+			incrementOffset();
+
+			const newSearchParams = new URLSearchParams(window.location.search);
+			newSearchParams.set('offset', String(offset + 100));
+			navigate(`?${newSearchParams.toString()}`, { replace: true });
+
+			const params = new URLSearchParams(window.location.search);
+
+			getNewRecipes({
+				count: 100,
+				offset: offset + 100,
+				query: params.get('query') || null,
+				type: params.get('type') || null,
+			});
 		}
-	}, [loadRecepes, recipeList]);
+	}, [isAtEnd, navigate, incrementOffset, getNewRecipes]);
 
 	return (
 		<div className={styles.recipe_list}>
-			{isLoaded ? (
-				<>
-					<img
-						src={intro}
-						className={styles.recipe_list__intro}
-					/>
-					<div className={`${styles.recipe_list__container} my-1`}>
-						{recipeList?.map((item: RecipeFromList) => (
-							<Card
-								key={item.id}
-								actionSlot={<Button>Save</Button>}
-								captionSlot={item.readyInMinutes + ' minutes'}
-								contentSlot={item.calories + ' kcal'}
-								image={item.image}
-								title={item.title}
-								subtitle={item.ingredients}
-								onButtonClick={() => {}}
-								onItemClick={() => navigate(`/recipe/${item.id}`)}
-							/>
-						))}
+			<>
+				<img
+					src={intro}
+					className={styles.recipe_list__intro}
+				/>
+				<div className={`${styles.recipe_list__input_search}`}>
+					<div className={styles['recipe_list__input_search__input-div']}>
+						<Input
+							value={inputStore.value}
+							onChange={onInputChange}
+							placeholder='Enter dishes'
+						/>
 					</div>
-				</>
-			) : (
-				<Loader />
-			)}
+					<div>
+						<MultiDropdown
+							dropdownStore={dropdownStore}
+							onMultiDropdownClick={onMultiDropdownClick}
+						/>
+					</div>
+					<div onClick={onButtonClick}>
+						<Button>
+							<img
+								src={search}
+								style={{ display: 'flex' }}
+							/>
+						</Button>
+					</div>
+				</div>
+				{isSuccess ? (
+					<List
+						recipeList={recipeList}
+						setIsAtEnd={setIsAtEnd}
+					/>
+				) : (
+					<Loader />
+				)}
+			</>
 		</div>
 	);
 };
 
-export default RecipeList;
+export default observer(RecipeList);
