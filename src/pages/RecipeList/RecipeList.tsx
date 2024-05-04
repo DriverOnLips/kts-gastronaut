@@ -130,10 +130,13 @@ const RecipeList = () => {
 					</div>
 				</div>
 				{isSuccess ? (
-					<List
-						recipeList={recipeList}
-						setIsAtEnd={setIsAtEnd}
-					/>
+					<>
+						<List
+							recipeList={recipeList}
+							setIsAtEnd={setIsAtEnd}
+						/>
+						<span>pagination</span>
+					</>
 				) : (
 					<Loader />
 				)}

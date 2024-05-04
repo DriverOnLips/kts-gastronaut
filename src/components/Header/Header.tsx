@@ -1,5 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope */
 import { useCallback } from 'react';
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import logo from 'assets/svg/logo.svg';

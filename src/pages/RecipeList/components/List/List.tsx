@@ -79,7 +79,7 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 				const columnCount = getColumnCount();
 				return window.innerWidth / columnCount - 14;
 			}}
-			height={1200} // Высота списка
+			height={window.innerHeight - 400} // Высота списка
 			rowCount={Math.ceil(recipeList.length / getColumnCount())}
 			rowHeight={setItemHeight} // Высота элемента
 			width={window.innerWidth - 15} // Ширина списка
