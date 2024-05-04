@@ -2,14 +2,13 @@
 	"compilerOptions": {
 		"baseUrl": "src",
 		"paths": {
+			"@assets/*": ["assets"],
 			"@components/*": ["components"],
-			"@config/*": ["config"],
+			"@hooks/*": ["hooks"],
+			"@pages/*": ["pages"],
 			"@styles/*": ["styles"],
-			"@utils/*": ["utils"],
-			"@models/*": ["models"],
-			"@Store/*": ["Store/*"],
-			"@images/*": ["images/*"],
-			"@pages/*": ["pages/*"]
+			"@types/*": ["types"],
+			"@utils/*": ["utils/*"]
 		},
 		"noEmit": true,
 		"allowJs": true,

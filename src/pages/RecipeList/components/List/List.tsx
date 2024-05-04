@@ -7,6 +7,10 @@ import Card from 'components/Card/Card';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import styles from '../../RecipeList.module.scss';
 
+interface ScrollEvent {
+	scrollTop: number;
+}
+
 interface GridItemProps {
 	columnIndex: number;
 	rowIndex: number;
@@ -22,7 +26,7 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 	const navigate = useNavigate();
 
 	const handleScroll = useCallback(
-		({ scrollTop }) => {
+		({ scrollTop }: ScrollEvent) => {
 			const totalHeight =
 				(recipeList.length * setItemHeight()) / getColumnCount();
 			const isAtEnd = scrollTop + 1200 >= totalHeight; // 1200 - это высота контейнера

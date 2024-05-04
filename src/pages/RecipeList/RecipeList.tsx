@@ -1,5 +1,5 @@
-/* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
 import { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
