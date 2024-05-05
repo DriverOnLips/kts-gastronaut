@@ -32,11 +32,26 @@ const Header = () => {
 			</div>
 
 			<ul className={styles.links}>
+				<div style={{ display: 'flex', gap: '2rem' }}>
+					<li
+						className={styles.link}
+						onClick={handleLogoClick}
+					>
+						Recipes
+					</li>
+					<li
+						className={styles.link}
+						onClick={handleLogoClick}
+					>
+						Saved
+					</li>
+				</div>
+
 				<li
 					className={styles.link}
 					onClick={handleLogoClick}
 				>
-					Recipes
+					Login
 				</li>
 			</ul>
 		</nav>

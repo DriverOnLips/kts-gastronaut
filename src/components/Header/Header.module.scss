@@ -8,7 +8,7 @@
 	background-color: $color-white;
 	display: flex;
 	align-items: center;
-	padding: 0 5vw;
+	justify-content: space-between;
 	z-index: 999;
 }
 
@@ -16,6 +16,7 @@
 	display: flex;
 	gap: 1rem;
 	align-items: center;
+	margin: 0 50px;
 	cursor: pointer;
 
 	.navbar__logo_link {
@@ -36,7 +37,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin: 0 0 0 5vw;
+	width: calc(100% - 350px);
+	margin-right: 50px;
 }
 
 .link {
