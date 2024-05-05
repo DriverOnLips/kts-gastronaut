@@ -12,7 +12,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const getSettingsForStyles = (withModules = false) => {
 	// Заменяем в нашей функции style-loader на mini-css-extract-plugin
 	return [
-		isProd ? MiniCssExtractPlugin.loader : 'style-loader',
+		isProd
+			? {
+					loader: MiniCssExtractPlugin.loader,
+					options: {
+						defaultExport: true,
+					},
+				}
+			: 'style-loader',
 		!withModules
 			? 'css-loader'
 			: {
