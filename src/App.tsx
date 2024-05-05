@@ -1,7 +1,9 @@
 import { createContext, useContext } from 'react';
 import * as React from 'react';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
+import ico from 'assets/ico/logo.ico';
 import Header from 'components/Header/Header';
 import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
 import NotFound from 'pages/NotFound/NotFound';
@@ -29,35 +31,44 @@ const App = () => {
 				rootRef,
 			}}
 		>
-			<BrowserRouter basename='/'>
-				<Header />
-				<Routes>
-					<Route
-						path='/'
-						element={<RecipeList />}
+			<HelmetProvider>
+				<Helmet>
+					<link
+						rel='icon'
+						type='image/svg+xml'
+						href={ico}
 					/>
-					<Route
-						path='/recipe/:id'
-						element={<RecipePage />}
-					/>
-					<Route
-						path='/not_found'
-						element={<NotFound />}
-					/>
-					<Route
-						path='/kts-gastronaut'
-						element={<MainPageRedirect />}
-					/>
-					<Route
-						path='/kts-gastronaut/'
-						element={<MainPageRedirect />}
-					/>
-					<Route
-						path='*'
-						element={<NotFound />}
-					/>
-				</Routes>
-			</BrowserRouter>
+				</Helmet>
+				<BrowserRouter basename='/'>
+					<Header />
+					<Routes>
+						<Route
+							path='/'
+							element={<RecipeList />}
+						/>
+						<Route
+							path='/recipe/:id'
+							element={<RecipePage />}
+						/>
+						<Route
+							path='/not_found'
+							element={<NotFound />}
+						/>
+						<Route
+							path='/kts-gastronaut'
+							element={<MainPageRedirect />}
+						/>
+						<Route
+							path='/kts-gastronaut/'
+							element={<MainPageRedirect />}
+						/>
+						<Route
+							path='*'
+							element={<NotFound />}
+						/>
+					</Routes>
+				</BrowserRouter>
+			</HelmetProvider>
 		</RecipeProvider>
 	);
 };

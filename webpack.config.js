@@ -87,6 +87,10 @@ module.exports = {
 					},
 				},
 			},
+			{
+				test: /\.(ico)$/,
+				type: 'asset/resource',
+			},
 		],
 	},
 	resolve: {
