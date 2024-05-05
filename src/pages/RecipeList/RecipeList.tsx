@@ -106,7 +106,7 @@ const RecipeList = () => {
 					src={intro}
 					className={styles.recipe_list__intro}
 				/>
-				<div className={`${styles.recipe_list__input_search}`}>
+				<div className={styles.recipe_list__input_search}>
 					<div className={styles['recipe_list__input_search__input-div']}>
 						<Input
 							value={inputStore.value}
@@ -114,12 +114,7 @@ const RecipeList = () => {
 							placeholder='Enter dishes'
 						/>
 					</div>
-					<div>
-						<MultiDropdown
-							dropdownStore={dropdownStore}
-							onMultiDropdownClick={onMultiDropdownClick}
-						/>
-					</div>
+
 					<div onClick={onButtonClick}>
 						<Button>
 							<img
@@ -128,6 +123,13 @@ const RecipeList = () => {
 							/>
 						</Button>
 					</div>
+				</div>
+				<div className={styles.recipe_list__categories}>
+					<MultiDropdown
+						className={styles['recipe_list__categories-div']}
+						dropdownStore={dropdownStore}
+						onMultiDropdownClick={onMultiDropdownClick}
+					/>
 				</div>
 				{isSuccess ? (
 					<>

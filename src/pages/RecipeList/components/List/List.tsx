@@ -54,24 +54,57 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 		}
 	};
 
-	const setItemHeight = () => {
+	const setItemHeight = useCallback(() => {
 		const screenWidth = window.innerWidth;
-		if (screenWidth < 350) {
+		const breakpoints: { [key: number]: number } = {
+			350: 550,
+			500: 600,
+			650: 700,
+			900: 600,
+			1200: 700,
+			1400: 600,
+			1700: 650,
+			2000: 750,
+		};
+
+		const sortedBreakpoints = Object.keys(breakpoints)
+			.map(Number)
+			.sort((a, b) => a - b);
+		const currentBreakpoint = sortedBreakpoints.find((bp) => screenWidth < bp);
+
+		if (currentBreakpoint !== undefined) {
+			return breakpoints[currentBreakpoint];
+		}
+
+		return 800;
+	}, []);
+
+	const setGridHeight = () => {
+		const screenHeight = window.innerHeight;
+		const screenWidth = window.innerWidth;
+
+		if (screenHeight < 350) {
 			return 550;
-		} else if (screenWidth < 500) {
-			return 600;
-		} else if (screenWidth < 650) {
-			return 700;
-		} else if (screenWidth < 900) {
-			return 600;
-		} else if (screenWidth < 1200) {
-			return 700;
-		} else if (screenWidth < 1400) {
-			return 600;
-		} else if (screenWidth < 1700) {
-			return 650;
+		} else if (screenHeight < 1500) {
+			return screenHeight - 450;
 		} else {
-			return 700;
+			if (screenWidth < 200) {
+				return 100;
+			} else if (screenWidth < 950) {
+				return screenHeight - 340;
+			} else if (screenWidth < 1300) {
+				return screenHeight - 380;
+			} else if (screenWidth < 1550) {
+				return screenHeight - 420;
+			} else if (screenWidth < 1750) {
+				return screenHeight - 450;
+			} else if (screenWidth < 2000) {
+				return screenHeight - 480;
+			} else if (screenWidth < 2200) {
+				return screenHeight - 520;
+			} else {
+				return screenHeight - 570;
+			}
 		}
 	};
 
@@ -81,13 +114,13 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 			columnCount={getColumnCount()}
 			columnWidth={() => {
 				const columnCount = getColumnCount();
-				return window.innerWidth / columnCount - 14;
+				return window.innerWidth / columnCount - 20;
 			}}
-			height={window.innerHeight - 400} // Высота списка
+			height={setGridHeight()} // Высота списка
 			rowCount={Math.ceil(recipeList.length / getColumnCount())}
 			rowHeight={setItemHeight} // Высота элемента
-			width={window.innerWidth - 15} // Ширина списка
-			style={{ overflowY: 'scroll', scrollbarWidth: 'none' }}
+			width={window.innerWidth - 4} // Ширина списка
+			// style={{ overflowY: 'scroll', scrollbarWidth: 'none' }}
 			onScroll={handleScroll}
 		>
 			{({ columnIndex, rowIndex, style }: GridItemProps) => {
