@@ -1,36 +1,28 @@
 {
 	"compilerOptions": {
-		"plugins": [{ "name": "typescript-plugin-css-modules" }],
-		"target": "ES2020",
-		"useDefineForClassFields": true,
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
-		"module": "ESNext",
-		"skipLibCheck": true,
-
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": true,
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"noEmit": true,
-		"jsx": "react-jsx",
-
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-
 		"baseUrl": "src",
 		"paths": {
-			"assets": ["assets/*"],
-			"components": ["components/*"],
-			"hooks": ["hooks/*"],
-			"pages": ["pages/*"],
-			"stores": ["stores/*"],
-			"styles": ["styles/*"],
-			"types": ["types/*"],
-			"utils": ["utils/*"]
-		}
+			"@assets/*": ["assets"],
+			"@components/*": ["components"],
+			"@hooks/*": ["hooks"],
+			"@pages/*": ["pages"],
+			"@styles/*": ["styles"],
+			"@types/*": ["types"],
+			"@utils/*": ["utils/*"]
+		},
+		"noEmit": true,
+		"allowJs": true,
+		"sourceMap": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"skipLibCheck": true,
+		"module": "es6",
+		"target": "es6",
+		"moduleResolution": "node",
+		"jsx": "react",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true
 	},
-	"include": ["src"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"]
 }

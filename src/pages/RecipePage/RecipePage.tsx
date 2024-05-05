@@ -1,14 +1,12 @@
-/* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-
 import back_button from 'assets/svg/back_button.svg';
 import Loader from 'components/Loader/Loader';
 import Text from 'components/Text/Text';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipePageStore from 'stores/RecipePageStore/RecipePageStore';
-import { Api } from 'utils/api';
 import { Meta } from 'utils/meta';
 import Equipment from './components/Equipment/Equipment';
 import Ingredients from './components/Ingredients/Ingredients';
