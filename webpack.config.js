@@ -99,6 +99,7 @@ module.exports = {
 		alias: {
 			assets: path.join(srcPath, 'assets'),
 			components: path.join(srcPath, 'components'),
+			contexts: path.join(srcPath, 'contexts'),
 			hooks: path.join(srcPath, 'hooks'),
 			pages: path.join(srcPath, 'pages'),
 			stores: path.join(srcPath, 'stores'),

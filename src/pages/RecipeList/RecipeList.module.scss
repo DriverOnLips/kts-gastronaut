@@ -1,12 +1,19 @@
 @import "styles/variables.scss";
 
+.hide-image {
+	max-height: 0 !important; /* Плавно уменьшаем max-height до 0 */
+	overflow: hidden; /* Скрываем содержимое, когда max-height равен 0 */
+}
+
 .recipe_list {
 	padding-top: 48px;
 
 	&__intro {
 		width: 100%;
-		height: 250px;
+		height: 220px;
 		object-fit: cover;
+		max-height: 220px; /* Установите max-height равным высоте элемента */
+		transition: max-height 0.5s ease-out; /* Анимация изменения max-height */
 	}
 
 	&__input_search {

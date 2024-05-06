@@ -20,9 +20,10 @@ interface GridItemProps {
 type ListProps = {
 	recipeList: RecipeFromListModel[];
 	setIsAtEnd(value: boolean): void;
+	increase: boolean;
 };
 
-const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
+const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd, increase }) => {
 	const navigate = useNavigate();
 
 	const handleScroll = useCallback(
@@ -80,32 +81,15 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd }) => {
 	}, []);
 
 	const setGridHeight = () => {
+		const rootFontSize = parseFloat(
+			getComputedStyle(document.documentElement).fontSize,
+		);
+		const remInPixels = rootFontSize * 5;
 		const screenHeight = window.innerHeight;
-		const screenWidth = window.innerWidth;
 
-		if (screenHeight < 350) {
-			return 550;
-		} else if (screenHeight < 1500) {
-			return screenHeight - 450;
-		} else {
-			if (screenWidth < 200) {
-				return 100;
-			} else if (screenWidth < 950) {
-				return screenHeight - 340;
-			} else if (screenWidth < 1300) {
-				return screenHeight - 380;
-			} else if (screenWidth < 1550) {
-				return screenHeight - 420;
-			} else if (screenWidth < 1750) {
-				return screenHeight - 450;
-			} else if (screenWidth < 2000) {
-				return screenHeight - 480;
-			} else if (screenWidth < 2200) {
-				return screenHeight - 520;
-			} else {
-				return screenHeight - 570;
-			}
-		}
+		return increase
+			? screenHeight - 215 - remInPixels
+			: screenHeight - 420 - remInPixels;
 	};
 
 	return (

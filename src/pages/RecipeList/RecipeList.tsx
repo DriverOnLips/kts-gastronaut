@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
 import search from 'assets/svg/search.svg';
@@ -8,6 +8,7 @@ import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Loader from 'components/Loader/Loader';
 import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
+import Pages from 'components/Pagination/Pagination';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
@@ -16,6 +17,11 @@ import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	useQueryParamsStore();
+
+	const intoroRef = useRef<HTMLImageElement>(null);
+	const listRef = useRef<HTMLDivElement>(null);
+
+	const [listIncrease, setListIncrease] = useState<boolean>(false);
 
 	const navigate = useNavigate();
 
@@ -99,10 +105,38 @@ const RecipeList = () => {
 		}
 	}, [isAtEnd, navigate, incrementOffset, getNewRecipes]);
 
+	useEffect(() => {
+		const handleWheel = (event: WheelEvent) => {
+			const targetNode = event.target as Node;
+
+			if (listRef?.current?.contains(targetNode)) {
+				return;
+			}
+
+			if (event.deltaY > 0) {
+				intoroRef?.current?.classList.add(styles['hide-image']);
+				setListIncrease(true);
+			} else {
+				intoroRef?.current?.classList.remove(styles['hide-image']);
+				setListIncrease(false);
+			}
+		};
+
+		window.addEventListener('wheel', handleWheel);
+
+		document.body.style.overflow = 'hidden';
+
+		return () => {
+			window.removeEventListener('wheel', handleWheel);
+			document.body.style.overflow = 'auto';
+		};
+	}, []);
+
 	return (
 		<div className={styles.recipe_list}>
 			<>
 				<img
+					ref={intoroRef}
 					src={intro}
 					className={styles.recipe_list__intro}
 				/>
@@ -133,11 +167,18 @@ const RecipeList = () => {
 				</div>
 				{isSuccess ? (
 					<>
-						<List
-							recipeList={recipeList}
-							setIsAtEnd={setIsAtEnd}
+						<div ref={listRef}>
+							<List
+								recipeList={recipeList}
+								setIsAtEnd={setIsAtEnd}
+								increase={listIncrease}
+							/>
+						</div>
+
+						<Pages
+							page={1}
+							pages={5}
 						/>
-						<span>pagination</span>
 					</>
 				) : (
 					<Loader />

@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import logo from 'assets/svg/logo.svg';
-import { useRecipeContext } from '../../App';
+import { useRootContext } from 'contexts/RootContext';
 import styles from './Header.module.scss';
 
 const Header = () => {
-	const { rootRef } = useRecipeContext();
+	const { rootRef } = useRootContext();
 	const navigate = useNavigate();
 
 	const handleLogoClick = useCallback(() => {

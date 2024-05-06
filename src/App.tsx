@@ -1,32 +1,20 @@
-import { createContext, useContext } from 'react';
 import * as React from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import ico from 'assets/ico/logo.ico';
 import Header from 'components/Header/Header';
+import { RootProvider } from 'contexts/RootContext';
 import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
 import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
 
-type RecipeContextType = {
-	rootRef: HTMLElement | null;
-};
-
-const RecipeContext = createContext<RecipeContextType>({
-	rootRef: null,
-});
-
-export const useRecipeContext = () => useContext(RecipeContext);
-
-const RecipeProvider = RecipeContext.Provider;
-
 const App = () => {
 	const rootRef = document.getElementById('root');
 
 	return (
-		<RecipeProvider
+		<RootProvider
 			value={{
 				rootRef,
 			}}
@@ -39,7 +27,10 @@ const App = () => {
 						href={ico}
 					/>
 				</Helmet>
-				<BrowserRouter basename='/'>
+
+				{/* Used for gh-pages */}
+				<BrowserRouter basename='/kts-gastronaut'>
+					{/* <BrowserRouter basename='/'> */}
 					<Header />
 					<Routes>
 						<Route
@@ -54,14 +45,10 @@ const App = () => {
 							path='/not_found'
 							element={<NotFound />}
 						/>
-						<Route
+						{/* <Route
 							path='/kts-gastronaut'
 							element={<MainPageRedirect />}
-						/>
-						<Route
-							path='/kts-gastronaut/'
-							element={<MainPageRedirect />}
-						/>
+						/> */}
 						<Route
 							path='*'
 							element={<NotFound />}
@@ -69,7 +56,7 @@ const App = () => {
 					</Routes>
 				</BrowserRouter>
 			</HelmetProvider>
-		</RecipeProvider>
+		</RootProvider>
 	);
 };
 
