@@ -1,0 +1,19 @@
+@import "styles/variables.scss";
+
+.page_button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	width: 38px;
+	height: 42px;
+	border-radius: 10px;
+	background: transparent;
+	font-size: $size5;
+	cursor: pointer;
+}
+
+.page_button-active {
+	background-color: $color-primary;
+	color: $text-color-white;
+}

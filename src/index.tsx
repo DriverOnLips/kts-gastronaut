@@ -1,10 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import App from './App.tsx';
+import { HelmetProvider } from 'react-helmet-async';
+import App from './App';
 import './styles/index.scss';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
-		<App />
+		<HelmetProvider>
+			<App />
+		</HelmetProvider>
 	</React.StrictMode>,
 );
