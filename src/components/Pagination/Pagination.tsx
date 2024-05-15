@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react';
-import Button from 'components/Button/Button';
-// import { scrollTo } from '../../../../utils/scrollTo';
 import PageButton from './components/PageButton/PageButton';
 import styles from './Pagination.module.scss';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -29,8 +29,8 @@ const App = () => {
 				</Helmet>
 
 				{/* Used for gh-pages */}
-				{/* <BrowserRouter basename='/kts-gastronaut'> */}
-				<BrowserRouter basename='/'>
+				<BrowserRouter basename='/kts-gastronaut'>
+					{/* <BrowserRouter basename='/'> */}
 					<Header />
 					<Routes>
 						<Route
@@ -45,10 +45,10 @@ const App = () => {
 							path='/not_found'
 							element={<NotFound />}
 						/>
-						{/* <Route
+						<Route
 							path='/kts-gastronaut'
 							element={<MainPageRedirect />}
-						/> */}
+						/>
 						<Route
 							path='*'
 							element={<NotFound />}
