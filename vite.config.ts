@@ -36,13 +36,13 @@ export default defineConfig({
 				description: 'Food Client PWA',
 				icons: [
 					{
-						src: '/logo64.png',
-						sizes: '64x64',
+						src: '/logo512.png',
+						sizes: '512x512',
 						type: 'any',
 					},
 					{
-						src: '/logo64.png',
-						sizes: '64x64',
+						src: '/logo512.png',
+						sizes: '512x512',
 						type: 'maskable',
 					},
 				],
