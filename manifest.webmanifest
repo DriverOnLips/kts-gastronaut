@@ -1,0 +1,1 @@
+{"name":"Food Client","short_name":"FC","start_url":"/kts-gastronaut/","display":"standalone","background_color":"#000000","lang":"en","scope":"/kts-gastronaut/","description":"Food Client PWA","icons":[{"src":"/logo64.png","sizes":"64x64","type":"any"},{"src":"/logo64.png","sizes":"64x64","type":"maskable"}],"theme_color":"#ffffff"}

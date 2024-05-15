@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/kts-gastronaut/sw.js', { scope: '/kts-gastronaut/' })})}
