@@ -7,8 +7,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const buildPath = path.resolve(__dirname, 'dist');
 const srcPath = path.resolve(__dirname, 'src');
 const isProd = process.env.NODE_ENV === 'production';
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const getSettingsForStyles = (withModules = false) => {
 	// Заменяем в нашей функции style-loader на mini-css-extract-plugin
 	return [
