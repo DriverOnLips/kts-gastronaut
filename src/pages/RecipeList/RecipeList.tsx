@@ -14,7 +14,6 @@ import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
 import List from './components/List/List';
 import styles from './RecipeList.module.scss';
-import React from 'react';
 
 const RecipeList = () => {
 	useQueryParamsStore();
@@ -23,7 +22,7 @@ const RecipeList = () => {
 	const listRef = useRef<HTMLDivElement>(null);
 
 	const [listIncrease, setListIncrease] = useState<boolean>(false);
-	const [lastScrollPosition, setLastScrollPosition] = useState(0);
+	const [_, setLastScrollPosition] = useState(0);
 
 	const navigate = useNavigate();
 
