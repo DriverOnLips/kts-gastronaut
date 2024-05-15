@@ -14,6 +14,7 @@ import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
 import List from './components/List/List';
 import styles from './RecipeList.module.scss';
+import React from 'react';
 
 const RecipeList = () => {
 	useQueryParamsStore();
@@ -22,6 +23,7 @@ const RecipeList = () => {
 	const listRef = useRef<HTMLDivElement>(null);
 
 	const [listIncrease, setListIncrease] = useState<boolean>(false);
+	const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
 	const navigate = useNavigate();
 
@@ -107,27 +109,50 @@ const RecipeList = () => {
 
 	useEffect(() => {
 		const handleWheel = (event: WheelEvent) => {
-			const targetNode = event.target as Node;
+			const targetNode = event.target;
 
-			if (listRef?.current?.contains(targetNode)) {
+			if (listRef.current?.contains(targetNode)) {
 				return;
 			}
 
 			if (event.deltaY > 0) {
-				intoroRef?.current?.classList.add(styles['hide-image']);
+				intoroRef.current?.classList.add(styles['hide-image']);
 				setListIncrease(true);
 			} else {
-				intoroRef?.current?.classList.remove(styles['hide-image']);
+				intoroRef.current?.classList.remove(styles['hide-image']);
 				setListIncrease(false);
 			}
 		};
 
+		const handleTouchMove = (event: TouchEvent) => {
+			if (listRef.current?.contains(event.target)) {
+				return;
+			}
+
+			const touch = event.touches[0];
+			const currentScrollPosition = touch.clientY;
+
+			setLastScrollPosition((prevPosition: number) => {
+				if (currentScrollPosition > prevPosition) {
+					intoroRef.current?.classList.remove(styles['hide-image']);
+					setListIncrease(false);
+				} else if (currentScrollPosition < prevPosition) {
+					intoroRef.current?.classList.add(styles['hide-image']);
+					setListIncrease(true);
+				}
+
+				return currentScrollPosition;
+			});
+		};
+
 		window.addEventListener('wheel', handleWheel);
+		window.addEventListener('touchmove', handleTouchMove);
 
 		document.body.style.overflow = 'hidden';
 
 		return () => {
 			window.removeEventListener('wheel', handleWheel);
+			window.removeEventListener('touchmove', handleTouchMove);
 			document.body.style.overflow = 'auto';
 		};
 	}, []);

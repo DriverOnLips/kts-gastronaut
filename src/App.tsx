@@ -1,8 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import ico from 'assets/ico/logo.ico';
 import Header from 'components/Header/Header';
 import { RootProvider } from 'contexts/RootContext';
 import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
@@ -19,43 +17,33 @@ const App = () => {
 				rootRef,
 			}}
 		>
-			<HelmetProvider>
-				<Helmet>
-					<link
-						rel='icon'
-						type='image/svg+xml'
-						href={ico}
+			{/* Used for gh-pages */}
+			{/* <BrowserRouter basename='/kts-gastronaut'> */}
+			<BrowserRouter basename='/'>
+				<Header />
+				<Routes>
+					<Route
+						path='/'
+						element={<RecipeList />}
 					/>
-				</Helmet>
-
-				{/* Used for gh-pages */}
-				<BrowserRouter basename='/kts-gastronaut'>
-					{/* <BrowserRouter basename='/'> */}
-					<Header />
-					<Routes>
-						<Route
-							path='/'
-							element={<RecipeList />}
-						/>
-						<Route
-							path='/recipe/:id'
-							element={<RecipePage />}
-						/>
-						<Route
-							path='/not_found'
-							element={<NotFound />}
-						/>
-						<Route
-							path='/kts-gastronaut'
-							element={<MainPageRedirect />}
-						/>
-						<Route
-							path='*'
-							element={<NotFound />}
-						/>
-					</Routes>
-				</BrowserRouter>
-			</HelmetProvider>
+					<Route
+						path='/recipe/:id'
+						element={<RecipePage />}
+					/>
+					<Route
+						path='/not_found'
+						element={<NotFound />}
+					/>
+					<Route
+						path='/kts-gastronaut'
+						element={<MainPageRedirect />}
+					/>
+					<Route
+						path='*'
+						element={<NotFound />}
+					/>
+				</Routes>
+			</BrowserRouter>
 		</RootProvider>
 	);
 };

@@ -23,8 +23,8 @@ const parseTsConfigPaths = (
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	// base: '/',
-	base: '/kts-gastronaut',
+	base: '/',
+	// base: '/kts-gastronaut',
 	plugins: [
 		react(),
 		VitePWA({
@@ -36,12 +36,20 @@ export default defineConfig({
 				description: 'Food Client PWA',
 				icons: [
 					{
-						src: '/logo512.png',
+						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png', // Замените на путь к вашему значку
+						// src: '/assets/logo512.png', // Замените на путь к вашему значку
+						sizes: '512x512', // Указываем размеры значка
+						type: 'image/png', // Тип файла
+					},
+					{
+						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png',
+						// src: '/assets/logo512.png', // Замените на путь к вашему значку
 						sizes: '512x512',
 						type: 'any',
 					},
 					{
-						src: '/logo512.png',
+						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png',
+						// src: '/assets/logo512.png', // Замените на путь к вашему значку
 						sizes: '512x512',
 						type: 'maskable',
 					},
