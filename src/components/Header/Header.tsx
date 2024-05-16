@@ -1,12 +1,16 @@
 /* eslint-disable react/react-in-jsx-scope */
-import { useCallback } from 'react';
+import cn from 'classnames';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import logo from 'assets/svg/logo.svg';
+import Menu from 'components/Icons/Menu/Menu';
+import MenuClose from 'components/Icons/MenuClose/MenuClose';
 import { useRootContext } from 'contexts/RootContext';
 import styles from './Header.module.scss';
 
 const Header = () => {
+	const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
+
 	const { rootRef } = useRootContext();
 	const navigate = useNavigate();
 
@@ -17,6 +21,11 @@ const Header = () => {
 			navigate('/');
 		}
 	}, [navigate, rootRef]);
+
+	const onMenuButtonClick = useCallback(
+		() => setIsSidebarVisible((prevState) => !prevState),
+		[],
+	);
 
 	return (
 		<nav className={styles.navbar_desctop}>
@@ -53,7 +62,24 @@ const Header = () => {
 				>
 					Login
 				</li>
+				<div className={styles.links__menu}>
+					<Menu onClick={onMenuButtonClick} />
+				</div>
 			</ul>
+
+			<nav
+				className={cn(
+					styles.mobile_sidebar,
+					isSidebarVisible && styles['mobile_sidebar-visible'],
+				)}
+			>
+				<ul className={styles.mobile_sidebar__items}>
+					<MenuClose
+						className={styles.mobile_sidebar__items__close}
+						onClick={onMenuButtonClick}
+					/>
+				</ul>
+			</nav>
 		</nav>
 	);
 };

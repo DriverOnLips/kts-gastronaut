@@ -1,4 +1,5 @@
-import * as React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
+import cn from 'classnames';
 import { useCallback, CSSProperties, memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VariableSizeGrid as Grid } from 'react-window';
@@ -6,7 +7,6 @@ import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
 import styles from '../../RecipeList.module.scss';
 import { useRecipeListContext } from '../../contexts/RecipeListContext';
-import cn from 'classnames';
 
 interface ScrollEvent {
 	scrollTop: number;

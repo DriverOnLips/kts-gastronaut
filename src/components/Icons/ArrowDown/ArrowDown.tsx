@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Icon, { IconProps } from '../Icon/Icon';
 
-const ArrowDownIcon: React.FC<IconProps> = ({
+const ArrowDown: React.FC<IconProps> = ({
 	className,
 	color,
 	width,
@@ -35,4 +35,4 @@ const ArrowDownIcon: React.FC<IconProps> = ({
 		</Icon>
 	);
 };
-export default ArrowDownIcon;
+export default ArrowDown;
