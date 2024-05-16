@@ -36,20 +36,17 @@ export default defineConfig({
 				description: 'Food Client PWA',
 				icons: [
 					{
-						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png', // Замените на путь к вашему значку
-						// src: '/assets/logo512.png', // Замените на путь к вашему значку
-						sizes: '512x512', // Указываем размеры значка
-						type: 'image/png', // Тип файла
+						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png',
+						sizes: '512x512',
+						type: 'image/png',
 					},
 					{
 						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png',
-						// src: '/assets/logo512.png', // Замените на путь к вашему значку
 						sizes: '512x512',
 						type: 'any',
 					},
 					{
 						src: 'https://driveronlips.github.io/kts-gastronaut/logo512.png',
-						// src: '/assets/logo512.png', // Замените на путь к вашему значку
 						sizes: '512x512',
 						type: 'maskable',
 					},
