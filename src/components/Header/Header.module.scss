@@ -24,6 +24,7 @@
 		color: $text-color-primary;
 		font-weight: $bold;
 		transition: all 0.3s;
+		text-wrap: nowrap;
 	}
 
 	.navbar__logo_link:hover {

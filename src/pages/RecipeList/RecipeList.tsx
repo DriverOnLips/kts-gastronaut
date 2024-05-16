@@ -13,16 +13,17 @@ import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
 import List from './components/List/List';
+import { RecipeListProvider } from './contexts/RecipeListContext';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	useQueryParamsStore();
 
-	const intoroRef = useRef<HTMLImageElement>(null);
+	const introRef = useRef<HTMLImageElement>(null);
 	const listRef = useRef<HTMLDivElement>(null);
 
 	const [listIncrease, setListIncrease] = useState<boolean>(false);
-	const [_, setLastScrollPosition] = useState(0);
+	const [, setLastScrollPosition] = useState(0);
 
 	const navigate = useNavigate();
 
@@ -108,23 +109,25 @@ const RecipeList = () => {
 
 	useEffect(() => {
 		const handleWheel = (event: WheelEvent) => {
-			const targetNode = event.target;
+			const targetNode = event.target as Node;
 
 			if (listRef.current?.contains(targetNode)) {
 				return;
 			}
 
 			if (event.deltaY > 0) {
-				intoroRef.current?.classList.add(styles['hide-image']);
+				introRef.current?.classList.add(styles['hide-image']);
 				setListIncrease(true);
 			} else {
-				intoroRef.current?.classList.remove(styles['hide-image']);
+				introRef.current?.classList.remove(styles['hide-image']);
 				setListIncrease(false);
 			}
 		};
 
 		const handleTouchMove = (event: TouchEvent) => {
-			if (listRef.current?.contains(event.target)) {
+			const targetNode = event.target as Node;
+
+			if (listRef.current?.contains(targetNode)) {
 				return;
 			}
 
@@ -133,10 +136,10 @@ const RecipeList = () => {
 
 			setLastScrollPosition((prevPosition: number) => {
 				if (currentScrollPosition > prevPosition) {
-					intoroRef.current?.classList.remove(styles['hide-image']);
+					introRef.current?.classList.remove(styles['hide-image']);
 					setListIncrease(false);
 				} else if (currentScrollPosition < prevPosition) {
-					intoroRef.current?.classList.add(styles['hide-image']);
+					introRef.current?.classList.add(styles['hide-image']);
 					setListIncrease(true);
 				}
 
@@ -160,7 +163,7 @@ const RecipeList = () => {
 		<div className={styles.recipe_list}>
 			<>
 				<img
-					ref={intoroRef}
+					ref={introRef}
 					src={intro}
 					className={styles.recipe_list__intro}
 				/>
@@ -192,11 +195,18 @@ const RecipeList = () => {
 				{isSuccess ? (
 					<>
 						<div ref={listRef}>
-							<List
-								recipeList={recipeList}
-								setIsAtEnd={setIsAtEnd}
-								increase={listIncrease}
-							/>
+							<RecipeListProvider
+								value={{
+									recipeList,
+									isAtEnd,
+									setIsAtEnd,
+									increase: listIncrease,
+									setIncrease: setListIncrease,
+									introRef,
+								}}
+							>
+								<List />
+							</RecipeListProvider>
 						</div>
 
 						<Pages

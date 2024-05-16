@@ -52,7 +52,7 @@ export default defineConfig({
 					},
 				],
 				theme_color: '#ffffff',
-				background_color: '#000000',
+				background_color: '#ffffff',
 				// display: 'standalone',
 				// scope: '/',
 				// start_url: '/',

@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useCallback, CSSProperties, memo } from 'react';
+import { useCallback, CSSProperties, memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VariableSizeGrid as Grid } from 'react-window';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
-import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import styles from '../../RecipeList.module.scss';
+import { useRecipeListContext } from '../../contexts/RecipeListContext';
+import cn from 'classnames';
 
 interface ScrollEvent {
 	scrollTop: number;
@@ -17,23 +18,33 @@ interface GridItemProps {
 	style: CSSProperties;
 }
 
-type ListProps = {
-	recipeList: RecipeFromListModel[];
-	setIsAtEnd(value: boolean): void;
-	increase: boolean;
-};
+const List = () => {
+	const { recipeList, setIsAtEnd, increase, setIncrease, introRef } =
+		useRecipeListContext();
 
-const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd, increase }) => {
 	const navigate = useNavigate();
+
+	const [lastScrollTop, setLastScrollTop] = useState<number>(0);
 
 	const handleScroll = useCallback(
 		({ scrollTop }: ScrollEvent) => {
+			if (scrollTop !== 0 && scrollTop < 300) {
+				if (scrollTop > lastScrollTop) {
+					introRef?.current?.classList.add(styles['hide-image']);
+					setIncrease(true);
+				} else {
+					introRef?.current?.classList.remove(styles['hide-image']);
+					setIncrease(false);
+				}
+				setLastScrollTop(scrollTop);
+			}
+
 			const totalHeight =
 				(recipeList.length * setItemHeight()) / getColumnCount();
 			const isAtEnd = scrollTop + 1200 >= totalHeight; // 1200 - это высота контейнера
 			setIsAtEnd(isAtEnd);
 		},
-		[recipeList.length, setIsAtEnd],
+		[recipeList.length, setIsAtEnd, lastScrollTop],
 	);
 
 	const onCardButtonClickHandler = useCallback(() => {}, []);
@@ -94,7 +105,7 @@ const List: React.FC<ListProps> = ({ recipeList, setIsAtEnd, increase }) => {
 
 	return (
 		<Grid
-			className={`${styles.recipe_list__container}`}
+			className={cn(styles.recipe_list__container, 'virtualized_list')}
 			columnCount={getColumnCount()}
 			columnWidth={() => {
 				const columnCount = getColumnCount();

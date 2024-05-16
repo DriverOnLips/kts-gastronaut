@@ -9,5 +9,4 @@ const RootContext = createContext<RootContextType>({
 });
 
 export const useRootContext = () => useContext(RootContext);
-
 export const RootProvider = RootContext.Provider;
