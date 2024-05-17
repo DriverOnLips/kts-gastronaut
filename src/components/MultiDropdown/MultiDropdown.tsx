@@ -2,9 +2,9 @@ import cn from 'classnames';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useCallback, useEffect, useRef } from 'react';
+import ArrowDown from 'components/Icons/ArrowDown/ArrowDown';
 import Input from 'components/Input/Input';
 import Text from 'components/Text/Text';
-import ArrowDownIcon from 'components/icons/ArrowDownIcon/ArrowDownIcon';
 import MultiDropdownStore from 'stores/MultiDropdownStore/MultiDropdownStore';
 import { Option } from 'stores/MultiDropdownStore/types';
 import styles from './MultiDropdown.module.scss';
@@ -67,7 +67,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
 				onChange={dropdownStore.setInputText}
 				onClick={onInputClick}
 				afterSlot={
-					<ArrowDownIcon
+					<ArrowDown
 						color='secondary'
 						width={24}
 						height={24}

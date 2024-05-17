@@ -1,6 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
-import * as React from 'react';
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
 import search from 'assets/svg/search.svg';
@@ -13,12 +13,13 @@ import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
 import List from './components/List/List';
+import { RecipeListProvider } from './contexts/RecipeListContext';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	useQueryParamsStore();
 
-	const intoroRef = useRef<HTMLImageElement>(null);
+	const introRef = useRef<HTMLImageElement>(null);
 	const listRef = useRef<HTMLDivElement>(null);
 
 	const [listIncrease, setListIncrease] = useState<boolean>(false);
@@ -32,23 +33,29 @@ const RecipeList = () => {
 		inputStore,
 		dropdownStore,
 		recipeList,
-		offset,
 		isSuccess,
-		incrementOffset,
+		pages,
 		getRecipes,
-		getNewRecipes,
 	} = recipeListStore;
 
+	const params = useMemo(
+		() => new URLSearchParams(window.location.search),
+		[window.location.search],
+	);
+	const page = useMemo(() => +(params.get('page') || 1), [params]);
+
 	const onButtonClick = useCallback(() => {
-		const params = new URLSearchParams(window.location.search);
+		const newSearchParams = new URLSearchParams(window.location.search);
+		newSearchParams.set('page', '1');
+		navigate(`?${newSearchParams.toString()}`, { replace: true });
 
 		getRecipes({
 			count: 100,
-			offset,
+			page,
 			query: params.get('query') || null,
 			type: params.get('type') || null,
 		});
-	}, [getRecipes]);
+	}, [params, page, getRecipes, navigate]);
 
 	const onInputChange = useCallback(
 		(value: string) => {
@@ -72,71 +79,35 @@ const RecipeList = () => {
 		[navigate],
 	);
 
-	useEffect(() => {
-		const params = new URLSearchParams(window.location.search);
+	const onPaginationButtonClick = useCallback(
+		(page: number) => () => {
+			const newSearchParams = new URLSearchParams(window.location.search);
+			newSearchParams.set('page', page.toString());
+			navigate(`?${newSearchParams.toString()}`, { replace: true });
+		},
+		[navigate],
+	);
 
+	useEffect(() => {
 		getRecipes({
 			count: 100,
-			offset,
+			page,
 			query: params.get('query') || null,
 			type: params.get('type') || null,
 		});
-	}, [getRecipes]);
-
-	// Used for addition data to list
-
-	useEffect(() => {
-		if (isAtEnd) {
-			setIsAtEnd(false);
-			incrementOffset();
-
-			const newSearchParams = new URLSearchParams(window.location.search);
-			newSearchParams.set('offset', String(offset + 100));
-			navigate(`?${newSearchParams.toString()}`, { replace: true });
-
-			const params = new URLSearchParams(window.location.search);
-
-			getNewRecipes({
-				count: 100,
-				offset: offset + 100,
-				query: params.get('query') || null,
-				type: params.get('type') || null,
-			});
-		}
-	}, [isAtEnd, navigate, incrementOffset, getNewRecipes]);
-
-	useEffect(() => {
-		const handleWheel = (event: WheelEvent) => {
-			const targetNode = event.target as Node;
-
-			if (listRef?.current?.contains(targetNode)) {
-				return;
-			}
-
-			if (event.deltaY > 0) {
-				intoroRef?.current?.classList.add(styles['hide-image']);
-				setListIncrease(true);
-			} else {
-				intoroRef?.current?.classList.remove(styles['hide-image']);
-				setListIncrease(false);
-			}
-		};
-
-		window.addEventListener('wheel', handleWheel);
 
 		document.body.style.overflow = 'hidden';
 
 		return () => {
-			window.removeEventListener('wheel', handleWheel);
 			document.body.style.overflow = 'auto';
 		};
-	}, []);
+	}, [page]);
 
 	return (
 		<div className={styles.recipe_list}>
 			<>
 				<img
-					ref={intoroRef}
+					ref={introRef}
 					src={intro}
 					className={styles.recipe_list__intro}
 				/>
@@ -168,16 +139,24 @@ const RecipeList = () => {
 				{isSuccess ? (
 					<>
 						<div ref={listRef}>
-							<List
-								recipeList={recipeList}
-								setIsAtEnd={setIsAtEnd}
-								increase={listIncrease}
-							/>
+							<RecipeListProvider
+								value={{
+									recipeList,
+									isAtEnd,
+									setIsAtEnd,
+									increase: listIncrease,
+									setIncrease: setListIncrease,
+									introRef,
+								}}
+							>
+								<List />
+							</RecipeListProvider>
 						</div>
 
 						<Pages
-							page={1}
-							pages={5}
+							page={page}
+							pages={pages}
+							onPageButtonClick={onPaginationButtonClick}
 						/>
 					</>
 				) : (

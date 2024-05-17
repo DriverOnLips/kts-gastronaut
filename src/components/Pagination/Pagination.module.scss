@@ -1,7 +1,13 @@
+@import "styles/variables.scss";
+
 .pagination {
 	display: flex;
+	position: absolute;
+	opacity: 1;
+	bottom: 0;
 	padding: 1rem 0;
 	width: 100%;
 	justify-content: center;
 	gap: 0.5rem;
+	background-color: $background-color;
 }

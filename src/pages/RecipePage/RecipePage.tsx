@@ -1,5 +1,5 @@
+/* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
-import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import back_button from 'assets/svg/back_button.svg';

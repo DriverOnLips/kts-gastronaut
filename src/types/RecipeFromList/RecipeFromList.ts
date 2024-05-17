@@ -19,6 +19,11 @@ export type RecipeFromListApi = {
 	nutrition: NutritionFromRecipe;
 };
 
+export type RecipeFromListResponse = {
+	results: RecipeFromListApi[];
+	totalResults: number;
+};
+
 export type RecipeFromListModel = {
 	id: number;
 	title: string;
