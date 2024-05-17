@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { useLocalStore } from 'hooks/useLocalStore';
-import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { RecipeFromListResponse } from 'types/RecipeFromList/RecipeFromList';
 import { RecipeTypeApi } from 'types/RecipeType/RecipeType';
 import { recipeListMock } from 'utils/mocks/recipeListMock';

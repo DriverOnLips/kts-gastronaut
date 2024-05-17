@@ -32,7 +32,7 @@ export default defineConfig({
 			includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
 			manifest: {
 				name: 'Food Client',
-				short_name: 'FC',
+				short_name: 'Food Client',
 				description: 'Food Client PWA',
 				icons: [
 					{
