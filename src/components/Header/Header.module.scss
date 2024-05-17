@@ -76,10 +76,10 @@
 	position: fixed;
 	right: 0;
 	top: 0;
-	background-color: $color-white;
-	opacity: 0.9;
+	background-color: rgba(255, 255, 255, 0.25);
 	transition: transform 0.5s ease-in-out;
 	transform: translateX(100%);
+	backdrop-filter: blur(8px);
 
 	&__items {
 		width: 100%;
@@ -87,13 +87,49 @@
 		&__close {
 			position: absolute;
 			top: 12px;
-			right: 50px;
+			right: 48px;
 		}
 	}
 }
 
 .mobile_sidebar-visible {
 	transform: translateX(0);
+}
+
+.links-mobile {
+	position: absolute;
+	width: 100vw;
+	top: 80px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0;
+	margin: 0;
+	gap: 1.5rem;
+}
+
+.link-mobile {
+	all: unset;
+	font-size: $size4;
+	font-weight: $medium;
+	text-decoration: none;
+	position: relative;
+	cursor: pointer;
+
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0;
+		height: 2px;
+		background-color: $text-color-primary;
+		transition: width 0.3s ease;
+	}
+
+	&:hover::after {
+		width: 100%;
+	}
 }
 
 @media (max-width: 750px) {

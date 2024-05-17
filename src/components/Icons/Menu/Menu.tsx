@@ -11,10 +11,10 @@ const Menu: React.FC<IconProps> = ({
 	const classes = `icon_wrapper arrow_down_icon ${className}`;
 	return (
 		<Icon
-			viewBox='0 0 24 24'
+			viewBox='0 0 24 30'
 			onClick={onClick}
 			color={color}
-			width={width ? width : 24}
+			width={width ? width : 30}
 			height={height ? height : 24}
 			className={classes}
 		>

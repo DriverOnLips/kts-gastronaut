@@ -25,14 +25,14 @@ import { Meta } from 'utils/meta';
 import { dropdownStoreOptions } from './config';
 import { IRecipeListStore, getRecipesParams } from './types';
 
-type PrivateFields = '_recipeList' | '_meta' | '_api' | '_offset';
+type PrivateFields = '_recipeList' | '_meta' | '_api' | '_pages';
 
 export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 	private _recipeList: CollectionModel<number, RecipeFromListModel> =
 		getInitialCollectionModel();
 	private _meta: Meta = Meta.initial;
 	private _api = new Api();
-	private _offset;
+	private _pages = 0;
 
 	public inputStore = new InputStore();
 	public dropdownStore = new MultiDropdownStore();
@@ -42,19 +42,16 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 			_recipeList: observable.ref,
 			_meta: observable,
 			_api: observable,
-			_offset: observable,
+			_pages: observable,
 			inputStore: observable,
 			dropdownStore: observable,
 			recipeList: computed,
 			meta: computed,
-			offset: computed,
+			pages: computed,
 			isSuccess: computed,
-			incrementOffset: action.bound,
+			setPages: action.bound,
 			getRecipes: action.bound,
-			getNewRecipes: action.bound,
 		});
-
-		this._offset = +(rootStore.query.getParam('offset') || 0);
 
 		const setDropdown = () => {
 			const type =
@@ -93,16 +90,16 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 		return this._meta;
 	}
 
-	get offset(): number {
-		return this._offset;
+	get pages(): number {
+		return this._pages;
 	}
 
 	get isSuccess(): boolean {
 		return this._meta === Meta.success;
 	}
 
-	incrementOffset(): void {
-		this._offset += 100;
+	setPages(pages: number) {
+		this._pages = pages;
 	}
 
 	async getRecipes(params: getRecipesParams): Promise<void> {
@@ -116,7 +113,7 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 		const response = await this._api.getRecipes(
 			params.count,
-			params.offset,
+			params.page,
 			params.query,
 			params.type,
 		);
@@ -131,7 +128,8 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 			try {
 				const recipeToSet: RecipeFromListModel[] = [];
-				for (const item of response) {
+
+				for (const item of response.results) {
 					recipeToSet.push(normalizeRecipeFromList(item));
 				}
 
@@ -139,50 +137,13 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 					recipeToSet,
 					(recipeItem) => recipeItem.id,
 				);
+
+				this.setPages(Math.floor(response.totalResults / 100));
+
 				this._meta = Meta.success;
 			} catch (error) {
 				log(error);
-				this._meta = Meta.error;
-				this._recipeList = getInitialCollectionModel();
-			}
-		});
-	}
-
-	async getNewRecipes(params: getRecipesParams): Promise<void> {
-		if (this.meta === Meta.loading) {
-			return;
-		}
-
-		this._meta = Meta.loading;
-
-		const response = await this._api.getRecipes(
-			params.count,
-			params.offset,
-			params.query,
-			params.type,
-		);
-
-		runInAction(() => {
-			if (response instanceof Error) {
-				log(response);
-				this._meta = Meta.error;
-
-				return;
-			}
-
-			try {
-				const recipeToSet: RecipeFromListModel[] = [];
-				for (const item of response) {
-					recipeToSet.push(normalizeRecipeFromList(item));
-				}
-
-				this._recipeList = normalizeCollection(
-					[...linearizeCollection(this._recipeList), ...recipeToSet],
-					(recipeItem) => recipeItem.id,
-				);
-				this._meta = Meta.success;
-			} catch (error) {
-				log(error);
+				this.setPages(0);
 				this._meta = Meta.error;
 				this._recipeList = getInitialCollectionModel();
 			}
@@ -191,27 +152,5 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 	destroy(): void {
 		this.inputStore.destroy();
-		// this._qpReaction();
 	}
-
-	// private readonly _qpReaction: IReactionDisposer = reaction(
-	// 	() => ({
-	// 		query:
-	// 			rootStore.query.getParam('query') !== undefined
-	// 				? String(rootStore.query.getParam('query'))
-	// 				: null,
-	// 		type:
-	// 			rootStore.query.getParam('type') !== undefined
-	// 				? String(rootStore.query.getParam('type'))
-	// 				: null,
-	// 	}),
-	// 	({ query, type }) => {
-	// 		this.getRecipes({
-	// 			count: 100,
-	// 			offset: 0,
-	// 			query,
-	// 			type,
-	// 		});
-	// 	},
-	// );
 }

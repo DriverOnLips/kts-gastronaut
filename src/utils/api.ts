@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { RecipeFromListApi } from 'types/RecipeFromList/RecipeFromList';
+import { useLocalStore } from 'hooks/useLocalStore';
+import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { RecipeFromListResponse } from 'types/RecipeFromList/RecipeFromList';
 import { RecipeTypeApi } from 'types/RecipeType/RecipeType';
 import { recipeListMock } from 'utils/mocks/recipeListMock';
 
@@ -13,7 +15,7 @@ export class Api {
 	// private token: string = 'd1042c6f8c84432bbd5b508bca52c270';
 	// private token: string = 'c1ed0064ec724ead8177ab8848ea4dc8';
 	// private token: string = 'b4be191811054ad3bbb2438df1158ca7';
-	// private token: string = '2f57ba40700b492a98d46c16cb731636';
+	private token: string = '2f57ba40700b492a98d46c16cb731636';
 	// private token: string = '96b03ded692d45b391ec26a66cf00564';
 	// private token: string = '3a40e1bfe3084f53b0d475f56d06468b';
 	// private token: string = '5884e4538ade47a3bee00a8bed3eb378';
@@ -21,7 +23,7 @@ export class Api {
 	// private token: string = 'af79edba6a414c9f92d551e45dcd08b1';
 	// private token: string = 'e31e1cb391a9463893f57a751d12c66a';
 
-	private token: string = '5612ded2c55f4a42aafe5dd7fdec9f3f';
+	// private token: string = '5612ded2c55f4a42aafe5dd7fdec9f3f';
 
 	constructor() {
 		if (Api.instance) {
@@ -35,10 +37,10 @@ export class Api {
 
 	getRecipes = async (
 		count = 10,
-		offset: number | null,
+		page: number | null,
 		query: string | null,
 		type: string | null,
-	): Promise<RecipeFromListApi[] | Error> => {
+	): Promise<RecipeFromListResponse | Error> => {
 		const configItem = this.config.find((item) => item.name === 'getRecipes');
 
 		if (!configItem) {
@@ -48,7 +50,7 @@ export class Api {
 		const params = {
 			apiKey: this.token,
 			number: count,
-			...(offset && { offset }),
+			...(page && { offset: (page - 1) * 100 }),
 			...(!!query && { query }),
 			...(!!type && { type }),
 		};
@@ -58,10 +60,10 @@ export class Api {
 				params: params,
 			});
 
-			return res?.data.results;
+			return res?.data;
 		} catch (error: any) {
 			if (error.response.status === 402) {
-				return recipeListMock.results;
+				return recipeListMock;
 			}
 
 			const errorMessage =

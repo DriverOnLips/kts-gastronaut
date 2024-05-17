@@ -5,22 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import logo from 'assets/svg/logo.svg';
 import Menu from 'components/Icons/Menu/Menu';
 import MenuClose from 'components/Icons/MenuClose/MenuClose';
-import { useRootContext } from 'contexts/RootContext';
 import styles from './Header.module.scss';
 
 const Header = () => {
 	const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
 
-	const { rootRef } = useRootContext();
 	const navigate = useNavigate();
 
 	const handleLogoClick = useCallback(() => {
 		if (location.pathname === '/') {
-			rootRef?.scrollIntoView({ behavior: 'smooth' });
+			const virtualizedList = document.querySelector('.virtualized_list');
+			virtualizedList?.scrollTo({ top: 0, behavior: 'smooth' });
 		} else {
 			navigate('/');
 		}
-	}, [navigate, rootRef]);
+	}, [navigate]);
 
 	const onMenuButtonClick = useCallback(
 		() => setIsSidebarVisible((prevState) => !prevState),
@@ -73,12 +72,32 @@ const Header = () => {
 					isSidebarVisible && styles['mobile_sidebar-visible'],
 				)}
 			>
-				<ul className={styles.mobile_sidebar__items}>
+				<div className={styles.mobile_sidebar__items}>
 					<MenuClose
 						className={styles.mobile_sidebar__items__close}
 						onClick={onMenuButtonClick}
 					/>
-				</ul>
+					<ul className={styles['links-mobile']}>
+						<li
+							className={styles['link-mobile']}
+							onClick={handleLogoClick}
+						>
+							Recipes
+						</li>
+						<li
+							className={styles['link-mobile']}
+							onClick={handleLogoClick}
+						>
+							Saved
+						</li>
+						<li
+							className={styles['link-mobile']}
+							onClick={handleLogoClick}
+						>
+							Login
+						</li>
+					</ul>
+				</div>
 			</nav>
 		</nav>
 	);
