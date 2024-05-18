@@ -12,6 +12,8 @@ type TextProps = {
 	color?: 'primary' | 'secondary' | 'main';
 	display?: 'flex';
 	gap?: string;
+	decoration?: string;
+	cursor?: string;
 	maxLines?: number;
 	children: ReactNode;
 };
@@ -24,6 +26,8 @@ const Text: React.FC<TextProps> = ({
 	color,
 	display,
 	gap,
+	decoration,
+	cursor,
 	maxLines,
 	children,
 }) => {
@@ -34,6 +38,8 @@ const Text: React.FC<TextProps> = ({
 
 	if (display) style.display = display;
 	if (gap) style.gap = gap;
+	if (decoration) style.textDecoration = decoration;
+	if (cursor) style.cursor = cursor;
 
 	return (
 		<span

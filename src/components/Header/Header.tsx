@@ -17,8 +17,14 @@ const Header = () => {
 			const virtualizedList = document.querySelector('.virtualized_list');
 			virtualizedList?.scrollTo({ top: 0, behavior: 'smooth' });
 		} else {
+			setIsSidebarVisible(false);
 			navigate('/');
 		}
+	}, [navigate]);
+
+	const handleLoginClick = useCallback(() => {
+		setIsSidebarVisible(false);
+		navigate('/login');
 	}, [navigate]);
 
 	const onMenuButtonClick = useCallback(
@@ -57,10 +63,11 @@ const Header = () => {
 
 				<li
 					className={styles.link}
-					onClick={handleLogoClick}
+					onClick={handleLoginClick}
 				>
 					Login
 				</li>
+
 				<div className={styles.links__menu}>
 					<Menu onClick={onMenuButtonClick} />
 				</div>
@@ -92,7 +99,7 @@ const Header = () => {
 						</li>
 						<li
 							className={styles['link-mobile']}
-							onClick={handleLogoClick}
+							onClick={handleLoginClick}
 						>
 							Login
 						</li>

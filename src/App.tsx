@@ -1,9 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import Header from 'components/Header/Header';
 import { RootProvider } from 'contexts/RootContext';
-// import MainPageRedirect from 'pages/MainPageRedirect/MainPageRedirect';
+import Login from 'pages/Login/Login';
 import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
@@ -31,13 +30,13 @@ const App = () => {
 						element={<RecipePage />}
 					/>
 					<Route
+						path='/login'
+						element={<Login />}
+					/>
+					<Route
 						path='/not_found'
 						element={<NotFound />}
 					/>
-					{/* <Route
-						path='/kts-gastronaut'
-						element={<MainPageRedirect />}
-					/> */}
 					<Route
 						path='*'
 						element={<NotFound />}

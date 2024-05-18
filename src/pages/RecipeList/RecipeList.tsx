@@ -114,9 +114,9 @@ const RecipeList = () => {
 				<div className={styles.recipe_list__input_search}>
 					<div className={styles['recipe_list__input_search__input-div']}>
 						<Input
+							placeholder='Enter dishes'
 							value={inputStore.value}
 							onChange={onInputChange}
-							placeholder='Enter dishes'
 						/>
 					</div>
 

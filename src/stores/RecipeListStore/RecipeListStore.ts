@@ -152,5 +152,6 @@ export default class RecipeListStore implements IRecipeListStore, ILocalStore {
 
 	destroy(): void {
 		this.inputStore.destroy();
+		this.dropdownStore.destroy();
 	}
 }
