@@ -1,16 +1,20 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Text from 'components/Text/Text';
 import { useLocalStore } from 'hooks/useLocalStore';
 import LoginStore from 'stores/LoginStore/LoginStore';
+import rootStore from 'stores/RootStore/instance';
+import { User } from 'types/User/User';
 import styles from './Login.module.scss';
 
 const Login: React.FC = () => {
 	const navigate = useNavigate();
+
+	const { isLoggedIn, login } = rootStore.authorization;
 
 	const loginStore = useLocalStore(() => new LoginStore());
 	const { usernameInput, passwordInput } = loginStore;
@@ -34,6 +38,29 @@ const Login: React.FC = () => {
 		[navigate],
 	);
 
+	const onLoginClick = useCallback(() => {
+		const existingUsers = JSON.parse(
+			localStorage.getItem('users') || '[]',
+		) as User[];
+
+		const user = existingUsers.find(
+			(user) =>
+				user.username === usernameInput.value &&
+				user.password === passwordInput.value,
+		);
+
+		if (user) {
+			login(user);
+			navigate(-1);
+		} else {
+			alert('Invalid username or password');
+		}
+	}, [usernameInput.value, passwordInput.value, login, navigate]);
+
+	useEffect(() => {
+		if (isLoggedIn) navigate('/');
+	}, [isLoggedIn, navigate]);
+
 	return (
 		<div className={styles.login}>
 			<div className={styles['login-wrapper']}>
@@ -54,7 +81,12 @@ const Login: React.FC = () => {
 						value={passwordInput.value}
 						onChange={onPasswordInputChange}
 					/>
-					<Button style={{ justifyContent: 'center' }}>Login</Button>
+					<Button
+						style={{ justifyContent: 'center' }}
+						onClick={onLoginClick}
+					>
+						Login
+					</Button>
 				</div>
 
 				<div className={styles['login-wrapper__authorization']}>

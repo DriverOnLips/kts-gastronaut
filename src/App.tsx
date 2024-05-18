@@ -7,8 +7,10 @@ import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
 import Registratiom from 'pages/Registration/Registration';
+import { useAuthorizationStore } from 'stores/RootStore/hooks/useAuthorizationStore';
 
 const App = () => {
+	useAuthorizationStore();
 	const rootRef = document.getElementById('root');
 
 	return (

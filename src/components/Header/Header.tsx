@@ -1,16 +1,20 @@
 /* eslint-disable react/react-in-jsx-scope */
 import cn from 'classnames';
+import { observer } from 'mobx-react-lite';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from 'assets/svg/logo.svg';
 import Menu from 'components/Icons/Menu/Menu';
 import MenuClose from 'components/Icons/MenuClose/MenuClose';
+import rootStore from 'stores/RootStore/instance';
 import styles from './Header.module.scss';
 
 const Header = () => {
-	const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
-
 	const navigate = useNavigate();
+
+	const { isLoggedIn, user, logout } = rootStore.authorization;
+
+	const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(false);
 
 	const handleLogoClick = useCallback(() => {
 		if (location.pathname === '/') {
@@ -26,6 +30,12 @@ const Header = () => {
 		setIsSidebarVisible(false);
 		navigate('/login');
 	}, [navigate]);
+
+	const handleUsernameClick = useCallback(() => {
+		logout();
+		setIsSidebarVisible(false);
+		navigate('/login');
+	}, [logout, navigate]);
 
 	const onMenuButtonClick = useCallback(
 		() => setIsSidebarVisible((prevState) => !prevState),
@@ -63,9 +73,9 @@ const Header = () => {
 
 				<li
 					className={styles.link}
-					onClick={handleLoginClick}
+					onClick={isLoggedIn ? handleUsernameClick : handleLoginClick}
 				>
-					Login
+					{isLoggedIn ? user?.username : 'Login'}
 				</li>
 
 				<div className={styles.links__menu}>
@@ -99,9 +109,9 @@ const Header = () => {
 						</li>
 						<li
 							className={styles['link-mobile']}
-							onClick={handleLoginClick}
+							onClick={isLoggedIn ? handleUsernameClick : handleLoginClick}
 						>
-							Login
+							{isLoggedIn ? user?.username : 'Login'}
 						</li>
 					</ul>
 				</div>
@@ -110,4 +120,4 @@ const Header = () => {
 	);
 };
 
-export default Header;
+export default observer(Header);
