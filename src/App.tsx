@@ -6,6 +6,7 @@ import Login from 'pages/Login/Login';
 import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
+import Registratiom from 'pages/Registration/Registration';
 
 const App = () => {
 	const rootRef = document.getElementById('root');
@@ -32,6 +33,10 @@ const App = () => {
 					<Route
 						path='/login'
 						element={<Login />}
+					/>
+					<Route
+						path='/registration'
+						element={<Registratiom />}
 					/>
 					<Route
 						path='/not_found'

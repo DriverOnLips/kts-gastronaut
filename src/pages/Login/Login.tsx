@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Text from 'components/Text/Text';
@@ -9,10 +10,12 @@ import LoginStore from 'stores/LoginStore/LoginStore';
 import styles from './Login.module.scss';
 
 const Login: React.FC = () => {
+	const navigate = useNavigate();
+
 	const loginStore = useLocalStore(() => new LoginStore());
 	const { usernameInput, passwordInput } = loginStore;
 
-	const onLoginInputChange = useCallback(
+	const onUsernameInputChange = useCallback(
 		(value: string) => {
 			usernameInput.setValue(value);
 		},
@@ -24,6 +27,11 @@ const Login: React.FC = () => {
 			passwordInput.setValue(value);
 		},
 		[passwordInput],
+	);
+
+	const onAuthorizationClick = useCallback(
+		() => navigate('/registration'),
+		[navigate],
 	);
 
 	return (
@@ -39,7 +47,7 @@ const Login: React.FC = () => {
 					<Input
 						placeholder='Username'
 						value={usernameInput.value}
-						onChange={onLoginInputChange}
+						onChange={onUsernameInputChange}
 					/>
 					<Input
 						placeholder='Password'
@@ -55,8 +63,9 @@ const Login: React.FC = () => {
 						size='s5'
 						decoration='underline'
 						cursor='pointer'
+						onClick={onAuthorizationClick}
 					>
-						Authorization
+						Create account
 					</Text>
 				</div>
 			</div>
