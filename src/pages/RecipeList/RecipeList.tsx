@@ -12,16 +12,13 @@ import Pages from 'components/Pagination/Pagination';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
-import List from './components/List/List';
-import { RecipeListProvider } from './contexts/RecipeListContext';
+import InfinityList from './components/InfinityList/InfinityList';
 import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	useQueryParamsStore();
 
 	const introRef = useRef<HTMLImageElement>(null);
-	const listRef = useRef<HTMLDivElement>(null);
-
 	const [listIncrease, setListIncrease] = useState<boolean>(false);
 
 	const navigate = useNavigate();
@@ -138,7 +135,7 @@ const RecipeList = () => {
 				</div>
 				{isSuccess ? (
 					<>
-						<div ref={listRef}>
+						{/* <div ref={listRef}>
 							<RecipeListProvider
 								value={{
 									recipeList,
@@ -151,7 +148,9 @@ const RecipeList = () => {
 							>
 								<List />
 							</RecipeListProvider>
-						</div>
+						</div> */}
+
+						<InfinityList />
 
 						<Pages
 							page={page}
