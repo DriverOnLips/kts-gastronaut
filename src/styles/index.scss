@@ -18,17 +18,17 @@ body {
 }
 
 @media screen and (min-width: 1440px) {
-	.virtualized_list::-webkit-scrollbar {
+	.Grid::-webkit-scrollbar {
 		width: 14px;
 	}
 
-	.virtualized_list::-webkit-scrollbar-track {
+	.Grid::-webkit-scrollbar-track {
 		background: $color-white;
 		border-radius: 20px;
 		border: 3px solid $color-white;
 	}
 
-	.virtualized_list::-webkit-scrollbar-thumb {
+	.Grid::-webkit-scrollbar-thumb {
 		background-color: $color-primary;
 		border-radius: 20px;
 		border: 3px solid $color-white;

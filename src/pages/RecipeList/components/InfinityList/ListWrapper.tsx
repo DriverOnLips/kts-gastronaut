@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	VariableSizeGrid as Grid,
@@ -10,14 +10,14 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import Item from './ListItem';
 
-interface ExampleWrapperProps {
+interface ListWrapperProps {
 	hasNextPage: boolean;
 	isNextPageLoading: boolean;
 	items: RecipeFromListModel[];
 	loadNextPage: () => void;
 }
 
-const ExampleWrapper: React.FC<ExampleWrapperProps> = ({
+const ListWrapper: React.FC<ListWrapperProps> = ({
 	hasNextPage,
 	isNextPageLoading,
 	items,
@@ -36,7 +36,7 @@ const ExampleWrapper: React.FC<ExampleWrapperProps> = ({
 		[navigate],
 	);
 
-	const getColumnCount = () => {
+	const columnCount = useMemo(() => {
 		const screenWidth = window.innerWidth;
 		if (screenWidth < 650) {
 			return 1;
@@ -45,18 +45,16 @@ const ExampleWrapper: React.FC<ExampleWrapperProps> = ({
 		} else {
 			return 3;
 		}
-	};
+	}, []);
 
-	const columnCount = getColumnCount();
-
-	const setGridHeight = () => {
+	const setGridHeight = useMemo(() => {
 		const rootFontSize = parseFloat(
 			getComputedStyle(document.documentElement).fontSize,
 		);
 		const remInPixels = rootFontSize * 5;
 		const screenHeight = window.innerHeight;
 		return screenHeight - 420 - remInPixels;
-	};
+	}, []);
 
 	const setItemHeight = useCallback(() => {
 		const screenWidth = window.innerWidth;
@@ -96,7 +94,7 @@ const ExampleWrapper: React.FC<ExampleWrapperProps> = ({
 					columnWidth={() => {
 						return window.innerWidth / columnCount - 20;
 					}}
-					height={setGridHeight()}
+					height={setGridHeight}
 					rowCount={Math.ceil(items.length / columnCount)}
 					rowHeight={setItemHeight}
 					width={window.innerWidth - 4}
@@ -127,4 +125,4 @@ const ExampleWrapper: React.FC<ExampleWrapperProps> = ({
 	);
 };
 
-export default ExampleWrapper;
+export default ListWrapper;

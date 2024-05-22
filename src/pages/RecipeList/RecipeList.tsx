@@ -19,11 +19,7 @@ const RecipeList = () => {
 	useQueryParamsStore();
 
 	const introRef = useRef<HTMLImageElement>(null);
-	const [listIncrease, setListIncrease] = useState<boolean>(false);
-
 	const navigate = useNavigate();
-
-	const [isAtEnd, setIsAtEnd] = useState<boolean>(false);
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
 	const {
@@ -85,15 +81,18 @@ const RecipeList = () => {
 		[navigate],
 	);
 
-	useEffect(() => {
+	const loadRecipes = useCallback(() => {
 		getRecipes({
 			count: 100,
 			page,
 			query: params.get('query') || null,
 			type: params.get('type') || null,
 		});
+	}, []);
 
+	useEffect(() => {
 		document.body.style.overflow = 'hidden';
+		loadRecipes();
 
 		return () => {
 			document.body.style.overflow = 'auto';
@@ -133,34 +132,22 @@ const RecipeList = () => {
 						onMultiDropdownClick={onMultiDropdownClick}
 					/>
 				</div>
-				{isSuccess ? (
-					<>
-						{/* <div ref={listRef}>
-							<RecipeListProvider
-								value={{
-									recipeList,
-									isAtEnd,
-									setIsAtEnd,
-									increase: listIncrease,
-									setIncrease: setListIncrease,
-									introRef,
-								}}
-							>
-								<List />
-							</RecipeListProvider>
-						</div> */}
+				{/* {isSuccess ? ( */}
+				<>
+					<InfinityList
+						recipeList={recipeList}
+						page={page}
+					/>
 
-						<InfinityList />
-
-						<Pages
-							page={page}
-							pages={pages}
-							onPageButtonClick={onPaginationButtonClick}
-						/>
-					</>
-				) : (
+					<Pages
+						page={page}
+						pages={pages}
+						onPageButtonClick={onPaginationButtonClick}
+					/>
+				</>
+				{/* ) : (
 					<Loader />
-				)}
+				)} */}
 			</>
 		</div>
 	);

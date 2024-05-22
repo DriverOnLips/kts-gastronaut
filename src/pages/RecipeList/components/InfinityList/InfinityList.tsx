@@ -1,43 +1,47 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { useState, useCallback, useEffect } from 'react';
-import { useLocalStore } from 'hooks/useLocalStore';
-import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
-import ExampleWrapper from './ListWrapper';
+import ListWrapper from './ListWrapper';
+import { useNavigate } from 'react-router-dom';
 
-const InfinityList: React.FC = () => {
-	const recipeListStore = useLocalStore(() => new RecipeListStore());
-	const { recipeList, getRecipes } = recipeListStore;
+type InfinityListProps = {
+	recipeList: RecipeFromListModel[];
+	page: number;
+};
+
+const InfinityList: React.FC<InfinityListProps> = ({ recipeList, page }) => {
+	console.log(page);
+	const navigate = useNavigate();
 
 	const [hasNextPage, setHasNextPage] = useState(true);
 	const [isNextPageLoading, setIsNextPageLoading] = useState(false);
-	const [page, setPage] = useState(2);
 	const [items, setItems] = useState<RecipeFromListModel[]>(recipeList);
 
-	const loadRecipes = async (page: number) => {
-		setIsNextPageLoading(true);
-		await getRecipes({ count: 100, page, query: null, type: null });
-		setHasNextPage(recipeList.length > 0);
-		setIsNextPageLoading(false);
+	const incrementPage = () => {
+		const newSearchParams = new URLSearchParams(window.location.search);
+		newSearchParams.set('page', (page + 1).toString());
+		navigate(`?${newSearchParams.toString()}`, { replace: true });
 	};
 
 	const loadNextPage = useCallback(() => {
-		loadRecipes(page);
-		setPage((prevPage) => prevPage + 1);
-	}, [page]);
+		setIsNextPageLoading(true);
+		incrementPage();
+		setHasNextPage(recipeList.length > 0);
+		setIsNextPageLoading(false);
+	}, [incrementPage]);
 
 	useEffect(() => {
 		setItems((prevItems) => [...prevItems, ...recipeList]);
 	}, [recipeList]);
 
-	useEffect(() => {
-		loadNextPage();
-	}, []);
+	// useEffect(() => {
+	// 	loadNextPage();
+	// }, []);
 
 	return (
 		<React.Fragment>
-			<ExampleWrapper
+			<ListWrapper
 				hasNextPage={hasNextPage}
 				isNextPageLoading={isNextPageLoading}
 				items={items}
