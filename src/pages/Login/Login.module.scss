@@ -1,0 +1,62 @@
+@import "styles/variables.scss";
+
+.login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: calc(100vh - 48px);
+	padding-top: 48px;
+
+	&-wrapper {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 5rem;
+		border-radius: 20px;
+		gap: 5rem;
+		background-color: rgba($color-primary, 0.7);
+
+		&__inputs {
+			display: flex;
+			flex-direction: column;
+			width: 60vw;
+			max-width: 300px;
+			gap: 2rem;
+		}
+
+		&__authorization {
+			display: flex;
+			gap: 5px;
+		}
+	}
+}
+
+@media (max-height: 800px) {
+	.login {
+		&-wrapper {
+			padding: 2rem;
+			gap: 2rem;
+		}
+	}
+}
+
+@media (max-width: 800px) {
+	.login {
+		&-wrapper {
+			padding: 2rem;
+		}
+	}
+}
+
+@media (max-width: 400px) {
+	.login {
+		&-wrapper {
+			&__authorization {
+				flex-direction: column;
+				align-items: center;
+			}
+		}
+	}
+}

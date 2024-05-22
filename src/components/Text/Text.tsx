@@ -12,7 +12,10 @@ type TextProps = {
 	color?: 'primary' | 'secondary' | 'main';
 	display?: 'flex';
 	gap?: string;
+	decoration?: string;
+	cursor?: string;
 	maxLines?: number;
+	onClick?(): void;
 	children: ReactNode;
 };
 
@@ -24,7 +27,10 @@ const Text: React.FC<TextProps> = ({
 	color,
 	display,
 	gap,
+	decoration,
+	cursor,
 	maxLines,
+	onClick,
 	children,
 }) => {
 	const style: React.CSSProperties = {
@@ -34,6 +40,8 @@ const Text: React.FC<TextProps> = ({
 
 	if (display) style.display = display;
 	if (gap) style.gap = gap;
+	if (decoration) style.textDecoration = decoration;
+	if (cursor) style.cursor = cursor;
 
 	return (
 		<span
@@ -45,6 +53,7 @@ const Text: React.FC<TextProps> = ({
 				!!maxLines && 'max_lines',
 			)}
 			style={style}
+			onClick={onClick}
 		>
 			{children}
 		</span>
