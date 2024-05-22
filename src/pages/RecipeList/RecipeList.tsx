@@ -14,6 +14,7 @@ import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
 import InfinityList from './components/InfinityList/InfinityList';
 import styles from './RecipeList.module.scss';
+import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 
 const RecipeList = () => {
 	useQueryParamsStore();
@@ -22,6 +23,7 @@ const RecipeList = () => {
 	const navigate = useNavigate();
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
+
 	const {
 		inputStore,
 		dropdownStore,
@@ -30,6 +32,8 @@ const RecipeList = () => {
 		pages,
 		getRecipes,
 	} = recipeListStore;
+
+	const [items, setItems] = useState<RecipeFromListModel[]>(recipeList);
 
 	const params = useMemo(
 		() => new URLSearchParams(window.location.search),
@@ -42,12 +46,8 @@ const RecipeList = () => {
 		newSearchParams.set('page', '1');
 		navigate(`?${newSearchParams.toString()}`, { replace: true });
 
-		getRecipes({
-			count: 100,
-			page,
-			query: params.get('query') || null,
-			type: params.get('type') || null,
-		});
+		setItems([]);
+		loadRecipes();
 	}, [params, page, getRecipes, navigate]);
 
 	const onInputChange = useCallback(
@@ -77,6 +77,9 @@ const RecipeList = () => {
 			const newSearchParams = new URLSearchParams(window.location.search);
 			newSearchParams.set('page', page.toString());
 			navigate(`?${newSearchParams.toString()}`, { replace: true });
+
+			setItems([]);
+			loadRecipes();
 		},
 		[navigate],
 	);
@@ -88,7 +91,7 @@ const RecipeList = () => {
 			query: params.get('query') || null,
 			type: params.get('type') || null,
 		});
-	}, []);
+	}, [page]);
 
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';
@@ -98,6 +101,12 @@ const RecipeList = () => {
 			document.body.style.overflow = 'auto';
 		};
 	}, [page]);
+
+	useEffect(() => {
+		setItems((prevItems) => [...prevItems, ...recipeList]);
+	}, [recipeList]);
+
+	console.log(items.length);
 
 	return (
 		<div className={styles.recipe_list}>
@@ -132,22 +141,22 @@ const RecipeList = () => {
 						onMultiDropdownClick={onMultiDropdownClick}
 					/>
 				</div>
-				{/* {isSuccess ? ( */}
-				<>
-					<InfinityList
-						recipeList={recipeList}
-						page={page}
-					/>
+				{items.length ? (
+					<>
+						<InfinityList
+							recipeList={items}
+							page={page}
+						/>
 
-					<Pages
-						page={page}
-						pages={pages}
-						onPageButtonClick={onPaginationButtonClick}
-					/>
-				</>
-				{/* ) : (
+						<Pages
+							page={page}
+							pages={pages}
+							onPageButtonClick={onPaginationButtonClick}
+						/>
+					</>
+				) : (
 					<Loader />
-				)} */}
+				)}
 			</>
 		</div>
 	);
