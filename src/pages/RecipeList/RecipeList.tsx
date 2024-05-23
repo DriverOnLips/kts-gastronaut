@@ -15,6 +15,7 @@ import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore'
 import InfinityList from './components/InfinityList/InfinityList';
 import styles from './RecipeList.module.scss';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
+import { RecipeListProvider } from './context/RecipeListContext';
 
 const RecipeList = () => {
 	useQueryParamsStore();
@@ -106,8 +107,6 @@ const RecipeList = () => {
 		setItems((prevItems) => [...prevItems, ...recipeList]);
 	}, [recipeList]);
 
-	console.log(items.length);
-
 	return (
 		<div className={styles.recipe_list}>
 			<>
@@ -143,11 +142,16 @@ const RecipeList = () => {
 				</div>
 				{items.length ? (
 					<>
-						<InfinityList
-							recipeList={items}
-							page={page}
-						/>
-
+						<RecipeListProvider
+							value={{
+								introRef,
+							}}
+						>
+							<InfinityList
+								recipeList={items}
+								page={page}
+							/>
+						</RecipeListProvider>
 						<Pages
 							page={page}
 							pages={pages}
