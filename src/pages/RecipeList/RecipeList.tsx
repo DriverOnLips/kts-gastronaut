@@ -33,14 +33,17 @@ const RecipeList = () => {
 	);
 	const page = +(params.get('page') || 1);
 
-	const loadRecipes = useCallback(() => {
-		getRecipes({
-			count: 100,
-			page,
-			query: params.get('query') || null,
-			type: params.get('type') || null,
-		});
-	}, [params, page, getRecipes]);
+	const loadRecipes = useCallback(
+		(pg?: number) => {
+			getRecipes({
+				count: 100,
+				page: pg || page,
+				query: params.get('query') || null,
+				type: params.get('type') || null,
+			});
+		},
+		[params, page, getRecipes],
+	);
 
 	const onButtonClick = useCallback(() => {
 		const newSearchParams = new URLSearchParams(window.location.search);
@@ -48,7 +51,8 @@ const RecipeList = () => {
 		navigate(`?${newSearchParams.toString()}`, { replace: true });
 
 		setItems([]);
-	}, [navigate]);
+		loadRecipes(1);
+	}, [navigate, loadRecipes]);
 
 	const onInputChange = useCallback(
 		(value: string) => {
@@ -79,8 +83,9 @@ const RecipeList = () => {
 			navigate(`?${newSearchParams.toString()}`, { replace: true });
 
 			setItems([]);
+			loadRecipes(page);
 		},
-		[navigate],
+		[navigate, loadRecipes],
 	);
 
 	useEffect(() => {
