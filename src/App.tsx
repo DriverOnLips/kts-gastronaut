@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import Header from 'components/Header/Header';
 import { RootProvider } from 'contexts/RootContext';
 import Login from 'pages/Login/Login';
@@ -23,6 +24,7 @@ const App = () => {
 			{/* <BrowserRouter basename='/kts-gastronaut'> */}
 			<BrowserRouter basename='/'>
 				<Header />
+				<Toaster position='top-center' />
 				<Routes>
 					<Route
 						path='/'

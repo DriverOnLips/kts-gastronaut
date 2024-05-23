@@ -3,11 +3,14 @@
 .pagination {
 	display: flex;
 	position: absolute;
-	opacity: 1;
-	bottom: 0;
-	padding: 1rem 0;
-	width: 100%;
+	left: 50%;
+	bottom: 20px;
+	transform: translateX(-50%);
+	padding: 1rem;
 	justify-content: center;
 	gap: 0.5rem;
-	background-color: $background-color;
+	background-color: rgba(255, 255, 255, 0.5);
+	backdrop-filter: blur(5px);
+	border-radius: 50px;
+	box-shadow: 0px 0px 40px rgba(128, 128, 128, 0.5);
 }

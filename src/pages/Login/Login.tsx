@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Text from 'components/Text/Text';
@@ -53,7 +54,10 @@ const Login: React.FC = () => {
 			login(user);
 			navigate(-1);
 		} else {
-			alert('Invalid username or password');
+			toast.error('Invalid username or password', {
+				className: 'notification',
+				duration: 2000,
+			});
 		}
 	}, [usernameInput.value, passwordInput.value, login, navigate]);
 

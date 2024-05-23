@@ -12,10 +12,10 @@ import Pages from 'components/Pagination/Pagination';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
 import { useQueryParamsStore } from 'stores/RootStore/hooks/useQueryParamsStore';
-import InfinityList from './components/InfinityList/InfinityList';
-import styles from './RecipeList.module.scss';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
+import InfinityList from './components/InfinityList/InfinityList';
 import { RecipeListProvider } from './context/RecipeListContext';
+import styles from './RecipeList.module.scss';
 
 const RecipeList = () => {
 	useQueryParamsStore();

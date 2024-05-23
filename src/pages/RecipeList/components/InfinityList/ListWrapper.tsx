@@ -1,5 +1,6 @@
+import cn from 'classnames';
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	VariableSizeGrid as Grid,
@@ -8,9 +9,10 @@ import {
 import InfiniteLoader from 'react-window-infinite-loader';
 
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
+import { debounce } from 'utils/debounce';
 import styles from '../../RecipeList.module.scss';
-import Item from './ListItem';
 import { useRecipeListContext } from '../../context/RecipeListContext';
+import Item from './ListItem';
 
 interface ListWrapperProps {
 	hasNextPage: boolean;
@@ -31,6 +33,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 
 	const itemCount = hasNextPage ? items.length + 1 : items.length;
 	const loadMoreItems = isNextPageLoading ? () => {} : loadNextPage;
+	const debouncedLoadMoreItems = debounce(loadMoreItems, 1000);
 	const isItemLoaded = (index: number) => index < items.length;
 
 	const navigate = useNavigate();
@@ -60,8 +63,8 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 		const remInPixels = rootFontSize * 5;
 		const screenHeight = window.innerHeight;
 		return increase
-			? screenHeight - 215 - remInPixels
-			: screenHeight - 420 - remInPixels;
+			? screenHeight - 141 - remInPixels
+			: screenHeight - 346 - remInPixels;
 	}, [increase]);
 
 	const setItemHeight = useCallback(() => {
@@ -99,17 +102,17 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 		} else {
 			introRef?.current?.classList.remove(styles['hide-image']);
 		}
-	}, [increase]);
+	}, [increase, introRef]);
 
 	return (
 		<InfiniteLoader
 			isItemLoaded={isItemLoaded}
 			itemCount={itemCount}
-			loadMoreItems={loadMoreItems}
+			loadMoreItems={debouncedLoadMoreItems}
 		>
 			{({ ref }) => (
 				<Grid
-					className='Grid'
+					className={cn('Grid', styles.recipe_list__container)}
 					columnCount={columnCount}
 					columnWidth={() => {
 						return window.innerWidth / columnCount - 20;
@@ -121,8 +124,10 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 					onItemsRendered={({
 						visibleRowStopIndex,
 					}: GridOnItemsRenderedProps) => {
-						if (itemCount - (visibleRowStopIndex + 1) * columnCount < 30) {
-							loadMoreItems();
+						const position =
+							itemCount - (visibleRowStopIndex + 1) * columnCount;
+						if (position >= 70 && position <= 75) {
+							debouncedLoadMoreItems();
 						}
 					}}
 					ref={ref}
@@ -146,4 +151,4 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 	);
 };
 
-export default ListWrapper;
+export default memo(ListWrapper);

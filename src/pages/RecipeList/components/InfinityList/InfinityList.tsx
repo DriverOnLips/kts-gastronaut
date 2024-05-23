@@ -1,10 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import ListWrapper from './ListWrapper';
-import { useNavigate } from 'react-router-dom';
-import useDebounce from 'hooks/useDebounce';
 
 type InfinityListProps = {
 	recipeList: RecipeFromListModel[];
@@ -17,11 +16,11 @@ const InfinityList: React.FC<InfinityListProps> = ({ recipeList, page }) => {
 	const [hasNextPage, setHasNextPage] = useState(true);
 	const [isNextPageLoading, setIsNextPageLoading] = useState(false);
 
-	const incrementPage = () => {
+	const incrementPage = useCallback(() => {
 		const newSearchParams = new URLSearchParams(window.location.search);
 		newSearchParams.set('page', (page + 1).toString());
 		navigate(`?${newSearchParams.toString()}`, { replace: true });
-	};
+	}, [page, navigate]);
 
 	const loadNextPage = useCallback(() => {
 		setIsNextPageLoading(true);
@@ -30,15 +29,13 @@ const InfinityList: React.FC<InfinityListProps> = ({ recipeList, page }) => {
 		setIsNextPageLoading(false);
 	}, [incrementPage]);
 
-	const debouncedLoadNextPage = useDebounce(loadNextPage, 1000);
-
 	return (
 		<React.Fragment>
 			<ListWrapper
 				hasNextPage={hasNextPage}
 				isNextPageLoading={isNextPageLoading}
 				items={recipeList}
-				loadNextPage={debouncedLoadNextPage}
+				loadNextPage={loadNextPage}
 			/>
 		</React.Fragment>
 	);

@@ -1,4 +1,5 @@
 import { action, computed, makeObservable, observable } from 'mobx';
+import { toast } from 'sonner';
 import { User } from 'types/User/User';
 
 type PrivateFields = '_isLoggedIn' | '_user';
@@ -61,7 +62,10 @@ export default class AuthorizationStore {
 			};
 
 			localStorage.setItem('users', JSON.stringify(existingUsers));
-			alert('Successfully logged out');
+			toast.success('Successfully logged out', {
+				className: 'notification',
+				duration: 2000,
+			});
 		}
 
 		this._isLoggedIn = false;

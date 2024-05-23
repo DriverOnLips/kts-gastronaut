@@ -18,7 +18,7 @@
 	}
 
 	&__content:hover {
-		box-shadow: 0px 2px 20px rgb(128, 128, 128);
+		box-shadow: 0px 2px 20px rgba($color-primary, 0.5);
 	}
 
 	&__content:hover &-img {

@@ -3,6 +3,7 @@ import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
 import Loader from 'components/Loader/Loader';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
+import styles from '../../RecipeList.module.scss';
 
 interface ItemProps {
 	columnIndex: number;
@@ -37,6 +38,7 @@ const Item: React.FC<ItemProps> = ({
 	return (
 		<div style={style}>
 			<Card
+				className={styles.recipe_list__container_item}
 				key={item.id}
 				actionSlot={<Button>Save</Button>}
 				captionSlot={item?.readyInMinutes + ' minutes'}

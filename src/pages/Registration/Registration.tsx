@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import Button from 'components/Button/Button';
 import Input from 'components/Input/Input';
 import Text from 'components/Text/Text';
@@ -49,7 +50,10 @@ const Registration: React.FC = () => {
 		) as User[];
 
 		if (existingUsers.some((user) => user.username === usernameInput.value)) {
-			alert('Username already exists!');
+			toast.error('Username already exists', {
+				className: 'notification',
+				duration: 2000,
+			});
 			return;
 		}
 
@@ -61,7 +65,10 @@ const Registration: React.FC = () => {
 		existingUsers.push(newUser);
 		localStorage.setItem('users', JSON.stringify(existingUsers));
 
-		alert('Registrated successfuly!');
+		toast.success('Account created successfuly', {
+			className: 'notification',
+			duration: 2000,
+		});
 
 		login(newUser);
 		navigate('/');
