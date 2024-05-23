@@ -3,11 +3,8 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import intro from 'assets/img/intro.png';
-import search from 'assets/svg/search.svg';
-import Button from 'components/Button/Button';
-import Input from 'components/Input/Input';
+import Filters from 'components/Filters/Filters';
 import Loader from 'components/Loader/Loader';
-import MultiDropdown from 'components/MultiDropdown/MultiDropdown';
 import Pages from 'components/Pagination/Pagination';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipeListStore from 'stores/RecipeListStore/RecipeListStore';
@@ -25,14 +22,8 @@ const RecipeList = () => {
 
 	const recipeListStore = useLocalStore(() => new RecipeListStore());
 
-	const {
-		inputStore,
-		dropdownStore,
-		recipeList,
-		isSuccess,
-		pages,
-		getRecipes,
-	} = recipeListStore;
+	const { inputStore, dropdownStore, recipeList, pages, getRecipes } =
+		recipeListStore;
 
 	const [items, setItems] = useState<RecipeFromListModel[]>(recipeList);
 
@@ -40,7 +31,16 @@ const RecipeList = () => {
 		() => new URLSearchParams(window.location.search),
 		[window.location.search],
 	);
-	const page = useMemo(() => +(params.get('page') || 1), [params]);
+	const page = +(params.get('page') || 1);
+
+	const loadRecipes = useCallback(() => {
+		getRecipes({
+			count: 100,
+			page,
+			query: params.get('query') || null,
+			type: params.get('type') || null,
+		});
+	}, [params, page, getRecipes]);
 
 	const onButtonClick = useCallback(() => {
 		const newSearchParams = new URLSearchParams(window.location.search);
@@ -48,8 +48,7 @@ const RecipeList = () => {
 		navigate(`?${newSearchParams.toString()}`, { replace: true });
 
 		setItems([]);
-		loadRecipes();
-	}, [params, page, getRecipes, navigate]);
+	}, [navigate]);
 
 	const onInputChange = useCallback(
 		(value: string) => {
@@ -80,19 +79,9 @@ const RecipeList = () => {
 			navigate(`?${newSearchParams.toString()}`, { replace: true });
 
 			setItems([]);
-			loadRecipes();
 		},
 		[navigate],
 	);
-
-	const loadRecipes = useCallback(() => {
-		getRecipes({
-			count: 100,
-			page,
-			query: params.get('query') || null,
-			type: params.get('type') || null,
-		});
-	}, [page]);
 
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';
@@ -115,31 +104,14 @@ const RecipeList = () => {
 					src={intro}
 					className={styles.recipe_list__intro}
 				/>
-				<div className={styles.recipe_list__input_search}>
-					<div className={styles['recipe_list__input_search__input-div']}>
-						<Input
-							placeholder='Enter dishes'
-							value={inputStore.value}
-							onChange={onInputChange}
-						/>
-					</div>
+				<Filters
+					inputStore={inputStore}
+					onInputChange={onInputChange}
+					onButtonClick={onButtonClick}
+					dropdownStore={dropdownStore}
+					onMultiDropdownClick={onMultiDropdownClick}
+				/>
 
-					<div onClick={onButtonClick}>
-						<Button>
-							<img
-								src={search}
-								style={{ display: 'flex' }}
-							/>
-						</Button>
-					</div>
-				</div>
-				<div className={styles.recipe_list__categories}>
-					<MultiDropdown
-						className={styles['recipe_list__categories-div']}
-						dropdownStore={dropdownStore}
-						onMultiDropdownClick={onMultiDropdownClick}
-					/>
-				</div>
 				{items.length ? (
 					<>
 						<RecipeListProvider
