@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 import { RecipeFromListResponse } from 'types/RecipeFromList/RecipeFromList';
 import { RecipeTypeApi } from 'types/RecipeType/RecipeType';
-import { recipeListMock } from 'utils/mocks/recipeListMock';
 
 export class Api {
 	private static instance: Api;
@@ -11,20 +11,22 @@ export class Api {
 		{ name: 'getRecipeInfo', url: `${this.domain}recipes/` },
 	];
 
-	// private token: string = 'd1042c6f8c84432bbd5b508bca52c270';
-	// private token: string = 'c1ed0064ec724ead8177ab8848ea4dc8';
-	// private token: string = 'b4be191811054ad3bbb2438df1158ca7';
-	// private token: string = '96b03ded692d45b391ec26a66cf00564';
+	private tokens: { [key: string]: boolean } = {
+		d1042c6f8c84432bbd5b508bca52c270: true,
+		'96b03ded692d45b391ec26a66cf00564': true,
+		c1ed0064ec724ead8177ab8848ea4dc8: true,
+		b4be191811054ad3bbb2438df1158ca7: true,
+		// '3a40e1bfe3084f53b0d475f56d06468b': true,
 
-	private token: string = '2f57ba40700b492a98d46c16cb731636';
+		// '2f57ba40700b492a98d46c16cb731636': true,
 
-	// private token: string = '3a40e1bfe3084f53b0d475f56d06468b';
-	// private token: string = '5884e4538ade47a3bee00a8bed3eb378';
-	// private token: string = 'b628c4fc31ce4a519836f0bfa06853a4';
-	// private token: string = 'af79edba6a414c9f92d551e45dcd08b1';
-	// private token: string = 'e31e1cb391a9463893f57a751d12c66a';
+		// 'b628c4fc31ce4a519836f0bfa06853a4': true,
+		// 'af79edba6a414c9f92d551e45dcd08b1': true,
+		// 'e31e1cb391a9463893f57a751d12c66a': true,
 
-	// private token: string = '5612ded2c55f4a42aafe5dd7fdec9f3f';
+		// '5612ded2c55f4a42aafe5dd7fdec9f3f': true, // my token
+	};
+	private tokenKeys!: string[];
 
 	constructor() {
 		if (Api.instance) {
@@ -34,6 +36,39 @@ export class Api {
 		Api.instance = this;
 
 		this.domain = 'https://api.spoonacular.com/';
+		this.tokenKeys = this.shuffleTokens(Object.keys(this.tokens));
+	}
+
+	private shuffleTokens(tokens: string[]): string[] {
+		for (let i = tokens.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[tokens[i], tokens[j]] = [tokens[j], tokens[i]];
+		}
+		return tokens;
+	}
+
+	private async requestWithToken(url: string, params: any): Promise<any> {
+		for (const token of this.tokenKeys) {
+			if (this.tokens[token]) {
+				params.apiKey = token;
+				try {
+					const res = await axios.get(url, { params });
+					return res?.data;
+				} catch (error: any) {
+					if (error.response && error.response.status === 402) {
+						this.tokens[token] = false;
+					} else {
+						throw error;
+					}
+				}
+			}
+		}
+		toast.message('Tokens have run out', {
+			description: 'We are waiting for you tomorrow',
+			className: 'notification',
+			duration: 3000,
+		});
+		throw new Error('All tokens are invalid.');
 	}
 
 	getRecipes = async (
@@ -49,7 +84,6 @@ export class Api {
 		}
 
 		const params = {
-			apiKey: this.token,
 			number: count,
 			...(page && { offset: (page - 1) * 100 }),
 			...(!!query && { query }),
@@ -57,16 +91,11 @@ export class Api {
 		};
 
 		try {
-			const res = await axios.get(`${configItem.url}addRecipeNutrition=true`, {
-				params: params,
-			});
-
-			return res?.data;
+			return await this.requestWithToken(
+				`${configItem.url}addRecipeNutrition=true`,
+				params,
+			);
 		} catch (error: any) {
-			if (error.response.status === 402) {
-				return recipeListMock;
-			}
-
 			const errorMessage =
 				error instanceof Error ? error.message : String(error);
 			return new Error(errorMessage);
@@ -82,19 +111,17 @@ export class Api {
 			throw new Error('Не найдена конфигурация для getRecipeInfo');
 		}
 
-		const params = {
-			apiKey: this.token,
-		};
+		const params = {};
 
-		return axios
-			.get(`${configItem.url}${id}/information?`, {
-				params: params,
-			})
-			.then((res) => {
-				return res?.data;
-			})
-			.catch((error) => {
-				return error?.response?.data;
-			});
+		try {
+			return await this.requestWithToken(
+				`${configItem.url}${id}/information?`,
+				params,
+			);
+		} catch (error: any) {
+			const errorMessage =
+				error instanceof Error ? error.message : String(error);
+			return new Error(errorMessage);
+		}
 	};
 }
