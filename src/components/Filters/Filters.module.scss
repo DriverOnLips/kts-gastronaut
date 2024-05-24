@@ -34,7 +34,7 @@
 }
 
 @media (max-width: 900px) {
-	.__input_search {
+	.input_search {
 		&__input-div {
 			width: 70vw;
 		}
@@ -42,7 +42,11 @@
 }
 
 @media (max-width: 650px) {
-	.__input_search {
+	.input_search {
 		margin: 1rem 10vw 1rem 2rem;
+
+		&__input-div {
+			width: 65vw;
+		}
 	}
 }

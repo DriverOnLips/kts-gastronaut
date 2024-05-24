@@ -1,10 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { observer } from 'mobx-react-lite';
 import { useCallback, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import back_button from 'assets/svg/back_button.svg';
 import Loader from 'components/Loader/Loader';
 import Text from 'components/Text/Text';
+import { useRootContext } from 'contexts/RootContext';
 import { useLocalStore } from 'hooks/useLocalStore';
 import RecipePageStore from 'stores/RecipePageStore/RecipePageStore';
 import { Meta } from 'utils/meta';
@@ -18,18 +19,23 @@ const RecipePage = () => {
 	const navigate = useNavigate();
 	const { id } = useParams();
 
-	const location = useLocation();
+	const { rootRef } = useRootContext();
 
 	const recipePageStore = useLocalStore(() => new RecipePageStore());
 	const recipe = recipePageStore.recipeInfo;
 
 	const onImgClickHandler = useCallback(() => {
-		navigate('/');
+		navigate(-1);
 	}, [navigate]);
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, [location]);
+		if (!rootRef) return;
+		rootRef.style.height = '100%';
+
+		return () => {
+			rootRef.style.height = '100vh';
+		};
+	}, [rootRef]);
 
 	useEffect(() => {
 		if (!id || isNaN(+id)) {
