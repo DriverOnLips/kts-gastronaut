@@ -28,9 +28,7 @@ export class Api {
 		'35c0d5eef2554a03ad6c2caad7962b2a': true,
 		fa7c6c2090c94745a6ec889e612a96da: true,
 		'855cdc3f7d7548649e1b838fd967ca2d': true,
-
-		// '98b660fd6fca46038e2189b0fe7ae07e': true, // my token
-		// '93048fe8089642c2a16619633c8875da': true,
+		c7f4b94a5ddf4dbfac90e9352225babb: true,
 	};
 	private tokenKeys!: string[];
 
