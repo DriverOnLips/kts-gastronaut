@@ -59,3 +59,11 @@ button {
 .dropdown_open .dropdown__input {
 	border: 1px solid $brand;
 }
+
+@media (max-height: 950px) {
+	.dropdown {
+		&__options {
+			max-height: 30vh;
+		}
+	}
+}

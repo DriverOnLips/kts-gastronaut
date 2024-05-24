@@ -40,6 +40,17 @@ const Login: React.FC = () => {
 	);
 
 	const onLoginClick = useCallback(() => {
+		// empty fields
+		if (!usernameInput.value.trim() || !passwordInput.value.trim()) {
+			toast.error('Fill in all the fields', {
+				className: 'notification',
+				duration: 2000,
+			});
+
+			return;
+		}
+
+		// log in
 		const existingUsers = JSON.parse(
 			localStorage.getItem('users') || '[]',
 		) as User[];
@@ -52,7 +63,7 @@ const Login: React.FC = () => {
 
 		if (user) {
 			login(user);
-			navigate(-1);
+			navigate('/');
 		} else {
 			toast.error('Invalid username or password', {
 				className: 'notification',
@@ -81,6 +92,7 @@ const Login: React.FC = () => {
 						onChange={onUsernameInputChange}
 					/>
 					<Input
+						type='password'
 						placeholder='Password'
 						value={passwordInput.value}
 						onChange={onPasswordInputChange}

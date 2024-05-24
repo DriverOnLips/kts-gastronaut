@@ -1,6 +1,7 @@
 @import "styles/variables.scss";
 
 .input-wrapper {
+	position: relative;
 	display: flex;
 	color: $text-primary;
 	background: $default-color;
@@ -50,4 +51,14 @@
 		flex-shrink: 0;
 		margin-left: $space-xxs;
 	}
+}
+
+.toggle-password-visibility {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
 }

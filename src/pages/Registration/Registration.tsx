@@ -45,6 +45,44 @@ const Registration: React.FC = () => {
 	const onLoginClick = useCallback(() => navigate('/login'), [navigate]);
 
 	const onCreateAccountClick = useCallback(() => {
+		// empty fields
+		if (
+			!usernameInput.value.trim() ||
+			!passwordInput.value.trim() ||
+			!passwordRepeatInput.value.trim()
+		) {
+			toast.error('Fill in all the fields', {
+				className: 'notification',
+				duration: 2000,
+			});
+
+			return;
+		}
+
+		// username check
+		if (
+			usernameInput.value.trim().length > 8 ||
+			usernameInput.value.trim().length < 4
+		) {
+			toast.error('Username must be between 4 and 8 characters', {
+				className: 'notification',
+				duration: 2000,
+			});
+
+			return;
+		}
+
+		// pw doesn't matches
+		if (passwordInput.value.trim() !== passwordRepeatInput.value.trim()) {
+			toast.error('Password mismatch', {
+				className: 'notification',
+				duration: 2000,
+			});
+
+			return;
+		}
+
+		// account creating
 		const existingUsers = JSON.parse(
 			localStorage.getItem('users') || '[]',
 		) as User[];
@@ -54,6 +92,7 @@ const Registration: React.FC = () => {
 				className: 'notification',
 				duration: 2000,
 			});
+
 			return;
 		}
 
@@ -94,11 +133,13 @@ const Registration: React.FC = () => {
 						onChange={onUsernameInputChange}
 					/>
 					<Input
+						type='password'
 						placeholder='Password'
 						value={passwordInput.value}
 						onChange={onPasswordInputChange}
 					/>
 					<Input
+						type='password'
 						placeholder='Repeat password'
 						value={passwordRepeatInput.value}
 						onChange={onPasswordRepeatInputChange}
