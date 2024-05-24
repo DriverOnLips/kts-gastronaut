@@ -18,9 +18,9 @@ const Header = () => {
 	const handleLogoClick = () => {
 		setIsSidebarVisible(false);
 		if (
-			location.pathname === '/'
-			// location.pathname === '/kts-gastronaut' ||
-			// location.pathname === '/kts-gastronaut/'
+			// location.pathname === '/'
+			location.pathname === '/kts-gastronaut' ||
+			location.pathname === '/kts-gastronaut/'
 		) {
 			const virtualizedList = document.querySelector('.Grid');
 			virtualizedList?.scrollTo({ top: 0, behavior: 'smooth' });
@@ -28,6 +28,11 @@ const Header = () => {
 			navigate('/');
 		}
 	};
+
+	const handleSavedClick = useCallback(() => {
+		setIsSidebarVisible(false);
+		navigate('/saved');
+	}, [navigate]);
 
 	const handleLoginClick = useCallback(() => {
 		setIsSidebarVisible(false);
@@ -68,7 +73,7 @@ const Header = () => {
 					</li>
 					<li
 						className={styles.link}
-						onClick={handleLogoClick}
+						onClick={handleSavedClick}
 					>
 						Saved
 					</li>

@@ -1,20 +1,16 @@
 import cn from 'classnames';
 import * as React from 'react';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-	VariableSizeGrid as Grid,
-	GridOnItemsRenderedProps,
-} from 'react-window';
+import { VariableSizeGrid as Grid } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 
 import { toast } from 'sonner';
 import rootStore from 'stores/RootStore/instance';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
 import { debounce } from 'utils/debounce';
-import styles from '../../RecipeList.module.scss';
-import { useRecipeListContext } from '../../context/RecipeListContext';
-import Item from './ListItem';
+import styles from '../../SavedRecipes.module.scss';
+import Item from './ListItem.tsx';
 
 interface ListWrapperProps {
 	hasNextPage: boolean;
@@ -30,14 +26,11 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 	loadNextPage,
 }) => {
 	const { isLoggedIn, user } = rootStore.authorization;
-	const { introRef } = useRecipeListContext();
-
-	const [increase, setIncrease] = useState<boolean>(false);
 
 	const itemCount = hasNextPage ? items.length + 1 : items.length;
 	const loadMoreItems = isNextPageLoading ? () => {} : loadNextPage;
 	const debouncedLoadMoreItems = debounce(loadMoreItems, 1000);
-	const isItemLoaded = (index: number) => index < items.length;
+	const isItemLoaded = () => true;
 
 	const navigate = useNavigate();
 
@@ -61,24 +54,20 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 					localStorage.getItem(user.username) || '[]',
 				);
 
-				const isItemAlreadySaved = userItems.some(
-					(item: RecipeFromListModel) => item.id === id,
+				const updatedItems = userItems.filter(
+					(item: RecipeFromListModel) => item.id !== id,
 				);
 
-				if (!isItemAlreadySaved) {
-					userItems.push(selectedItem);
-
-					localStorage.setItem(user.username, JSON.stringify(userItems));
-					toast.success('Recipe saved successfully', {
-						className: 'notification',
-						duration: 2000,
-					});
-				} else {
-					toast.error('The recipe is already saved', {
-						className: 'notification',
-						duration: 2000,
-					});
-				}
+				localStorage.setItem(user.username, JSON.stringify(updatedItems));
+				toast.success('Recipe removed successfully', {
+					className: 'notification',
+					duration: 2000,
+				});
+			} else {
+				toast.error('The recipe is not saved', {
+					className: 'notification',
+					duration: 2000,
+				});
 			}
 		},
 		[isLoggedIn, user, items, navigate],
@@ -106,12 +95,11 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 		const rootFontSize = parseFloat(
 			getComputedStyle(document.documentElement).fontSize,
 		);
-		const remInPixels = rootFontSize * 5;
+		const remInPixels = rootFontSize * 2;
 		const screenHeight = window.innerHeight;
-		return increase
-			? screenHeight - 141 - remInPixels
-			: screenHeight - 346 - remInPixels;
-	}, [increase]);
+
+		return screenHeight - 85 - remInPixels;
+	}, []);
 
 	const setItemHeight = useCallback(() => {
 		const screenWidth = window.innerWidth;
@@ -138,18 +126,6 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 		return 800;
 	}, []);
 
-	const onScroll = useCallback(({ scrollTop }: { scrollTop: number }) => {
-		setIncrease(scrollTop > 100);
-	}, []);
-
-	useEffect(() => {
-		if (increase) {
-			introRef?.current?.classList.add(styles['hide-image']);
-		} else {
-			introRef?.current?.classList.remove(styles['hide-image']);
-		}
-	}, [increase, introRef]);
-
 	return (
 		<InfiniteLoader
 			isItemLoaded={isItemLoaded}
@@ -158,7 +134,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 		>
 			{({ ref }) => (
 				<Grid
-					className={cn('Grid', styles.recipe_list__container)}
+					className={cn('Grid-saved', styles.saved_recipes__container)}
 					columnCount={columnCount}
 					columnWidth={() => {
 						return window.innerWidth / columnCount - 20;
@@ -167,17 +143,7 @@ const ListWrapper: React.FC<ListWrapperProps> = ({
 					rowCount={Math.ceil(items.length / columnCount)}
 					rowHeight={setItemHeight}
 					width={window.innerWidth - 4}
-					onItemsRendered={({
-						visibleRowStopIndex,
-					}: GridOnItemsRenderedProps) => {
-						const position =
-							itemCount - (visibleRowStopIndex + 1) * columnCount;
-						if (position >= 70 && position <= 75) {
-							debouncedLoadMoreItems();
-						}
-					}}
 					ref={ref}
-					onScroll={onScroll}
 				>
 					{({ columnIndex, rowIndex, style }) => (
 						<Item

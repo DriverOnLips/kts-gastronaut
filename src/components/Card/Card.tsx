@@ -101,9 +101,9 @@ const Card: React.FC<CardProps> = ({
 					)}
 					<div
 						className={`${styles['card_item__info-btn']} mb-3 mr-3`}
-						onClick={(event) => {
-							event.stopPropagation();
-							onButtonClick;
+						onClick={(e) => {
+							e.stopPropagation();
+							if (onButtonClick) onButtonClick(e);
 						}}
 					>
 						{actionSlot}

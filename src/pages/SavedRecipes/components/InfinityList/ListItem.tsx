@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Button from 'components/Button/Button';
 import Card from 'components/Card/Card';
+import Loader from 'components/Loader/Loader';
 import { RecipeFromListModel } from 'types/RecipeFromList/RecipeFromList';
-import styles from '../../RecipeList.module.scss';
+import styles from '../../SavedRecipes.module.scss';
 
 interface ItemProps {
 	columnIndex: number;
@@ -19,6 +20,7 @@ const Item: React.FC<ItemProps> = ({
 	columnIndex,
 	rowIndex,
 	style,
+	isItemLoaded,
 	items,
 	columnCount,
 	onCardButtonClickHandler,
@@ -26,15 +28,19 @@ const Item: React.FC<ItemProps> = ({
 }) => {
 	const index = rowIndex * columnCount + columnIndex;
 
+	if (!isItemLoaded(index)) {
+		return <Loader />;
+	}
+
 	const item = items[index];
 	if (!item) return null;
 
 	return (
 		<div style={style}>
 			<Card
-				className={styles.recipe_list__container_item}
+				className={styles.saved_recipes__container_item}
 				key={item.id}
-				actionSlot={<Button>Save</Button>}
+				actionSlot={<Button>Delete</Button>}
 				captionSlot={item?.readyInMinutes + ' minutes'}
 				contentSlot={item.calories + ' kcal'}
 				image={item.image}

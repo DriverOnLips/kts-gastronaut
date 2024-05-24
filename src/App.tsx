@@ -8,6 +8,7 @@ import NotFound from 'pages/NotFound/NotFound';
 import RecipeList from 'pages/RecipeList/RecipeList';
 import RecipePage from 'pages/RecipePage/RecipePage';
 import Registratiom from 'pages/Registration/Registration';
+import SavedRecipes from 'pages/SavedRecipes/SavedRecipes';
 import { useAuthorizationStore } from 'stores/RootStore/hooks/useAuthorizationStore';
 
 const App = () => {
@@ -21,8 +22,8 @@ const App = () => {
 			}}
 		>
 			{/* Used for gh-pages */}
-			{/* <BrowserRouter basename='/kts-gastronaut'> */}
-			<BrowserRouter basename='/'>
+			<BrowserRouter basename='/kts-gastronaut'>
+				{/* <BrowserRouter basename='/'> */}
 				<Header />
 				<Toaster position='top-center' />
 				<Routes>
@@ -33,6 +34,10 @@ const App = () => {
 					<Route
 						path='/recipe/:id'
 						element={<RecipePage />}
+					/>
+					<Route
+						path='/saved'
+						element={<SavedRecipes />}
 					/>
 					<Route
 						path='/login'

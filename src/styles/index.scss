@@ -18,17 +18,20 @@ body {
 }
 
 @media screen and (min-width: 1440px) {
-	.Grid::-webkit-scrollbar {
+	.Grid::-webkit-scrollbar,
+	.Grid-saved::-webkit-scrollbar {
 		width: 14px;
 	}
 
-	.Grid::-webkit-scrollbar-track {
+	.Grid::-webkit-scrollbar-track,
+	.Grid-saved::-webkit-scrollbar-track {
 		background: $color-white;
 		border-radius: 20px;
 		border: 3px solid $color-white;
 	}
 
-	.Grid::-webkit-scrollbar-thumb {
+	.Grid::-webkit-scrollbar-thumb,
+	.Grid-saved::-webkit-scrollbar-thumb {
 		background-color: $color-primary;
 		border-radius: 20px;
 		border: 3px solid $color-white;

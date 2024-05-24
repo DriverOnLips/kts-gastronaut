@@ -23,8 +23,8 @@ const parseTsConfigPaths = (
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	base: '/',
-	// base: '/kts-gastronaut',
+	// base: '/',
+	base: '/kts-gastronaut',
 	plugins: [
 		react(),
 		VitePWA({
