@@ -110,7 +110,7 @@ const Header = () => {
 						</li>
 						<li
 							className={styles['link-mobile']}
-							onClick={handleLogoClick}
+							onClick={handleSavedClick}
 						>
 							Saved
 						</li>
