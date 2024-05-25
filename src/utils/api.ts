@@ -13,22 +13,25 @@ export class Api {
 	];
 
 	private tokens: { [key: string]: boolean } = {
-		// d1042c6f8c84432bbd5b508bca52c270: true,
-		// '96b03ded692d45b391ec26a66cf00564': true,
-		// c1ed0064ec724ead8177ab8848ea4dc8: true,
-		// b4be191811054ad3bbb2438df1158ca7: true,
-		// '3a40e1bfe3084f53b0d475f56d06468b': true,
-		// '2f57ba40700b492a98d46c16cb731636': true,
-		// b628c4fc31ce4a519836f0bfa06853a4: true,
-		// af79edba6a414c9f92d551e45dcd08b1: true,
-		// e31e1cb391a9463893f57a751d12c66a: true,
-		// '5612ded2c55f4a42aafe5dd7fdec9f3f': true,
-		// '25fe1d1f78d44884a4dc6257d93f71c3': true,
-
+		d1042c6f8c84432bbd5b508bca52c270: true,
+		'96b03ded692d45b391ec26a66cf00564': true,
+		c1ed0064ec724ead8177ab8848ea4dc8: true,
+		b4be191811054ad3bbb2438df1158ca7: true,
+		'3a40e1bfe3084f53b0d475f56d06468b': true,
+		'2f57ba40700b492a98d46c16cb731636': true,
+		b628c4fc31ce4a519836f0bfa06853a4: true,
+		af79edba6a414c9f92d551e45dcd08b1: true,
+		e31e1cb391a9463893f57a751d12c66a: true,
+		'5612ded2c55f4a42aafe5dd7fdec9f3f': true,
+		'25fe1d1f78d44884a4dc6257d93f71c3': true,
 		'35c0d5eef2554a03ad6c2caad7962b2a': true,
 		fa7c6c2090c94745a6ec889e612a96da: true,
 		'855cdc3f7d7548649e1b838fd967ca2d': true,
 		c7f4b94a5ddf4dbfac90e9352225babb: true,
+		'98b660fd6fca46038e2189b0fe7ae07e': true,
+		'93048fe8089642c2a16619633c8875da': true,
+		efa577eb5e8e4f1fa5087327495ea145: true,
+		db0a60506a0242e59fe0d7550130e94d: true,
 	};
 	private tokenKeys!: string[];
 
