@@ -18,9 +18,9 @@ const Header = () => {
 	const handleLogoClick = () => {
 		setIsSidebarVisible(false);
 		if (
-			// location.pathname === '/'
-			location.pathname === '/kts-gastronaut' ||
-			location.pathname === '/kts-gastronaut/'
+			location.pathname === '/'
+			// location.pathname === '/kts-gastronaut' ||
+			// location.pathname === '/kts-gastronaut/'
 		) {
 			const virtualizedList = document.querySelector('.Grid');
 			virtualizedList?.scrollTo({ top: 0, behavior: 'smooth' });

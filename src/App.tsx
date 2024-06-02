@@ -22,8 +22,8 @@ const App = () => {
 			}}
 		>
 			{/* Used for gh-pages */}
-			<BrowserRouter basename='/kts-gastronaut'>
-				{/* <BrowserRouter basename='/'> */}
+			{/* <BrowserRouter basename='/kts-gastronaut'> */}
+			<BrowserRouter basename='/'>
 				<Header />
 				<Toaster position='top-center' />
 				<Routes>

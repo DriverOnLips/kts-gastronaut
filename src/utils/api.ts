@@ -2,7 +2,6 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { RecipeFromListResponse } from 'types/RecipeFromList/RecipeFromList';
 import { RecipeTypeApi } from 'types/RecipeType/RecipeType';
-// import { recipeListMock } from 'utils/mocks/recipeListMock';
 
 export class Api {
 	private static instance: Api;
@@ -63,7 +62,6 @@ export class Api {
 					return res?.data;
 				} catch (error: any) {
 					if (error.response && error.response.status === 402) {
-						// return recipeListMock;
 						this.tokens[token] = false;
 					} else {
 						throw error;
